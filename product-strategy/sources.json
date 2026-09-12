@@ -16,6 +16,7 @@
       "https://www.bildungsurlaub.de/infos/bundeslaender/bildungsurlaub-in-hessen",
       "https://www.dein-bildungsurlaub.de/bundeslander/hessen"
     ],
+    "method": "websearch",
     "confidence": "medium",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-01-15",
@@ -39,6 +40,7 @@
     "source_secondary": [
       "https://www.bildungsurlaub.de/infos/bundeslaender/bildungsurlaub-bildungszeit-in-berlin/berliner-bildungszeitgesetz-bizeitg"
     ],
+    "method": "websearch, webfetch",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-01-15",
@@ -62,6 +64,7 @@
       "https://bildungsurlaub-hamburg.de/g847",
       "https://www.dein-bildungsurlaub.de/bundeslander/hamburg"
     ],
+    "method": "websearch, webfetch",
     "confidence": "medium",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-01-15",
@@ -83,6 +86,7 @@
     "source_secondary": [
       "https://www.sparkasse.de/pk/ratgeber/finanzplanung/finanzen-und-haushalt/steuern-sparen/homeoffice-pauschale.html"
     ],
+    "method": "websearch",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-01-15",
@@ -103,6 +107,7 @@
     "source_secondary": [
       "https://www.vlh.de/arbeiten-pendeln/beruf/umzugspauschale-erneut-erhoeht.html"
     ],
+    "method": "websearch",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-01-15",
@@ -113,7 +118,10 @@
     "category": "Market data",
     "region": "national",
     "facts": {
-      "first_year_refund_range_eur": [800, 1500],
+      "first_year_refund_range_eur": [
+        800,
+        1500
+      ],
       "general_avg_refund_eur": 1240,
       "reason": "full relocation costs deductible in the first year, typically the largest single line item"
     },
@@ -122,6 +130,7 @@
       "https://www.vlh.de/wissen-service/steuer-nachrichten/durchschnittliche-steuererstattung-steigt-stetig-an.html",
       "https://taxfix.de (live homepage figure, 2026-09-10)"
     ],
+    "method": "websearch, playwright",
     "confidence": "medium",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-01-15",
@@ -140,6 +149,7 @@
     },
     "source_primary": "https://mediendienst-integration.de/arbeitsmarkt/auslaendische-arbeitskraefte/wie-viele-auslaender-arbeiten-in-deutschland/",
     "source_secondary": [],
+    "method": "websearch",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-03-01",
@@ -161,6 +171,7 @@
     "source_secondary": [
       "https://taxfix.de/informationen-zur-gemeinsamen-verantwortlichkeit-steuerberater/"
     ],
+    "method": "playwright",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-03-01",
@@ -173,12 +184,18 @@
     "facts": {
       "operator": "government (NRW Ministerium für Arbeit, Gesundheit und Soziales + BMAS)",
       "scope": "Sozialleistungen only (Wohngeld, Grundsicherung, family benefits) — no tax or labor-law questions",
-      "intake_questions_observed": ["birthdate", "citizenship", "usual residence", "living situation (couple/single parent/single)"]
+      "intake_questions_observed": [
+        "birthdate",
+        "citizenship",
+        "usual residence",
+        "living situation (couple/single parent/single)"
+      ]
     },
     "source_primary": "https://sozialplattform.de/sozialleistungsfinder",
     "source_secondary": [
       "https://sozialplattform.de/inhalt/sozialleistungen-finden"
     ],
+    "method": "playwright",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-03-01",
@@ -198,6 +215,7 @@
     "source_secondary": [
       "https://impact-factory.de/startup/leistungslotse"
     ],
+    "method": "websearch",
     "confidence": "medium",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-03-01",
@@ -216,6 +234,7 @@
     "source_secondary": [
       "https://www.bpb.de/themen/soziale-lage/verteilung-von-armut-reichtum/237438/empfaengerzahlen-der-grundsicherungsleistungen-und-dunkelziffer-der-nicht-inanspruchnahme/"
     ],
+    "method": "websearch",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2028-01-01",
@@ -233,6 +252,7 @@
     },
     "source_primary": "https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Soziales/Wohngeld/aktuell-wohngeld.html",
     "source_secondary": [],
+    "method": "websearch",
     "confidence": "high",
     "last_verified": "2026-09-10",
     "next_check_due": "2027-06-01",
