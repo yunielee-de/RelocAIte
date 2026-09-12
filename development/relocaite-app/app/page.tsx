@@ -110,7 +110,7 @@ function Sidebar({ active = "Home" }: { active?: "Home" | "My journey" }) {
     { label: "Resources", icon: BookOpen },
   ];
   return (
-    <aside className="hidden min-h-screen flex-col border-r border-border bg-white px-4 py-6 lg:flex">
+    <aside className="hidden min-h-screen flex-col border-r border-border bg-white px-3 py-6 md:flex">
       <div className="px-2"><Brand /></div>
       <nav className="mt-10 space-y-2" aria-label="Primary navigation">
         {navigation.map(({ label, icon: Icon }) => (
@@ -153,7 +153,7 @@ function AppHeader({
           >
             <ArrowLeft />
           </Button>
-          <div className="lg:hidden"><Brand /></div>
+          <div className="md:hidden"><Brand /></div>
         </div>
         <div className="hidden items-center gap-3 sm:flex">
           <span className="text-sm text-muted-foreground">
@@ -183,11 +183,11 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
     { title: "Tax Refund & Benefits", description: "Check what may apply to your situation.", icon: WalletCards, status: "Ready" },
   ];
   return (
-    <div className="min-h-screen bg-[#f7faff] text-foreground lg:grid lg:grid-cols-[220px_minmax(0,1fr)]">
+    <div className="min-h-screen bg-[#f7faff] text-foreground md:grid md:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)]">
       <Sidebar />
       <main className="min-w-0">
         <header className="flex h-[82px] items-center justify-between gap-5 border-b border-border bg-white px-5 md:px-8">
-          <div className="lg:hidden"><Brand /></div>
+          <div className="md:hidden"><Brand /></div>
           <div className="ml-auto flex items-center gap-4">
             <div className="hidden h-11 w-[290px] items-center gap-3 rounded-xl border border-border bg-[#fbfcff] px-4 text-sm text-muted-foreground shadow-sm sm:flex">
               <Search className="size-5" /> Search anything...
@@ -197,7 +197,7 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
         </header>
 
         <div className="mx-auto max-w-[1120px] px-5 py-7 md:px-8 md:py-9">
-          <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-end">
+          <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_260px] md:items-end xl:grid-cols-[minmax(0,1fr)_360px]">
             <div>
               <h1 className="text-[clamp(2rem,4vw,3rem)] font-semibold tracking-[-0.045em]">Hi Priya 👋</h1>
               <p className="mt-1 text-lg text-muted-foreground">Let’s get you set up in Germany.</p>
@@ -904,7 +904,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[220px_minmax(0,1fr)]">
+    <div className="min-h-screen bg-background text-foreground md:grid md:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)]">
       <Sidebar active="My journey" />
       <div className="min-w-0">
       <AppHeader step={step} onBack={() => goTo(previousStep[step])} />
