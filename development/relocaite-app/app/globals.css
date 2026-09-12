@@ -35,6 +35,11 @@
   --sidebar-accent-foreground: #175fbf;
   --sidebar-border: #dfe7f3;
   --sidebar-ring: #2f80ed;
+  /* RelocAIte type system: four sizes only. */
+  --type-label-size: 0.875rem;
+  --type-body-size: 1rem;
+  --type-heading-size: 1.5rem;
+  --type-display-size: clamp(2.5rem, 6vw, 4.5rem);
 }
 
 @theme inline {
@@ -75,5 +80,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+.type-label { font-size: var(--type-label-size); line-height: 1.35; }
+.type-body { font-size: var(--type-body-size); line-height: 1.6; }
+.type-heading { font-size: var(--type-heading-size); line-height: 1.2; }
+.type-display { font-size: var(--type-display-size); }
 button, a, input, select { -webkit-tap-highlight-color: transparent; }
 ::selection { background: #dcecff; color: #10183f; }

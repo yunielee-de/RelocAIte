@@ -11,6 +11,7 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  CircleCheck,
   ExternalLink,
   FileCheck2,
   FileText,
@@ -43,7 +44,7 @@ import {
 } from "@/components/ui/select";
 import type { Finding, Profile } from "@/lib/assessment";
 
-type Step = "welcome" | "profile" | "upload" | "confirm" | "results";
+type Step = "welcome" | "dashboard" | "profile" | "upload" | "confirm" | "results";
 type ExtractedFields = {
   employer: string;
   period: string;
@@ -117,15 +118,15 @@ function Sidebar({ active = "Home" }: { active?: "Home" | "My journey" }) {
           <button
             type="button"
             key={label}
-            className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors ${active === label ? "bg-[#eaf3ff] text-primary" : "text-[#52617d] hover:bg-[#f5f8fc]"}`}
+            className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left type-label font-medium transition-colors ${active === label ? "bg-[#eaf3ff] text-primary" : "text-[#52617d] hover:bg-[#f5f8fc]"}`}
           >
             <Icon className="size-5" /> {label}
           </button>
         ))}
       </nav>
       <div className="mt-auto space-y-2 border-t border-border pt-5">
-        <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#52617d]"><Settings className="size-5" /> Settings</button>
-        <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#52617d]"><LogOut className="size-5" /> Log out</button>
+        <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 type-label text-[#52617d]"><Settings className="size-5" /> Settings</button>
+        <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 type-label text-[#52617d]"><LogOut className="size-5" /> Log out</button>
       </div>
     </aside>
   );
@@ -156,7 +157,7 @@ function AppHeader({
           <div className="md:hidden"><Brand /></div>
         </div>
         <div className="hidden items-center gap-3 sm:flex">
-          <span className="text-sm text-muted-foreground">
+          <span className="type-label text-muted-foreground">
             Step {index + 1} of {stepOrder.length}
           </span>
           <Progress
@@ -164,16 +165,56 @@ function AppHeader({
             className="w-36 bg-primary/10 [&_[data-slot=progress-indicator]]:bg-primary"
           />
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <LockKeyhole className="size-4" aria-hidden="true" />
-          <span className="hidden md:inline">Private & secure</span>
-        </div>
       </div>
     </header>
   );
 }
 
 function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void }) {
+  return (
+    <main className="min-h-screen bg-[radial-gradient(circle_at_82%_10%,rgba(47,128,237,.10),transparent_25%),linear-gradient(180deg,#fbfdff_0%,#f4f8fe_100%)] text-foreground">
+      <header className="mx-auto flex w-full max-w-[1240px] items-center px-5 py-5 md:px-10">
+        <Brand />
+      </header>
+
+      <section className="mx-auto grid w-full max-w-[1240px] gap-8 px-5 pb-10 pt-5 md:px-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,.95fr)] lg:items-center lg:py-14">
+        <div className="max-w-2xl">
+          <h1 className="max-w-[720px] type-display font-semibold leading-[.94] tracking-[-0.065em]">Your Germany journey, made clearer.</h1>
+          <p className="mt-7 max-w-xl type-body leading-8 text-muted-foreground">Understand your next steps—from documents and deadlines to money and workplace opportunities—in one clear, sourced plan.</p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button size="lg" className="h-12 rounded-xl px-6 type-body shadow-[0_10px_28px_rgba(47,128,237,.24)]" onClick={onStart}>Start my journey <ArrowRight /></Button>
+            <Button variant="ghost" size="lg" className="h-12 rounded-xl px-5 type-body" onClick={onDemo}>Explore demo</Button>
+          </div>
+          <ul className="mt-8 grid gap-3 type-label text-muted-foreground sm:grid-cols-3">
+            {["Takes about 3 minutes", "Official sources included", "No legal jargon"].map((item) => <li className="flex items-center gap-2" key={item}><CircleCheck className="size-4 text-[#16a085]" />{item}</li>)}
+          </ul>
+        </div>
+
+        <div className="relative mx-auto w-full max-w-[520px]">
+          <div className="absolute -inset-5 -z-10 rounded-[2.2rem] bg-[radial-gradient(circle_at_30%_20%,rgba(47,128,237,.18),transparent_48%),radial-gradient(circle_at_80%_80%,rgba(38,185,154,.14),transparent_48%)] blur-xl" />
+          <div className="overflow-hidden rounded-[1.5rem] border border-border bg-card shadow-[0_24px_64px_rgba(39,79,132,.12)]">
+            <div className="flex items-center justify-between border-b border-border px-6 py-5">
+              <div className="flex items-center gap-3">
+                <img src="/priya-profile.png" alt="Priya’s profile" className="size-11 rounded-full object-cover ring-2 ring-white" />
+                <div><p className="type-label text-muted-foreground">Priya’s preview</p><p className="mt-1 type-body font-semibold">3 next steps identified</p></div>
+              </div>
+              <span className="rounded-full bg-[#dff8f1] px-3 py-1.5 type-label font-semibold text-[#087663]">Demo</span>
+            </div>
+            <div className="space-y-3 p-4 sm:p-6">
+              <article className="rounded-2xl bg-[linear-gradient(135deg,#2f80ed,#1768d3)] p-5 text-white"><div className="flex items-start justify-between gap-4"><p className="font-medium">Relocation costs</p><span className="rounded-full bg-white/12 px-2.5 py-1 type-label">Worth checking</span></div><p className="mt-6 type-heading font-semibold tracking-[-0.04em]">€2,400</p><p className="mt-2 type-label leading-6 text-white/70">Unreimbursed expenses to review before filing.</p></article>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <article className="rounded-2xl border border-border p-4"><p className="type-label font-semibold uppercase tracking-[.11em] text-muted-foreground">Deadline</p><p className="mt-3 font-semibold">Residence permit</p><p className="mt-1 type-label text-muted-foreground">Review in 43 days</p></article>
+                <article className="rounded-2xl border border-border p-4"><p className="type-label font-semibold uppercase tracking-[.11em] text-muted-foreground">Payslip</p><p className="mt-3 font-semibold">Core fields identified</p><p className="mt-1 type-label text-muted-foreground">1 item to confirm</p></article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function Dashboard({ onStart, onDemo }: { onStart: () => void; onDemo: () => void }) {
   const journey = [
     { title: "Job Offer & Contract", description: "Check, accept and understand your offer.", icon: BriefcaseBusiness, status: "Completed" },
     { title: "Visa Application", description: "Get the right visa with the right documents.", icon: FileText, status: "Completed" },
@@ -186,40 +227,39 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
     <div className="min-h-screen bg-[#f7faff] text-foreground md:grid md:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)]">
       <Sidebar />
       <main className="min-w-0">
-        <header className="flex h-[82px] items-center justify-between gap-5 border-b border-border bg-white px-5 md:px-8">
+        <header className="flex h-[82px] items-center justify-between gap-5 px-5 md:px-8">
           <div className="md:hidden"><Brand /></div>
           <div className="ml-auto flex items-center gap-4">
-            <div className="hidden h-11 w-[290px] items-center gap-3 rounded-xl border border-border bg-[#fbfcff] px-4 text-sm text-muted-foreground shadow-sm sm:flex">
+            <div className="hidden h-11 w-[290px] items-center gap-3 rounded-xl border border-border bg-[#fbfcff] px-4 type-label text-muted-foreground shadow-sm sm:flex">
               <Search className="size-5" /> Search anything...
             </div>
-            <div className="grid size-11 place-items-center rounded-full bg-[#111b42] text-sm font-semibold text-white">PR</div>
+            <img src="/priya-profile.png" alt="Priya’s profile" className="size-11 rounded-full border-2 border-white object-cover shadow-sm" />
           </div>
         </header>
 
         <div className="mx-auto max-w-[1120px] px-5 py-7 md:px-8 md:py-9">
           <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_260px] md:items-end xl:grid-cols-[minmax(0,1fr)_360px]">
             <div>
-              <h1 className="text-[clamp(2rem,4vw,3rem)] font-semibold tracking-[-0.045em]">Hi Priya 👋</h1>
-              <p className="mt-1 text-lg text-muted-foreground">Let’s get you set up in Germany.</p>
+              <h1 className="type-heading font-semibold tracking-[-0.045em]">Hi Priya</h1>
+              <p className="mt-1 type-body text-muted-foreground">Let’s get you set up in Germany.</p>
               <div className="mt-6 rounded-2xl border border-border bg-white p-5 shadow-[0_8px_28px_rgba(39,79,132,.06)]">
                 <div className="flex items-end justify-between">
-                  <div><p className="font-semibold">Your journey</p><p className="mt-1 text-sm text-muted-foreground">2 of 6 steps completed</p></div>
-                  <span className="text-lg font-semibold text-primary">33%</span>
+                  <div><p className="font-semibold">Your journey</p><p className="mt-1 type-label text-muted-foreground">2 of 6 steps completed</p></div>
+                  <span className="type-body font-semibold text-primary">33%</span>
                 </div>
                 <Progress value={33} className="mt-4 h-3 bg-[#e8eef7] [&_[data-slot=progress-indicator]]:bg-primary" />
               </div>
             </div>
-            <div className="relative min-h-[188px] overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#d9efff_0%,#f2f8ff_58%,#c7e2f6_100%)] p-7 shadow-[0_8px_28px_rgba(39,79,132,.08)]">
-              <p className="relative z-10 text-xl font-medium leading-7">A new chapter<br />awaits.</p>
-              <div className="mt-4 h-0.5 w-8 bg-foreground" />
-              <div className="absolute bottom-0 right-5 flex h-24 items-end gap-2 opacity-45" aria-hidden="true">
-                {[38,62,48,86,54,70].map((height, index) => <span key={index} className="w-7 rounded-t-sm bg-[#367ca6]" style={{ height }} />)}
-                <span className="mb-0 h-32 w-1 bg-[#18395a]" />
-              </div>
+            <div className="relative min-h-[188px] overflow-hidden rounded-2xl bg-[#18395a] p-7 text-white shadow-[0_8px_28px_rgba(39,79,132,.08)]">
+              <img src="/berlin-reichstag.jpg" alt="The Reichstag beside the River Spree in Berlin" className="absolute inset-0 size-full object-cover" />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,28,52,.76)_0%,rgba(8,28,52,.25)_62%,rgba(8,28,52,.05)_100%)]" />
+              <p className="relative z-10 type-heading font-medium leading-7">A new chapter<br />awaits.</p>
+              <div className="relative z-10 mt-4 h-0.5 w-8 bg-white" />
+              <a href="https://commons.wikimedia.org/wiki/File:Berlin_Reichstag_Bundestag_von_der_Spree_aus_gesehen.JPG" target="_blank" rel="noreferrer" className="absolute bottom-2 right-3 z-10 type-label text-white/75 hover:text-white">Photo: Schlaier · Public domain</a>
             </div>
           </div>
 
-          <h2 className="mb-4 mt-7 text-xl font-semibold">Your steps</h2>
+          <h2 className="mb-4 mt-7 type-heading font-semibold">Your steps</h2>
           <div className="space-y-3">
             {journey.map(({ title, description, icon: Icon, status }, index) => {
               const active = status === "In progress";
@@ -227,15 +267,15 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
               const complete = status === "Completed";
               return (
                 <article key={title} className={`grid gap-4 rounded-2xl border bg-white p-4 shadow-[0_5px_20px_rgba(39,79,132,.045)] sm:grid-cols-[40px_64px_minmax(0,1fr)_auto_24px] sm:items-center ${active || ready ? "border-[#9cc8ff]" : "border-border"}`}>
-                  <span className="grid size-9 place-items-center rounded-full bg-[#f0f4fa] text-sm font-semibold text-[#536481]">{index + 1}</span>
+                  <span className="grid size-9 place-items-center rounded-full bg-[#f0f4fa] type-label font-semibold text-[#536481]">{index + 1}</span>
                   <span className={`grid size-14 place-items-center rounded-xl ${complete ? "bg-[#e6f8f3] text-[#13a487]" : ready || active ? "bg-[#eaf3ff] text-primary" : "bg-[#f1f4f9] text-[#536481]"}`}><Icon className="size-7" /></span>
                   <div>
                     <h3 className="font-semibold">{title}</h3>
-                    <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>
-                    {active ? <button type="button" onClick={onDemo} className="mt-2 rounded-full bg-primary px-6 py-2 text-sm font-medium text-white">Continue</button> : null}
-                    {ready ? <button type="button" onClick={onStart} className="mt-2 text-sm font-semibold text-primary">Start check</button> : null}
+                    <p className="mt-0.5 type-label text-muted-foreground">{description}</p>
+                    {active ? <button type="button" onClick={onDemo} className="mt-2 rounded-full bg-primary px-6 py-2 type-label font-medium text-white">Continue</button> : null}
+                    {ready ? <button type="button" onClick={onStart} className="mt-2 type-label font-semibold text-primary">Start check</button> : null}
                   </div>
-                  <span className={`w-fit rounded-full px-3 py-1.5 text-xs font-medium ${complete ? "bg-[#def7f0] text-[#07866f]" : active ? "bg-[#eaf3ff] text-[#1768d3]" : ready ? "bg-[#eaf3ff] text-[#1768d3]" : "bg-[#f1f4f8] text-[#52617d]"}`}>
+                  <span className={`w-fit rounded-full px-3 py-1.5 type-label font-medium ${complete ? "bg-[#def7f0] text-[#07866f]" : active ? "bg-[#eaf3ff] text-[#1768d3]" : ready ? "bg-[#eaf3ff] text-[#1768d3]" : "bg-[#f1f4f8] text-[#52617d]"}`}>
                     {complete ? "✓ Completed" : status}
                   </span>
                   <ArrowRight className="hidden size-5 text-[#536481] sm:block" />
@@ -246,7 +286,7 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
 
           <div className="mt-4 flex flex-col gap-4 rounded-2xl border border-border bg-white p-4 shadow-[0_5px_20px_rgba(39,79,132,.045)] sm:flex-row sm:items-center">
             <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#eaf3ff] text-primary"><Sparkles className="size-5" /></span>
-            <div className="flex-1"><p className="font-semibold">Need help with your next step?</p><p className="text-sm text-muted-foreground">Ask our AI assistant about working and living in Germany.</p></div>
+            <div className="flex-1"><p className="font-semibold">Need help with your next step?</p><p className="type-label text-muted-foreground">Ask our AI assistant about working and living in Germany.</p></div>
             <Button variant="secondary" className="rounded-full"><MessageSquare /> Ask AI assistant</Button>
           </div>
         </div>
@@ -266,9 +306,9 @@ function Field({
 }) {
   return (
     <label className="grid gap-2">
-      <span className="text-sm font-medium">{label}</span>
+      <span className="type-label font-medium">{label}</span>
       {children}
-      {note ? <span className="text-xs leading-5 text-muted-foreground">{note}</span> : null}
+      {note ? <span className="type-label leading-5 text-muted-foreground">{note}</span> : null}
     </label>
   );
 }
@@ -292,14 +332,14 @@ function ProfileStep({
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="First name">
           <Input
-            className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+            className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
             value={profile.name}
             onChange={(event) => setProfile({ ...profile, name: event.target.value })}
           />
         </Field>
         <Field label="German city">
           <Input
-            className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+            className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
             value={profile.city}
             onChange={(event) => setProfile({ ...profile, city: event.target.value })}
           />
@@ -309,7 +349,7 @@ function ProfileStep({
             value={profile.federalState}
             onValueChange={(value) => setProfile({ ...profile, federalState: value })}
           >
-            <SelectTrigger className="h-12 w-full rounded-xl bg-white px-4 text-base shadow-xs">
+            <SelectTrigger className="h-12 w-full rounded-xl bg-white px-4 type-body shadow-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -325,7 +365,7 @@ function ProfileStep({
         <Field label="Arrival date">
           <Input
             type="date"
-            className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+            className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
             value={profile.arrivalDate}
             onChange={(event) => setProfile({ ...profile, arrivalDate: event.target.value })}
           />
@@ -335,7 +375,7 @@ function ProfileStep({
             value={profile.permit}
             onValueChange={(value) => setProfile({ ...profile, permit: value })}
           >
-            <SelectTrigger className="h-12 w-full rounded-xl bg-white px-4 text-base shadow-xs">
+            <SelectTrigger className="h-12 w-full rounded-xl bg-white px-4 type-body shadow-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -350,7 +390,7 @@ function ProfileStep({
           <Field label="Permit expiry">
             <Input
               type="date"
-              className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+              className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
               value={profile.permitExpiry}
               onChange={(event) => setProfile({ ...profile, permitExpiry: event.target.value })}
             />
@@ -360,7 +400,7 @@ function ProfileStep({
           <Input
             type="number"
             min="0"
-            className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+            className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
             value={profile.grossSalary}
             onChange={(event) => setProfile({ ...profile, grossSalary: Number(event.target.value) })}
           />
@@ -369,7 +409,7 @@ function ProfileStep({
           <Input
             type="number"
             min="0"
-            className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+            className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
             value={profile.employmentMonths}
             onChange={(event) => setProfile({ ...profile, employmentMonths: Number(event.target.value) })}
           />
@@ -379,7 +419,7 @@ function ProfileStep({
             type="number"
             min="0"
             max="10"
-            className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+            className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
             value={profile.educationDaysUsed}
             onChange={(event) => setProfile({ ...profile, educationDaysUsed: Number(event.target.value) })}
           />
@@ -389,7 +429,7 @@ function ProfileStep({
             value={String(profile.remoteDaysPerWeek)}
             onValueChange={(value) => setProfile({ ...profile, remoteDaysPerWeek: Number(value) })}
           >
-            <SelectTrigger className="h-12 w-full rounded-xl bg-white px-4 text-base shadow-xs">
+            <SelectTrigger className="h-12 w-full rounded-xl bg-white px-4 type-body shadow-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -410,7 +450,7 @@ function ProfileStep({
           />
           <span>
             <span className="block font-medium">I moved to Germany for this job</span>
-            <span className="mt-1 block text-sm leading-6 text-muted-foreground">This helps identify relocation-related records worth reviewing.</span>
+            <span className="mt-1 block type-label leading-6 text-muted-foreground">This helps identify relocation-related records worth reviewing.</span>
           </span>
         </label>
         <label className="flex cursor-pointer items-start gap-3">
@@ -421,7 +461,7 @@ function ProfileStep({
           />
           <span>
             <span className="block font-medium">I already filed this year’s German tax return</span>
-            <span className="mt-1 block text-sm leading-6 text-muted-foreground">This avoids showing a filing action you have already completed.</span>
+            <span className="mt-1 block type-label leading-6 text-muted-foreground">This avoids showing a filing action you have already completed.</span>
           </span>
         </label>
         <label className="flex cursor-pointer items-start gap-3">
@@ -432,7 +472,7 @@ function ProfileStep({
           />
           <span>
             <span className="block font-medium">I had income outside Germany this tax year</span>
-            <span className="mt-1 block text-sm leading-6 text-muted-foreground">We use this only to identify when professional review is safer.</span>
+            <span className="mt-1 block type-label leading-6 text-muted-foreground">We use this only to identify when professional review is safer.</span>
           </span>
         </label>
       </div>
@@ -443,7 +483,7 @@ function ProfileStep({
             <Input
               type="number"
               min="0"
-              className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+              className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
               value={profile.relocationSpend}
               onChange={(event) => setProfile({ ...profile, relocationSpend: Number(event.target.value) })}
             />
@@ -452,7 +492,7 @@ function ProfileStep({
             <Input
               type="number"
               min="0"
-              className="h-12 rounded-xl bg-white px-4 text-base md:text-base"
+              className="h-12 rounded-xl bg-white px-4 type-body md:type-body"
               value={profile.employerReimbursement}
               onChange={(event) => setProfile({ ...profile, employerReimbursement: Number(event.target.value) })}
             />
@@ -463,7 +503,7 @@ function ProfileStep({
       <div className="mt-8 flex justify-end">
         <Button
           size="lg"
-          className="h-12 rounded-xl px-6 text-base"
+          className="h-12 rounded-xl px-6 type-body"
           onClick={onNext}
           disabled={!profile.name || !profile.city || !profile.arrivalDate}
         >
@@ -481,12 +521,12 @@ function ProfileAside() {
         <ShieldCheck className="size-6" />
       </div>
       <div>
-        <p className="text-xl font-semibold tracking-[-0.02em]">Why these questions?</p>
+        <p className="type-heading font-semibold tracking-[-0.02em]">Why these questions?</p>
         <p className="mt-3 leading-7 text-muted-foreground">
           Dates, residence status, and employment facts determine which rules are relevant. Missing facts are shown as questions—not guessed.
         </p>
       </div>
-      <div className="border-t border-border pt-5 text-sm leading-6 text-muted-foreground">
+      <div className="border-t border-border pt-5 type-label leading-6 text-muted-foreground">
         Prototype note: information remains in this browser session and is used only to generate the demo assessment.
       </div>
     </div>
@@ -509,9 +549,9 @@ function StepShell({
   return (
     <main className="mx-auto grid w-full max-w-[1160px] gap-8 px-5 py-9 md:px-10 md:py-14 lg:grid-cols-[minmax(0,1fr)_300px]">
       <section>
-        <p className="text-sm font-semibold uppercase tracking-[.13em] text-[#1768d3]">{eyebrow}</p>
-        <h1 className="mt-3 max-w-2xl text-[clamp(2.15rem,5vw,3.7rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{title}</h1>
-        <p className="mb-9 mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">{description}</p>
+        <p className="type-label font-semibold uppercase tracking-[.13em] text-[#1768d3]">{eyebrow}</p>
+        <h1 className="mt-3 max-w-2xl type-display font-semibold leading-[1.02] tracking-[-0.055em]">{title}</h1>
+        <p className="mb-9 mt-4 max-w-2xl type-body leading-8 text-muted-foreground">{description}</p>
         {children}
       </section>
       {side ? <aside className="h-fit rounded-[1.25rem] border border-[#dce8f8] bg-[#eef5ff] p-6 shadow-[0_12px_36px_rgba(39,79,132,.06)] lg:sticky lg:top-8">{side}</aside> : null}
@@ -560,8 +600,8 @@ function UploadStep({
       side={
         <div>
           <FileCheck2 className="size-8 text-[#2f80ed]" />
-          <p className="mt-5 text-lg font-semibold">What we look for</p>
-          <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
+          <p className="mt-5 type-body font-semibold">What we look for</p>
+          <ul className="mt-4 space-y-3 type-label leading-6 text-muted-foreground">
             {["Gross and net salary", "Tax class", "Employer and pay period", "Health insurance label"].map((item) => (
               <li className="flex gap-2" key={item}><Check className="mt-1 size-4 shrink-0 text-[#16a085]" />{item}</li>
             ))}
@@ -582,7 +622,7 @@ function UploadStep({
           <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#eaf3ff] text-[#2f80ed]">
             <UploadCloud className="size-8" />
           </div>
-          <h2 className="mt-6 text-xl font-semibold">Drop your payslip here</h2>
+          <h2 className="mt-6 type-heading font-semibold">Drop your payslip here</h2>
           <p className="mt-2 leading-7 text-muted-foreground">PDF, JPG, or PNG. For this prototype, any file uses a safe synthetic extraction response.</p>
           <Input
             ref={inputRef}
@@ -622,10 +662,10 @@ function UploadStep({
           >
             Skip the document and confirm details manually
           </Button>
-          {error ? <p role="alert" className="mt-4 text-sm text-destructive">{error}</p> : null}
+          {error ? <p role="alert" className="mt-4 type-label text-destructive">{error}</p> : null}
         </div>
       </div>
-      <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+      <p className="mt-4 flex items-center gap-2 type-label text-muted-foreground">
         <LockKeyhole className="size-4" /> Your document is not stored by this prototype.
       </p>
     </StepShell>
@@ -664,8 +704,8 @@ function ConfirmStep({
         <div>
           <div className="grid size-12 place-items-center rounded-2xl bg-[#dff8f1] text-[#087663]"><FileCheck2 /></div>
           <p className="mt-5 font-semibold">Document read</p>
-          <p className="mt-1 break-all text-sm leading-6 text-muted-foreground">{fileName}</p>
-          <div className="mt-5 border-t border-border pt-5 text-sm leading-6 text-muted-foreground">
+          <p className="mt-1 break-all type-label leading-6 text-muted-foreground">{fileName}</p>
+          <div className="mt-5 border-t border-border pt-5 type-label leading-6 text-muted-foreground">
             Relocaite never silently treats uncertain extraction as fact.
           </div>
         </div>
@@ -674,9 +714,9 @@ function ConfirmStep({
       <div className="overflow-hidden rounded-[1.5rem] border border-border bg-white">
         {rows.map((row, index) => (
           <div className={`grid gap-2 px-5 py-4 sm:grid-cols-[170px_minmax(0,1fr)_130px] sm:items-center ${index ? "border-t border-border" : ""}`} key={row.key}>
-            <label className="text-sm font-medium" htmlFor={row.key}>{row.label}</label>
+            <label className="type-label font-medium" htmlFor={row.key}>{row.label}</label>
             <div className="relative">
-              {row.suffix ? <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">{row.suffix}</span> : null}
+              {row.suffix ? <span className="absolute left-3 top-1/2 -translate-y-1/2 type-label text-muted-foreground">{row.suffix}</span> : null}
               <Input
                 id={row.key}
                 className={`h-10 rounded-lg bg-[#f7faff] ${row.suffix ? "pl-7" : ""}`}
@@ -684,16 +724,16 @@ function ConfirmStep({
                 onChange={(event) => setFields({ ...fields, [row.key]: event.target.value })}
               />
             </div>
-            <span className={`flex items-center gap-1.5 text-xs font-medium ${row.confidence.startsWith("High") ? "text-[#087663]" : "text-[#9a651d]"}`}>
+            <span className={`flex items-center gap-1.5 type-label font-medium ${row.confidence.startsWith("High") ? "text-[#087663]" : "text-[#9a651d]"}`}>
               <span className={`size-2 rounded-full ${row.confidence.startsWith("High") ? "bg-[#26b99a]" : "bg-[#e2a547]"}`} />
               {row.confidence}
             </span>
           </div>
         ))}
       </div>
-      {error ? <p role="alert" className="mt-4 text-sm text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="mt-4 type-label text-destructive">{error}</p> : null}
       <div className="mt-8 flex justify-end">
-        <Button size="lg" className="h-12 rounded-xl px-6 text-base" onClick={onAssess} disabled={busy}>
+        <Button size="lg" className="h-12 rounded-xl px-6 type-body" onClick={onAssess} disabled={busy}>
           {busy ? <><RefreshCw className="animate-spin" /> Building your plan</> : <>Show my next steps <Sparkles /></>}
         </Button>
       </div>
@@ -728,11 +768,11 @@ function ResultsStep({
     <main className="mx-auto w-full max-w-[1160px] px-5 py-8 md:px-10 md:py-12">
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[.13em] text-[#1768d3]">Your next steps</p>
-          <h1 className="mt-3 text-[clamp(2.4rem,6vw,4.5rem)] font-semibold leading-none tracking-[-0.06em]">
+          <p className="type-label font-semibold uppercase tracking-[.13em] text-[#1768d3]">Your next steps</p>
+          <h1 className="mt-3 type-display font-semibold leading-none tracking-[-0.06em]">
             {profile.name}, here’s what to do next.
           </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
+          <p className="mt-4 max-w-2xl type-body leading-8 text-muted-foreground">
             We matched your confirmed facts against {findings.length} relevant checks. Every result explains its evidence and limits.
           </p>
         </div>
@@ -743,16 +783,16 @@ function ResultsStep({
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl bg-[linear-gradient(135deg,#2f80ed,#1768d3)] p-5 text-white shadow-[0_14px_32px_rgba(47,128,237,.18)]">
-          <p className="text-sm text-white/65">Actions identified</p>
-          <p className="mt-3 text-3xl font-semibold">{findings.length}</p>
+          <p className="type-label text-white/65">Actions identified</p>
+          <p className="mt-3 type-heading font-semibold">{findings.length}</p>
         </div>
         <div className="rounded-2xl bg-[#dff8f1] p-5 text-[#087663]">
-          <p className="text-sm text-[#087663]/70">Expenses to review</p>
-          <p className="mt-3 text-3xl font-semibold">€{moneyTotal.toLocaleString("en-DE")}</p>
+          <p className="type-label text-[#087663]/70">Expenses to review</p>
+          <p className="mt-3 type-heading font-semibold">€{moneyTotal.toLocaleString("en-DE")}</p>
         </div>
         <div className="rounded-2xl border border-border bg-white p-5">
-          <p className="text-sm text-muted-foreground">Profile</p>
-          <p className="mt-3 text-lg font-semibold">{profile.city} · {profile.permit}</p>
+          <p className="type-label text-muted-foreground">Profile</p>
+          <p className="mt-3 type-body font-semibold">{profile.city} · {profile.permit}</p>
         </div>
       </div>
 
@@ -771,13 +811,13 @@ function ResultsStep({
               >
                 <span className={`grid size-12 place-items-center rounded-2xl ${meta.tone}`}><Icon /></span>
                 <span>
-                  <span className="text-xs font-semibold uppercase tracking-[.11em] text-muted-foreground">{index + 1}. {meta.label}</span>
-                  <span className="mt-1 block text-lg font-semibold">{finding.title}</span>
-                  <span className="mt-1 block text-sm leading-6 text-muted-foreground">{finding.summary}</span>
+                  <span className="type-label font-semibold uppercase tracking-[.11em] text-muted-foreground">{index + 1}. {meta.label}</span>
+                  <span className="mt-1 block type-body font-semibold">{finding.title}</span>
+                  <span className="mt-1 block type-label leading-6 text-muted-foreground">{finding.summary}</span>
                 </span>
                 <span className="sm:text-right">
-                  <span className="block text-xl font-semibold">{finding.value}</span>
-                  <span className="mt-1 block text-xs font-medium text-muted-foreground">{finding.status}</span>
+                  <span className="block type-heading font-semibold">{finding.value}</span>
+                  <span className="mt-1 block type-label font-medium text-muted-foreground">{finding.status}</span>
                 </span>
                 {isOpen ? <ChevronUp /> : <ChevronDown />}
               </button>
@@ -785,16 +825,16 @@ function ResultsStep({
                 <div className="border-t border-border bg-[#f7faff] px-5 py-5 md:px-[88px] md:py-6">
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
-                      <p className="text-sm font-semibold">Why this appeared</p>
-                      <p className="mt-2 text-sm leading-7 text-muted-foreground">{finding.reason}</p>
+                      <p className="type-label font-semibold">Why this appeared</p>
+                      <p className="mt-2 type-label leading-7 text-muted-foreground">{finding.reason}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Recommended next step</p>
-                      <p className="mt-2 text-sm leading-7 text-muted-foreground">{finding.action}</p>
+                      <p className="type-label font-semibold">Recommended next step</p>
+                      <p className="mt-2 type-label leading-7 text-muted-foreground">{finding.action}</p>
                     </div>
                   </div>
                   {finding.destination ? (
-                    <div className="mt-5 rounded-xl border border-border bg-white px-4 py-3 text-sm">
+                    <div className="mt-5 rounded-xl border border-border bg-white px-4 py-3 type-label">
                       <span className="font-semibold">Where it goes:</span>{" "}
                       <span className="text-muted-foreground">{finding.destination}</span>
                     </div>
@@ -802,7 +842,7 @@ function ResultsStep({
                   {finding.draft ? (
                     <div className="mt-5">
                       <div className="mb-2 flex items-center justify-between gap-3">
-                        <p className="text-sm font-semibold">Ready-to-edit request</p>
+                        <p className="type-label font-semibold">Ready-to-edit request</p>
                         <Button
                           type="button"
                           variant="outline"
@@ -817,16 +857,16 @@ function ResultsStep({
                         </Button>
                       </div>
                       <textarea
-                        className="min-h-48 w-full resize-y rounded-xl border border-border bg-white p-4 text-sm leading-6 outline-none focus:border-ring focus:ring-3 focus:ring-ring/30"
+                        className="min-h-48 w-full resize-y rounded-xl border border-border bg-white p-4 type-label leading-6 outline-none focus:border-ring focus:ring-3 focus:ring-ring/30"
                         readOnly
                         value={finding.draft}
                         aria-label={`Draft request for ${finding.title}`}
                       />
-                      <p className="mt-2 text-xs leading-5 text-muted-foreground">Relocaite prepares the draft. You review and send it yourself.</p>
+                      <p className="mt-2 type-label leading-5 text-muted-foreground">Relocaite prepares the draft. You review and send it yourself.</p>
                     </div>
                   ) : null}
                   <a
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#1768d3] underline decoration-[#8abcf5] underline-offset-4"
+                    className="mt-5 inline-flex items-center gap-2 type-label font-semibold text-[#1768d3] underline decoration-[#8abcf5] underline-offset-4"
                     href={finding.source.url}
                     target="_blank"
                     rel="noreferrer"
@@ -840,7 +880,7 @@ function ResultsStep({
         })}
       </div>
 
-      <div className="mt-8 flex items-start gap-3 rounded-2xl border border-[#dce8f8] bg-[#eef5ff] p-5 text-sm leading-6 text-muted-foreground">
+      <div className="mt-8 flex items-start gap-3 rounded-2xl border border-[#dce8f8] bg-[#eef5ff] p-5 type-label leading-6 text-muted-foreground">
         <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#1768d3]" />
         <p>{disclaimer}</p>
       </div>
@@ -858,7 +898,7 @@ export default function Home() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const previousStep = useMemo<Record<Exclude<Step, "welcome">, Step>>(
+  const previousStep = useMemo<Record<Exclude<Step, "welcome" | "dashboard">, Step>>(
     () => ({ profile: "welcome", upload: "profile", confirm: "upload", results: "confirm" }),
     [],
   );
@@ -897,8 +937,17 @@ export default function Home() {
         onStart={() => goTo("profile")}
         onDemo={() => {
           setProfile(defaultProfile);
-          goTo("profile");
+          goTo("dashboard");
         }}
+      />
+    );
+  }
+
+  if (step === "dashboard") {
+    return (
+      <Dashboard
+        onStart={() => goTo("profile")}
+        onDemo={() => goTo("profile")}
       />
     );
   }
