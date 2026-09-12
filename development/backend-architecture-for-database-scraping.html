@@ -1,0 +1,299 @@
+<!doctype html>
+<title>Scraping & Source Pipeline</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF2FA;
+    --surface: #FFFFFF;
+    --surface-sunken: #F5F7FC;
+    --ink: #101B36;
+    --ink-soft: #56618A;
+    --ink-faint: #8992B5;
+    --line: #DBE1F2;
+    --accent: #2B3E8C;
+    --accent-bright: #3452E0;
+    --accent-tint: #E7EBFC;
+    --good: #1F7A4C;
+    --good-tint: #E5F3EA;
+    --caution: #96650A;
+    --caution-tint: #FBF0DC;
+    --critical: #B23A2E;
+    --critical-tint: #FBE7E4;
+    --font-display: "Manrope", -apple-system, sans-serif;
+    --font-body: "Manrope", -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1020; --surface: #131A30; --surface-sunken: #0F1526;
+      --ink: #E7EBFA; --ink-soft: #AAB4DA; --ink-faint: #6E799E;
+      --line: #263056; --accent: #7C90F0; --accent-bright: #96A6FF; --accent-tint: #1C2444;
+      --good: #5FCE93; --good-tint: #123322; --caution: #E3B84C; --caution-tint: #392B10;
+      --critical: #F0897C; --critical-tint: #3A1A17;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1020; --surface: #131A30; --surface-sunken: #0F1526;
+    --ink: #E7EBFA; --ink-soft: #AAB4DA; --ink-faint: #6E799E;
+    --line: #263056; --accent: #7C90F0; --accent-bright: #96A6FF; --accent-tint: #1C2444;
+    --good: #5FCE93; --good-tint: #123322; --caution: #E3B84C; --caution-tint: #392B10;
+    --critical: #F0897C; --critical-tint: #3A1A17;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 34px 20px 60px; display: flex; flex-direction: column; gap: 30px; }
+
+  /* header */
+  header { display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); }
+  h1 { font-family: var(--font-display); font-size: clamp(24px, 3.4vw, 31px); font-weight: 800; margin: 0; text-wrap: balance; }
+  .lede { font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; max-width: 66ch; margin: 0; }
+
+  /* two-track split */
+  .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .track {
+    border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; background: var(--surface);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .track.in-scope { border-color: var(--accent); background: var(--accent-tint); }
+  .track .tt { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .track .tt .chip {
+    font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .04em;
+    padding: 2px 7px; border-radius: 10px; font-weight: 600;
+  }
+  .track.in-scope .chip { background: var(--accent); color: #fff; }
+  .track.out-scope .chip { background: var(--surface-sunken); color: var(--ink-faint); border: 1px solid var(--line); }
+  .track p { margin: 0; font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; }
+
+  /* section label */
+  .section-label {
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--ink-faint); display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* tools row */
+  .tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .tool-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 15px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .tool-card .name { font-family: var(--font-mono); font-size: 13px; font-weight: 600; }
+  .tool-status { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; width: fit-content; padding: 2px 8px; border-radius: 10px; }
+  .tool-status.ok { background: var(--good-tint); color: var(--good); }
+  .tool-status.no { background: var(--critical-tint); color: var(--critical); }
+  .tool-card .desc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* pipeline */
+  .pipeline { display: flex; align-items: stretch; gap: 0; }
+  .stage {
+    flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 15px; display: flex; flex-direction: column; gap: 8px; position: relative;
+  }
+  .stage .num {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff;
+    font-family: var(--font-mono); font-weight: 700; font-size: 11px; display: flex; align-items: center; justify-content: center;
+  }
+  .stage .stitle { font-size: 13px; font-weight: 700; }
+  .stage .stool { font-family: var(--font-mono); font-size: 10.5px; color: var(--accent); }
+  .stage .sdesc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.5; }
+  .stage.manual { border-style: dashed; }
+  .stage.manual .num { background: var(--caution); }
+  .arrow { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 26px; color: var(--ink-faint); font-size: 16px; }
+
+  /* schema card */
+  .schema-wrap { display: grid; grid-template-columns: 1fr 1.15fr; gap: 16px; align-items: start; }
+  .schema-code {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+    font-family: var(--font-mono); font-size: 12px; line-height: 1.75; overflow-x: auto; color: var(--ink-soft);
+  }
+  .schema-code .k { color: var(--accent); }
+  .schema-code .s { color: var(--good); }
+  .schema-code .punct { color: var(--ink-faint); }
+  .schema-notes { display: flex; flex-direction: column; gap: 10px; }
+  .schema-note {
+    background: var(--surface); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+    padding: 10px 14px; font-size: 12px; color: var(--ink-soft); line-height: 1.5;
+  }
+  .schema-note b { color: var(--ink); font-family: var(--font-mono); font-weight: 600; }
+
+  /* journey segments */
+  .segs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .seg {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 13px 12px;
+    display: flex; flex-direction: column; gap: 7px; text-align: center; align-items: center;
+  }
+  .seg .segnum { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); letter-spacing: .04em; }
+  .seg .segname { font-size: 12.5px; font-weight: 700; line-height: 1.3; }
+  .seg-status { font-family: var(--font-mono); font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .seg-status.done { background: var(--good-tint); color: var(--good); }
+  .seg-status.partial { background: var(--caution-tint); color: var(--caution); }
+  .seg-fill { width: 100%; height: 5px; border-radius: 3px; background: var(--surface-sunken); overflow: hidden; }
+  .seg-fill i { display: block; height: 100%; background: var(--good); border-radius: 3px; }
+  .seg-status.partial ~ .seg-fill i, .seg .partial-fill { background: var(--caution); }
+
+  .foot-note { font-size: 12px; color: var(--ink-faint); text-align: center; line-height: 1.6; }
+  .foot-note code { font-family: var(--font-mono); background: var(--surface-sunken); padding: 1px 6px; border-radius: 5px; color: var(--ink-soft); }
+
+  @media (max-width: 760px) {
+    .tracks, .tools, .schema-wrap { grid-template-columns: 1fr; }
+    .segs { grid-template-columns: repeat(2, 1fr); }
+    .pipeline { flex-direction: column; }
+    .arrow { transform: rotate(90deg); width: auto; height: 22px; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">RelocAIte &middot; Development</span>
+    <h1>How the source pipeline actually runs</h1>
+    <p class="lede">Every legal/financial figure the product shows (Bildungsurlaub days, Homeoffice-Pauschale caps, Blue Card thresholds) comes from this pipeline into <code style="font-family:var(--font-mono);background:var(--surface-sunken);padding:1px 6px;border-radius:5px;">sources.json</code> &mdash; never guessed, never hardcoded in the UI.</p>
+  </header>
+
+  <div class="tracks">
+    <div class="track in-scope">
+      <div class="tt">Scraping public legal content <span class="chip">This pipeline</span></div>
+      <p>Collecting rules like &ldquo;Bildungsurlaub in Hessen = 5 days, 6-month wait.&rdquo; Static public information &mdash; RDG/StBerG regulate <em>giving advice</em>, not <em>collecting public facts</em>, so there's no legal exposure here.</p>
+    </div>
+    <div class="track out-scope">
+      <div class="tt">Parsing user-uploaded documents <span class="chip">Separate stack</span></div>
+      <p>Reading an uploaded payslip or contract isn't scraping &mdash; it's an OCR/Document-AI problem (Mindee, Affinda-style commercial APIs). Different stack, out of scope for this diagram.</p>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label" style="margin-bottom:12px;">Tools &mdash; verified status, not assumed</div>
+    <div class="tools">
+      <div class="tool-card">
+        <span class="name">scrapling</span>
+        <span class="tool-status ok">&#10003; Installed</span>
+        <p class="desc">Default choice. Static pages, stealthy-fetch for bot-guarded sites, full-browser fetch for JS-heavy pages.</p>
+      </div>
+      <div class="tool-card">
+        <span class="name">Playwright (MCP)</span>
+        <span class="tool-status ok">&#10003; Verified working</span>
+        <p class="desc">Anything needing real interaction &mdash; filling a questionnaire, clicking through a flow, confirming what a competitor's product shows.</p>
+      </div>
+      <div class="tool-card">
+        <span class="name">WebSearch / WebFetch</span>
+        <span class="tool-status ok">&#10003; Built-in</span>
+        <p class="desc">Fast fact-finding without a known URL yet. What most legal/market research so far actually used.</p>
+      </div>
+      <div class="tool-card">
+        <span class="name">firecrawl CLI</span>
+        <span class="tool-status no">&#10007; Not installed</span>
+        <p class="desc">Would add site-wide <code style="font-family:inherit;">map</code>, schema <code style="font-family:inherit;">agent</code> extraction, and scheduled <code style="font-family:inherit;">monitor</code> &mdash; only worth setting up at scale.</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label" style="margin-bottom:12px;">The 5-stage pipeline</div>
+    <div class="pipeline">
+      <div class="stage">
+        <span class="num">1</span>
+        <span class="stitle">Discover</span>
+        <span class="stool">WebSearch / scrapling</span>
+        <span class="sdesc">Find candidate URLs against a known government portal.</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+      <div class="stage">
+        <span class="num">2</span>
+        <span class="stitle">Extract</span>
+        <span class="stool">scrapling / Playwright</span>
+        <span class="sdesc">Pull the actual text &mdash; static get, stealthy-fetch, or full browser as needed.</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+      <div class="stage">
+        <span class="num">3</span>
+        <span class="stitle">Verify</span>
+        <span class="stool">cross-check &times;2</span>
+        <span class="sdesc">Primary + secondary source. Disagreement &rarr; <code style="font-family:inherit;">confidence: low</code>, flag for review.</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+      <div class="stage">
+        <span class="num">4</span>
+        <span class="stitle">Store</span>
+        <span class="stool">sources.json</span>
+        <span class="sdesc">Merge in &mdash; update existing id or add new, <code style="font-family:inherit;">method</code> filled in honestly.</span>
+      </div>
+      <div class="arrow">&#8594;</div>
+      <div class="stage manual">
+        <span class="num">5</span>
+        <span class="stitle">Monitor</span>
+        <span class="stool">manual, for now</span>
+        <span class="sdesc">No automated tool yet &mdash; <code style="font-family:inherit;">next_check_due</code> schedules re-verification by hand.</span>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label" style="margin-bottom:12px;">What lands in sources.json</div>
+    <div class="schema-wrap">
+      <div class="schema-code">{<br>
+        &nbsp;&nbsp;<span class="k">"id"</span><span class="punct">:</span> <span class="s">"bildungsurlaub-hessen"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"category"</span><span class="punct">:</span> <span class="s">"Bildungsurlaub"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"region"</span><span class="punct">:</span> <span class="s">"Hessen"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"law_short"</span><span class="punct">:</span> <span class="s">"HBUG"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"facts"</span><span class="punct">:</span> { <span class="ink-faint">days_per_period, waiting_period_months, &hellip;</span> },<br>
+        &nbsp;&nbsp;<span class="k">"source_primary"</span><span class="punct">:</span> <span class="s">"gesetze-im-internet.de/&hellip;"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"source_secondary"</span><span class="punct">:</span> [ <span class="ink-faint">cross-check URLs</span> ],<br>
+        &nbsp;&nbsp;<span class="k">"method"</span><span class="punct">:</span> <span class="s">"websearch | scrapling | playwright | &hellip;"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"confidence"</span><span class="punct">:</span> <span class="s">"high | medium | low"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"last_verified"</span><span class="punct">:</span> <span class="s">"2026-09-10"</span>,<br>
+        &nbsp;&nbsp;<span class="k">"next_check_due"</span><span class="punct">:</span> <span class="s">"2027-01-01"</span><br>
+      }</div>
+      <div class="schema-notes">
+        <div class="schema-note"><b>source_primary</b> is always the statute text or official statistic itself &mdash; never a blog or explainer. Those go in <b>source_secondary</b>, for cross-checking only.</div>
+        <div class="schema-note"><b>method</b> records which tool actually produced the entry, so nobody has to guess later whether a fact was scraped, searched, or manually confirmed.</div>
+        <div class="schema-note"><b>confidence</b> stays honest &mdash; e.g. Bildungsurlaub usage-rate stats couldn't be found anywhere, so that gap is marked <b>low</b> rather than silently omitted.</div>
+        <div class="schema-note"><b>next_check_due</b> exists because rates and caps change yearly &mdash; this is what schedules re-verification, not a one-time pull.</div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label" style="margin-bottom:12px;">The DB is segmented by Consumer Journey step, not one flat table</div>
+    <div class="segs">
+      <div class="seg">
+        <span class="segnum">SEG 1</span>
+        <span class="segname">Job Offer Check</span>
+        <span class="seg-status partial">🆕 Not started</span>
+        <div class="seg-fill"><i class="partial-fill" style="width:5%"></i></div>
+      </div>
+      <div class="seg">
+        <span class="segnum">SEG 2</span>
+        <span class="segname">Visa</span>
+        <span class="seg-status partial">Researched, not in JSON</span>
+        <div class="seg-fill"><i class="partial-fill" style="width:45%"></i></div>
+      </div>
+      <div class="seg">
+        <span class="segnum">SEG 3</span>
+        <span class="segname">Accommodation</span>
+        <span class="seg-status partial">Researched, not in JSON</span>
+        <div class="seg-fill"><i class="partial-fill" style="width:45%"></i></div>
+      </div>
+      <div class="seg">
+        <span class="segnum">SEG 4</span>
+        <span class="segname">Insurance</span>
+        <span class="seg-status partial">Researched, not in JSON</span>
+        <div class="seg-fill"><i class="partial-fill" style="width:45%"></i></div>
+      </div>
+      <div class="seg">
+        <span class="segnum">SEG 5</span>
+        <span class="segname">Tax</span>
+        <span class="seg-status done">✓ 12 entries live</span>
+        <div class="seg-fill"><i style="width:90%"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot-note">A user on Step 5 pulls only from Seg 5 &mdash; the DB doesn't need to be complete everywhere at once, just current where it's used.<br>Run day-to-day with: <code>"add these 3 new states to sources.json, following the existing schema, verify with scrapling/WebSearch"</code> &mdash; a human reviews anything that comes back <code>confidence: low</code>.</p>
+</div>
