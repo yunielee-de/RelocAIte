@@ -1,4 +1,4 @@
-# Anspruch — Scraping & Source Pipeline Guide
+# RelocAIte — Scraping & Source Pipeline Guide
 
 Two different things need to be kept separate:
 
@@ -26,9 +26,9 @@ The rest of this document is corrected to reflect this.
 
 ## 1. Why the current setup is technical debt
 
-Right now, the Hessen/Berlin/Hamburg Bildungsurlaub rules are **hardcoded in three separate files** (`anspruch-pitch-deck.html`, `anspruch-scan.html`, `anspruch-field-interview.html` — each has its own `BL_INFO` object). If a law changes, or we add a new state, all three need to be edited by hand. This is the first thing that breaks once the team grows.
+Earlier prototype code (kept privately in `../reference/`, not part of this repo's build) hardcoded per-state Bildungsurlaub rules directly inside each HTML file as a `BL_INFO` object, duplicated across files. That pattern doesn't scale — if a law changes, or a new state is added, every copy needs a manual edit.
 
-**Goal**: pull the legal content out into a single source (`sources.json`), and have all three prototypes — and the eventual real product — read from that one file.
+**Goal**: whatever gets built during the event should read state/category rules from `../product-strategy/sources.json` directly, never re-hardcode them.
 
 ## 2. Tools to use — verified status, not assumed
 
@@ -88,4 +88,4 @@ This can largely be run by telling Claude Code "add these 3 new states to source
 
 ## 5. What's already done
 
-`sources.json` holds 12 already-verified entries (Hessen/Berlin/Hamburg Bildungsurlaub, Homeoffice-Pauschale, Umzugskostenpauschale, average tax refund, foreign-worker population, competitor facts) — see `sources.json`. They predate the `method` field (see the correction note). The next engineering task is swapping the three HTML files' hardcoded `BL_INFO` objects for a read from this file.
+`sources.json` holds 12 already-verified entries (Hessen/Berlin/Hamburg Bildungsurlaub, Homeoffice-Pauschale, Umzugskostenpauschale, average tax refund, foreign-worker population, competitor facts) — see `../product-strategy/sources.json`. They predate the `method` field (see the correction note). Build the event's code to read from this file directly rather than hardcoding facts again.
