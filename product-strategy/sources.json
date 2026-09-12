@@ -1,0 +1,241 @@
+[
+  {
+    "id": "bildungsurlaub-hessen",
+    "category": "Bildungsurlaub",
+    "region": "Hessen",
+    "law_short": "HBUG",
+    "facts": {
+      "days_per_period": 5,
+      "period": "calendar_year",
+      "waiting_period_months": 6,
+      "application_deadline_weeks": 6,
+      "expiry_rule": "31.12 (annual, no rollover without employer consent)"
+    },
+    "source_primary": "https://www.bildungsurlauber.de/bildungsurlaub/bundeslaender/bildungsurlaub-hessen/",
+    "source_secondary": [
+      "https://www.bildungsurlaub.de/infos/bundeslaender/bildungsurlaub-in-hessen",
+      "https://www.dein-bildungsurlaub.de/bundeslander/hessen"
+    ],
+    "confidence": "medium",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-01-15",
+    "notes": "Confirmed via secondary explainer sites, not the raw HBUG statute text itself. Usage-rate statistics (how many employees actually take it) could not be found — treat any 'X% use it' claim as unverified."
+  },
+  {
+    "id": "bildungszeit-berlin",
+    "category": "Bildungsurlaub",
+    "region": "Berlin",
+    "law_short": "BiZeitG (2021)",
+    "facts": {
+      "days_per_period": 5,
+      "period": "calendar_year",
+      "waiting_period_months": 6,
+      "application_deadline_weeks": 6,
+      "expiry_rule": "31.12; unused prior-year time lapses",
+      "small_employer_exception": "employers with up to 20 staff may refuse on operational grounds",
+      "combination_option": "with employer consent, can combine with next year's allowance for up to 10 days in one year"
+    },
+    "source_primary": "https://www.berlin.de/sen/arbeit/weiterbildung/bildungszeit/",
+    "source_secondary": [
+      "https://www.bildungsurlaub.de/infos/bundeslaender/bildungsurlaub-bildungszeit-in-berlin/berliner-bildungszeitgesetz-bizeitg"
+    ],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-01-15",
+    "notes": "source_primary is the official Berlin Senate page, which is a strong source but still a summary, not the raw statute PDF."
+  },
+  {
+    "id": "bildungsurlaub-hamburg",
+    "category": "Bildungsurlaub",
+    "region": "Hamburg",
+    "law_short": "HmbBUG",
+    "facts": {
+      "days_per_period": 10,
+      "period": "2_year_cycle",
+      "days_if_6day_week": 12,
+      "cycle_start_rule": "Jan 1 following the start of employment",
+      "application_deadline_weeks": 6,
+      "expiry_rule": "unused time lapses at the end of the 2-year cycle"
+    },
+    "source_primary": "https://www.bildungsurlaub.de/infos/bundeslaender/bildungsurlaub-in-hamburg/hamburgisches-bildungsurlaubsgesetz",
+    "source_secondary": [
+      "https://bildungsurlaub-hamburg.de/g847",
+      "https://www.dein-bildungsurlaub.de/bundeslander/hamburg"
+    ],
+    "confidence": "medium",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-01-15",
+    "notes": "Structurally different from Hessen/Berlin (2-year pooled cycle, not annual) — do not reuse the annual calculation logic for this region without checking maxDays/period fields."
+  },
+  {
+    "id": "homeoffice-pauschale",
+    "category": "Tax deduction",
+    "region": "national",
+    "law_short": "§4 EStG",
+    "facts": {
+      "rate_eur_per_day": 6,
+      "max_days_per_year": 210,
+      "max_eur_per_year": 1260,
+      "condition": "more than 50% of that day's work must be from home",
+      "2026_change": "Finanzamt enforcement of daily documentation tightened for 2025 returns filed in 2026"
+    },
+    "source_primary": "https://www.ad-hoc-news.de/boerse/news/ueberblick/homeoffice-pauschale-finanzaemter-verschaerfen-pruefung-ab-2026/68454970",
+    "source_secondary": [
+      "https://www.sparkasse.de/pk/ratgeber/finanzplanung/finanzen-und-haushalt/steuern-sparen/homeoffice-pauschale.html"
+    ],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-01-15",
+    "notes": "Uptake-rate statistics (% of eligible taxpayers actually claiming) could not be found — do not cite a specific non-uptake percentage for this deduction."
+  },
+  {
+    "id": "umzugskostenpauschale-2026",
+    "category": "Tax deduction",
+    "region": "national",
+    "law_short": "§10 BUKG (flat-rate table)",
+    "facts": {
+      "employee_flat_rate_eur": 964,
+      "per_family_member_eur": 643,
+      "applies_to_international_moves": true,
+      "caveat": "cross-border moves may be limited by double-taxation agreements (DBA)"
+    },
+    "source_primary": "https://www.lohnsteuer-kompakt.de/steuerwissen/erhoehung-der-umzugskostenpauschale/",
+    "source_secondary": [
+      "https://www.vlh.de/arbeiten-pendeln/beruf/umzugspauschale-erneut-erhoeht.html"
+    ],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-01-15",
+    "notes": "Rate unchanged since March 2024; still current for 2026 per source."
+  },
+  {
+    "id": "newcomer-tax-refund-avg",
+    "category": "Market data",
+    "region": "national",
+    "facts": {
+      "first_year_refund_range_eur": [800, 1500],
+      "general_avg_refund_eur": 1240,
+      "reason": "full relocation costs deductible in the first year, typically the largest single line item"
+    },
+    "source_primary": "https://restio.io/de/blog/erste-steuererklaerung-expat",
+    "source_secondary": [
+      "https://www.vlh.de/wissen-service/steuer-nachrichten/durchschnittliche-steuererstattung-steigt-stetig-an.html",
+      "https://taxfix.de (live homepage figure, 2026-09-10)"
+    ],
+    "confidence": "medium",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-01-15",
+    "notes": "The €1,240 figure is Taxfix's own live marketing claim, not an independent statistic — treat as directionally accurate, not authoritative."
+  },
+  {
+    "id": "foreign-workers-germany-2025",
+    "category": "Market data",
+    "region": "national",
+    "facts": {
+      "total_foreign_workers": 6530000,
+      "share_of_workforce_pct": 16.7,
+      "eu_citizens": 2510000,
+      "non_eu_citizens": 3310000,
+      "as_of": "end of 2025"
+    },
+    "source_primary": "https://mediendienst-integration.de/arbeitsmarkt/auslaendische-arbeitskraefte/wie-viele-auslaender-arbeiten-in-deutschland/",
+    "source_secondary": [],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-03-01",
+    "notes": "Ultimate source is Bundesagentur für Arbeit / Destatis, aggregated by Mediendienst Integration. This is the core TAM/SAM number used throughout the deck."
+  },
+  {
+    "id": "competitor-taxfix",
+    "category": "Competitor",
+    "region": "national",
+    "facts": {
+      "returns_filed": "10M+",
+      "total_refunded_eur": "5.1bn+ (live counter)",
+      "avg_refund_eur": 1240,
+      "scope": "tax filing only (ELSTER-integrated); covers Homeoffice-Pauschale and moving costs only as deduction line items inside a filed return",
+      "has_expat_page": true,
+      "expert_tier_structure": "partners with independent licensed Steuerberater for the paid 'Expert' tier"
+    },
+    "source_primary": "https://taxfix.de/",
+    "source_secondary": [
+      "https://taxfix.de/informationen-zur-gemeinsamen-verantwortlichkeit-steuerberater/"
+    ],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-03-01",
+    "notes": "Live-verified by walking the actual site (pricing tiers, feature comparison table), not a full signed-up account flow."
+  },
+  {
+    "id": "competitor-sozialplattform",
+    "category": "Competitor",
+    "region": "national (NRW-led federal platform)",
+    "facts": {
+      "operator": "government (NRW Ministerium für Arbeit, Gesundheit und Soziales + BMAS)",
+      "scope": "Sozialleistungen only (Wohngeld, Grundsicherung, family benefits) — no tax or labor-law questions",
+      "intake_questions_observed": ["birthdate", "citizenship", "usual residence", "living situation (couple/single parent/single)"]
+    },
+    "source_primary": "https://sozialplattform.de/sozialleistungsfinder",
+    "source_secondary": [
+      "https://sozialplattform.de/inhalt/sozialleistungen-finden"
+    ],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-03-01",
+    "notes": "Live-verified by starting the actual Sozialleistungsfinder questionnaire flow."
+  },
+  {
+    "id": "competitor-leistungslotse",
+    "category": "Competitor",
+    "region": "national",
+    "facts": {
+      "founded": 2023,
+      "founders": "Markus Poschenrieder, Sebastian Becker",
+      "scope": "Sozialleistungen only (Wohngeld, Bürgergeld, Grundsicherung)",
+      "target_users": "renters, single parents, pensioners — 95% of senior users apply for Grundsicherung"
+    },
+    "source_primary": "https://leistungslotse.com/",
+    "source_secondary": [
+      "https://impact-factory.de/startup/leistungslotse"
+    ],
+    "confidence": "medium",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-03-01",
+    "notes": "Desk research only, not a live product walkthrough (no public self-service demo found)."
+  },
+  {
+    "id": "grundsicherung-im-alter-nonuptake",
+    "category": "Pattern evidence (not Anspruch's target segment)",
+    "region": "national",
+    "facts": {
+      "nonuptake_rate_pct": 60,
+      "households_not_claiming": 625000,
+      "annual_unpaid_eur": "2bn (approx)"
+    },
+    "source_primary": "https://www.diw.de/de/diw_01.c.699957.de/publikationen/wochenberichte/2019_49_1/starke_nichtinanspruchnahme_von_grundsicherung_deutet_auf_hohe_verdeckte_altersarmut.html",
+    "source_secondary": [
+      "https://www.bpb.de/themen/soziale-lage/verteilung-von-armut-reichtum/237438/empfaengerzahlen-der-grundsicherungsleistungen-und-dunkelziffer-der-nicht-inanspruchnahme/"
+    ],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2028-01-01",
+    "notes": "DIW 2019 study, re-confirmed via bpb.de. Used only as systemic-pattern evidence on the deck (slide 4) — this is a different benefit and segment from Anspruch's actual target users; do not present it as Anspruch-specific data."
+  },
+  {
+    "id": "wohngeld-2024",
+    "category": "Pattern evidence (not Anspruch's target segment)",
+    "region": "national",
+    "facts": {
+      "households_receiving": 1242000,
+      "total_spent_eur": "4.689bn",
+      "as_of": "end of 2024",
+      "note": "sharp increase from the 2023 Wohngeld-Plus-Gesetz reform"
+    },
+    "source_primary": "https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Soziales/Wohngeld/aktuell-wohngeld.html",
+    "source_secondary": [],
+    "confidence": "high",
+    "last_verified": "2026-09-10",
+    "next_check_due": "2027-06-01",
+    "notes": "Not currently used in the deck. The original ~4M-eligible-households figure referenced in early planning notes was NOT independently re-verified this session — treat it as unconfirmed if cited again."
+  }
+]

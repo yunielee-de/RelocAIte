@@ -1,0 +1,910 @@
+<!doctype html>
+<title>Anspruch Pitch Deck</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F1F3EC;
+    --bg-raised: #FFFFFF;
+    --text: #16241D;
+    --text-muted: #566056;
+    --line: #C9D0C0;
+    --accent: #A9791F;
+    --accent-strong: #7C5A16;
+    --accent-tint: #E9DBB4;
+    --flag: #8B3A3A;
+    --flag-tint: #E9D3D3;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10160F;
+      --bg-raised: #182018;
+      --text: #E9ECE1;
+      --text-muted: #9BA695;
+      --line: #2C362A;
+      --accent: #D9B25A;
+      --accent-strong: #F0CD7E;
+      --accent-tint: #3A331C;
+      --flag: #C77272;
+      --flag-tint: #3A2323;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10160F;
+    --bg-raised: #182018;
+    --text: #E9ECE1;
+    --text-muted: #9BA695;
+    --line: #2C362A;
+    --accent: #D9B25A;
+    --accent-strong: #F0CD7E;
+    --accent-tint: #3A331C;
+    --flag: #C77272;
+    --flag-tint: #3A2323;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  .deck {
+    scroll-snap-type: y proximity;
+  }
+  .slide {
+    position: relative;
+    min-height: 100vh;
+    scroll-snap-align: start;
+    padding: clamp(20px, 4vw, 56px) clamp(18px, 6vw, 96px);
+    padding-block: clamp(64px, 9vh, 110px);
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--line);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 35px,
+      color-mix(in srgb, var(--line) 45%, transparent) 35px,
+      color-mix(in srgb, var(--line) 45%, transparent) 36px
+    );
+  }
+  .slide::before,
+  .slide::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--accent);
+    opacity: .55;
+  }
+  .slide::before {
+    top: 18px; left: 18px;
+    border-top: 1.5px solid var(--accent);
+    border-left: 1.5px solid var(--accent);
+  }
+  .slide::after {
+    bottom: 18px; right: 18px;
+    border-bottom: 1.5px solid var(--accent);
+    border-right: 1.5px solid var(--accent);
+  }
+
+  .chrome {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: auto;
+  }
+  .chrome .brand { color: var(--accent-strong); font-weight: 500; }
+
+  .slide-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    max-width: 980px;
+    margin: 0 auto;
+    width: 100%;
+    padding-block: 40px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.08;
+    text-wrap: balance;
+    margin: 0;
+    color: var(--text);
+  }
+  h1 { font-size: clamp(40px, 7vw, 88px); }
+  h2 { font-size: clamp(28px, 4.4vw, 48px); }
+  p.lede {
+    font-size: clamp(17px, 1.9vw, 22px);
+    max-width: 62ch;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ---- clause list (problem slide) ---- */
+  .clauses { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+  .clauses li {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+  .clauses .num { font-family: var(--font-mono); color: var(--accent); font-size: 15px; }
+  .clauses .txt { font-size: clamp(16px, 1.7vw, 19px); line-height: 1.5; }
+  .clauses .txt b { color: var(--text); font-weight: 600; }
+  .closing {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(18px, 2.2vw, 24px);
+    color: var(--accent-strong);
+    margin-top: 8px;
+  }
+
+  /* ---- stat grid (market size) ---- */
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .stat { background: var(--bg-raised); padding: 26px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .stat .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(26px, 3.4vw, 38px);
+    color: var(--accent-strong);
+    font-weight: 500;
+  }
+  .stat .label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+  .sources {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 70ch;
+  }
+
+  /* ---- competitor comparison matrix ---- */
+  .table-wrap { overflow-x: auto; }
+  .compare-matrix { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .compare-matrix th, .compare-matrix td {
+    border: 1px solid var(--line); padding: 10px 12px; text-align: center; vertical-align: middle; white-space: nowrap;
+  }
+  .compare-matrix th:first-child, .compare-matrix td:first-child {
+    text-align: left; font-family: var(--font-body); font-size: 13.5px; white-space: normal; min-width: 180px;
+  }
+  .compare-matrix thead th { font-family: var(--font-body); font-weight: 600; font-size: 12.5px; background: var(--bg-raised); line-height: 1.3; }
+  .compare-matrix td, .compare-matrix th:not(:first-child) { font-family: var(--font-mono); }
+  .compare-matrix .us { background: var(--accent-tint); }
+  .compare-matrix th.us { color: var(--accent-strong); font-family: var(--font-display); font-size: 15px; }
+  .compare-matrix .yes { color: var(--accent-strong); font-weight: 700; font-size: 15px; }
+  .compare-matrix .no { color: var(--text-muted); }
+  .compare-matrix .partial { color: var(--text-muted); font-style: italic; font-size: 11px; }
+
+  /* ---- impact box ---- */
+  .impact-box {
+    border: 1.5px solid var(--accent); padding: 22px 24px; display: flex; flex-direction: column; gap: 8px;
+    background: var(--accent-tint);
+  }
+  .impact-figure {
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 5vw, 48px);
+    color: var(--accent-strong); line-height: 1;
+  }
+  .impact-figure .unit { font-size: .4em; font-family: var(--font-mono); font-weight: 400; margin-left: 6px; color: var(--text-muted); }
+  .impact-label { margin: 0; font-size: 14.5px; color: var(--text); max-width: 60ch; }
+  .impact-math {
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-top: 4px;
+  }
+  .impact-math .op { color: var(--accent); }
+  .impact-math .result { color: var(--accent-strong); font-weight: 600; }
+  .impact-caveat { margin: 0; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); }
+
+  /* ---- pattern evidence (budget vs. claimed bar) ---- */
+  .pattern-evidence { border-top: 1px dashed var(--line); padding-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .pattern-label { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 17px; color: var(--text); margin: 0; max-width: 58ch; }
+  .bar-track { height: 36px; border: 1px solid var(--line); display: flex; overflow: hidden; }
+  .bar-fill { background: var(--accent); display: flex; align-items: center; padding-left: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--bg-raised); font-weight: 500; }
+  .bar-gap {
+    background-color: var(--bg-raised);
+    background-image: repeating-linear-gradient(135deg, var(--flag-tint) 0px, var(--flag-tint) 9px, transparent 9px, transparent 18px);
+    border-left: 1px dashed var(--flag);
+    display: flex; align-items: center; justify-content: flex-end; padding-right: 12px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--flag); font-weight: 500;
+  }
+  .bar-legend { display: flex; gap: 24px; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted); flex-wrap: wrap; }
+  .bar-legend .dot { display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: middle; }
+  .dot.claimed { background: var(--accent); }
+  .dot.gap { background-image: repeating-linear-gradient(135deg, var(--flag) 0px, var(--flag) 3px, transparent 3px, transparent 6px); }
+  .pattern-caption { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); line-height: 1.6; max-width: 70ch; margin: 0; }
+
+  /* ---- why now list ---- */
+  .points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 20px; }
+  .points li { display: flex; gap: 16px; align-items: flex-start; }
+  .points .bullet {
+    font-family: var(--font-mono); color: var(--accent);
+    font-size: 14px; margin-top: 4px; flex-shrink: 0;
+  }
+  .points .txt { font-size: clamp(16px, 1.7vw, 19px); line-height: 1.55; color: var(--text); }
+  .points .txt span.muted { color: var(--text-muted); }
+
+  /* ---- process flow (solution) ---- */
+  .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .flow-step {
+    position: relative;
+    padding: 22px 20px 22px 0;
+    border-top: 2px solid var(--accent);
+  }
+  .flow-step .n { font-family: var(--font-mono); font-size: 13px; color: var(--accent-strong); }
+  .flow-step h3 { font-family: var(--font-display); font-size: 22px; margin: 6px 0 8px; font-weight: 600; }
+  .flow-step p { margin: 0; color: var(--text-muted); font-size: 15px; line-height: 1.5; }
+  .flow-arrow {
+    display: none;
+  }
+
+  /* ---- two column (business model) ---- */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .col { background: var(--bg-raised); padding: 28px 26px; display: flex; flex-direction: column; gap: 12px; }
+  .col .tag {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 3px;
+    padding: 3px 8px; width: fit-content;
+  }
+  .col h3 { font-family: var(--font-display); font-size: 24px; margin: 0; font-weight: 600; }
+  .col p { margin: 0; color: var(--text-muted); font-size: 15px; line-height: 1.55; }
+
+  /* ---- GTM path ---- */
+  .path { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+  .path .stage {
+    font-family: var(--font-mono); font-size: 14px;
+    background: var(--bg-raised); border: 1px solid var(--line);
+    padding: 14px 18px; line-height: 1.4; max-width: 260px;
+  }
+  .path .stage b { display: block; font-family: var(--font-body); font-size: 16px; color: var(--text); margin-bottom: 3px; font-weight: 600; }
+  .path .arrow { color: var(--accent); font-size: 20px; }
+  .note { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+
+  /* ---- why me ---- */
+  .whyme { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 22px; }
+  .whyme li { display: grid; grid-template-columns: 1fr; gap: 4px; border-left: 2px solid var(--accent); padding-left: 20px; }
+  .whyme .label { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent-strong); }
+  .whyme .txt { font-size: clamp(16px, 1.8vw, 20px); line-height: 1.5; }
+
+  /* ---- pending slides ---- */
+  .pending-box {
+    border: 1.5px dashed var(--flag);
+    background: repeating-linear-gradient(
+      135deg,
+      var(--flag-tint) 0px,
+      var(--flag-tint) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    background-color: var(--bg-raised);
+    padding: 30px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pending-box .stamp {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--flag);
+    border: 1.5px solid var(--flag);
+    padding: 5px 12px;
+    width: fit-content;
+    transform: rotate(-2deg);
+  }
+  .pending-box p { margin: 0; font-size: 15.5px; line-height: 1.55; color: var(--text); max-width: 60ch; }
+  .pending-box p.unlock { color: var(--text-muted); font-family: var(--font-mono); font-size: 13.5px; }
+
+  .blank {
+    display: inline;
+    border-bottom: 1.5px dashed var(--accent);
+    color: var(--accent-strong);
+    padding: 0 2px;
+  }
+
+  /* ---- scanner demo (product demo) ---- */
+  .scanner { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .scanner-form { display: flex; flex-direction: column; gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .field input[type="number"], .field select {
+    font-family: var(--font-body); font-size: 14.5px; padding: 8px 10px;
+    border: 1px solid var(--line); background: var(--bg-raised); color: var(--text);
+    border-radius: 2px;
+  }
+  .field.checkbox-row { flex-direction: row; align-items: center; gap: 9px; }
+  .field.checkbox-row label { text-transform: none; font-size: 14px; color: var(--text); font-family: var(--font-body); letter-spacing: normal; }
+  .field.checkbox-row input { width: 16px; height: 16px; accent-color: var(--accent); }
+  .field-hint { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+
+  .receipt {
+    background: var(--bg-raised); border: 1px solid var(--line);
+    padding: 20px 22px; font-family: var(--font-mono);
+  }
+  .receipt-head {
+    font-family: var(--font-body); font-weight: 600; font-size: 14.5px;
+    border-bottom: 1px dashed var(--line); padding-bottom: 10px; margin-bottom: 4px;
+  }
+  .receipt-line {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12.5px;
+    padding: 7px 0; border-bottom: 1px dotted var(--line);
+  }
+  .receipt-line span:first-child { flex: 1 1 auto; }
+  .receipt-line .amt { font-variant-numeric: tabular-nums; color: var(--accent-strong); white-space: nowrap; flex: 0 0 auto; }
+  .receipt-total {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+    padding-top: 12px; margin-top: 6px; border-top: 1.5px solid var(--text);
+    font-family: var(--font-body); font-weight: 600; font-size: 15px;
+  }
+  .receipt-total .amt { font-variant-numeric: tabular-nums; color: var(--accent-strong); font-family: var(--font-mono); font-size: 17px; }
+  .receipt-note { font-size: 10.5px; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
+
+  /* ---- financial model year cards ---- */
+  .years { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .year-card { background: var(--bg-raised); padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; }
+  .year-card .yr { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-strong); }
+  .year-card .arr { font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 2.8vw, 32px); color: var(--text); }
+  .year-card .metric { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted); display: flex; justify-content: space-between; border-top: 1px dotted var(--line); padding-top: 6px; }
+  .year-card .metric b { color: var(--text); font-variant-numeric: tabular-nums; font-family: var(--font-body); }
+  .year-card .focus { font-size: 13px; color: var(--text-muted); line-height: 1.45; border-top: 1px dashed var(--line); padding-top: 10px; margin-top: 2px; }
+
+  /* ---- asks grid ---- */
+  .asks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .ask-card { background: var(--bg-raised); padding: 22px 20px; display: flex; flex-direction: column; gap: 9px; }
+  .ask-card .tag {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--accent); border-radius: 3px; padding: 2px 7px; width: fit-content;
+  }
+  .ask-card h3 { font-family: var(--font-display); font-size: 19px; margin: 0; font-weight: 600; }
+  .ask-card p { margin: 0; color: var(--text-muted); font-size: 13.5px; line-height: 1.5; }
+
+  @media (max-width: 720px) {
+    .scanner { grid-template-columns: 1fr; }
+    .asks { grid-template-columns: 1fr; }
+    .years { grid-template-columns: 1fr; }
+  }
+
+  /* title slide */
+  .title-slide .slide-body { align-items: flex-start; gap: 22px; }
+  .title-slide .mark {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .title-slide h1 { display: flex; align-items: baseline; gap: 4px; }
+  .title-slide h1 .section-mark { font-size: .4em; color: var(--accent); font-family: var(--font-mono); font-weight: 400; }
+  .definition {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    margin-top: 10px;
+  }
+  .definition b { color: var(--accent-strong); font-weight: 500; }
+
+  /* nav dots */
+  .navdots {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+  }
+  .navdots button {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1px solid var(--accent);
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    opacity: .5;
+  }
+  .navdots button[aria-current="true"] { background: var(--accent); opacity: 1; }
+  .counter {
+    position: fixed;
+    left: 20px;
+    bottom: 18px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    z-index: 10;
+    background: var(--bg);
+    padding: 4px 8px;
+  }
+
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: 1fr; }
+    .cols { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr; }
+    .flow-step { border-left: 2px solid var(--accent); border-top: none; padding: 4px 0 4px 18px; }
+    .navdots { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .navdots, .counter { display: none !important; }
+    .deck { scroll-snap-type: none; }
+    .slide {
+      page-break-after: always;
+      break-after: page;
+      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .slide:last-child { page-break-after: auto; break-after: auto; }
+  }
+</style>
+
+<div class="deck" id="deck">
+
+  <section class="slide title-slide" data-n="1">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 01 / 13</span></div>
+    <div class="slide-body">
+      <span class="mark">AI.WOMEN HACKATHON · HAMBURG · SEPT 2026</span>
+      <h1>Anspruch</h1>
+      <p class="lede">The money and rights foreign workers in Germany don't know they're owed.</p>
+      <p class="definition"><b>An·spruch</b>, noun (German): a legal claim — an entitlement you hold whether or not you know to ask for it.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-n="2">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 02 / 13 — The Hook</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">The Hook</span>
+      <h2>I've watched more than <span class="blank">[10+]</span> people move to Germany for work — and never claim a single euro of it back.</h2>
+      <p class="lede">Relocation alone is worth up to €964, plus €643 per family member. Nobody told them it was theirs to ask for. I almost didn't ask either.</p>
+      <div class="pending-box">
+        <span class="stamp">In Bearbeitung</span>
+        <p>Real angle, real math — the exact headcount just needs to hold up if a judge asks "how do you know?" Confirm the number (or soften to "dozens" / "everyone I know who moved here") before it goes on stage.</p>
+        <p class="unlock">Needs: a number you can defend on the spot — from memory, or from the interview round this week.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-n="3">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 03 / 13 — Problem</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Problem</span>
+      <h2>Nothing pays you automatically.</h2>
+      <ol class="clauses">
+        <li><span class="num">§1</span><span class="txt">Every entitlement requires an <b>application</b> — silence gets you nothing.</span></li>
+        <li><span class="num">§2</span><span class="txt">Backdating is narrow. Kindergeld: 6 months. Bürgergeld: none. <b>Miss the window, lose the money.</b></span></li>
+        <li><span class="num">§3</span><span class="txt">The information exists — in <b>Amtsdeutsch</b>, the dense bureaucratic German even natives struggle to parse.</span></li>
+      </ol>
+      <p class="closing">If you don't know the term for what you're owed, you can't search for it.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-n="4">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 04 / 13 — Market Size</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Market Size</span>
+      <h2>A blind spot the size of a country's workforce.</h2>
+      <div class="stats">
+        <div class="stat"><span class="num">6,53 Mio.</span><span class="label">foreign workers in Germany — 16.7% of the workforce, end of 2025</span></div>
+        <div class="stat"><span class="num">800–1.500 €</span><span class="label">average first-year tax refund for newcomers</span></div>
+        <div class="stat"><span class="num">964 €</span><span class="label">relocation cost flat-rate deduction (+643 € per family member)</span></div>
+        <div class="stat"><span class="num">1.260 €</span><span class="label">maximum annual Homeoffice-Pauschale</span></div>
+      </div>
+
+      <div class="pattern-evidence">
+        <p class="pattern-label">This isn't new. Germany already sits on money it's designed to pay out — and doesn't.</p>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:40%">40% claim it</div>
+          <div class="bar-gap" style="width:60%">60% never do</div>
+        </div>
+        <div class="bar-legend">
+          <span><i class="dot claimed"></i>Households claiming Grundsicherung im Alter</span>
+          <span><i class="dot gap"></i>Eligible households that never apply — ≈ €2bn stays unpaid, every year</span>
+        </div>
+        <p class="pattern-caption">Old-age basic security (Grundsicherung im Alter): ~625,000 eligible households never apply, most often because they don't know they qualify. Different benefit, same country, same failure mode — nothing says the state chases you down for your Bildungsurlaub or your tax refund any harder.</p>
+      </div>
+
+      <p class="sources">Sources: Bundesagentur für Arbeit / Statistisches Bundesamt via Mediendienst Integration (2025) · VLH · Restio · Lohnsteuer-kompakt (2026 rates) · Grundsicherung im Alter non-uptake — DIW Berlin (2019), re-confirmed via bpb.de (2026)</p>
+    </div>
+  </section>
+
+  <section class="slide" data-n="5">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 05 / 13 — Why Now</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Why Now</span>
+      <h2>The window just opened.</h2>
+      <ul class="points">
+        <li><span class="bullet">→</span><span class="txt">German administration is finally digitizing — the <span class="muted">Once-Only principle</span> means fewer paper trails to chase by hand.</span></li>
+        <li><span class="bullet">→</span><span class="txt">LLMs can now reliably parse dense German government forms and payslips — <span class="muted">that parsing layer didn't exist three years ago.</span></span></li>
+        <li><span class="bullet">→</span><span class="txt">Welfare and tax rules keep shifting — <span class="muted">2026's Bürgergeld → Grundsicherung reform is the latest — more churn than any one person can track alone.</span></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-n="6">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 06 / 13 — Solution</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Solution</span>
+      <h2>One input. Every entitlement, scanned.</h2>
+      <div class="flow">
+        <div class="flow-step"><span class="n">01</span><h3>Upload</h3><p>A payslip, a lease, or a few plain-language questions answered.</p></div>
+        <div class="flow-step"><span class="n">02</span><h3>Scan</h3><p>Matched against tax, labor-law, and subsidy rules — all of them, not one form at a time.</p></div>
+        <div class="flow-step"><span class="n">03</span><h3>Claim</h3><p>A drafted application, in plain language, ready to submit.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-n="7">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 07 / 13 — Product Demo</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Product Demo — live</span>
+      <h2>Answer six questions. See what you're leaving on the table.</h2>
+      <div class="scanner">
+        <div class="scanner-form">
+          <div class="field">
+            <label for="bl">Bundesland</label>
+            <select id="bl">
+              <option value="hessen">Hessen — 5 Tage/Jahr Bildungsurlaub</option>
+              <option value="berlin">Berlin — 5 Tage/Jahr Bildungszeit</option>
+              <option value="hamburg">Hamburg — 10 Tage/2 Jahre Bildungsurlaub</option>
+              <option value="none">Bayern / Sachsen — kein Anspruch</option>
+              <option value="other">Anderes Bundesland — i.d.R. 5 Tage/Jahr</option>
+            </select>
+            <span class="field-hint" id="blHint"></span>
+          </div>
+          <div class="field">
+            <label for="months">Monate beim aktuellen Arbeitgeber</label>
+            <input type="number" id="months" min="0" max="60" value="8">
+          </div>
+          <div class="field">
+            <label for="used">Bildungsurlaubstage in diesem Zeitraum genutzt</label>
+            <input type="number" id="used" min="0" max="10" value="0">
+          </div>
+          <div class="field">
+            <label for="salary">Bruttogehalt / Monat — optional, für €-Wert</label>
+            <input type="number" id="salary" min="0" step="50" placeholder="z. B. 4200">
+          </div>
+          <div class="field">
+            <label for="ho">Homeoffice-Tage / Woche</label>
+            <input type="number" id="ho" min="0" max="5" value="2">
+          </div>
+          <div class="field checkbox-row">
+            <input type="checkbox" id="moved" checked>
+            <label for="moved">Für diesen Job dieses Jahr nach Deutschland gezogen</label>
+          </div>
+          <div class="field" id="familyField">
+            <label for="family">Mitgezogene Familienmitglieder</label>
+            <input type="number" id="family" min="0" max="6" value="0">
+          </div>
+          <div class="field checkbox-row">
+            <input type="checkbox" id="filed">
+            <label for="filed">Dieses Jahr schon eine Steuererklärung abgegeben</label>
+          </div>
+        </div>
+        <div class="receipt">
+          <div class="receipt-head">Vorläufige Anspruchs-Übersicht</div>
+          <div id="receiptLines"></div>
+          <div class="receipt-total"><span>Geschätzter Wert</span><span class="amt" id="receiptTotal">0 €</span></div>
+          <p class="receipt-note">Demo-Schätzung auf Basis öffentlicher Pauschalen (2026) — Bildungsurlaub HBUG, Homeoffice-Pauschale §4 EStG, Umzugskostenpauschale, Ø-Erstattung. Keine Steuer- oder Rechtsberatung.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-n="8">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 08 / 13 — Competition</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Competition, honestly</span>
+      <h2>Everyone covers one slice. No one covers the person.</h2>
+
+      <div class="table-wrap">
+        <table class="compare-matrix">
+          <thead>
+            <tr><th></th><th>Taxfix</th><th>Sozialplattform /<br>LeistungsLotse</th><th>Gov. calculators</th><th class="us">Anspruch</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tax refund guidance</td><td class="yes">✓</td><td class="no">—</td><td class="partial">calc only</td><td class="us yes">✓</td></tr>
+            <tr><td>Bildungsurlaub / -zeit discovery</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="us yes">✓</td></tr>
+            <tr><td>Relocation cost deduction</td><td class="partial">buried in filing</td><td class="no">—</td><td class="no">—</td><td class="us yes">✓</td></tr>
+            <tr><td>Homeoffice-Pauschale awareness</td><td class="partial">buried in filing</td><td class="no">—</td><td class="no">—</td><td class="us yes">✓</td></tr>
+            <tr><td>Aimed at working professionals</td><td class="yes">✓</td><td class="no">— (low-income)</td><td class="no">—</td><td class="us yes">✓</td></tr>
+            <tr><td>One scan, all of the above, together</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="us yes">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="closing">Tax refund guidance is the one row Taxfix already does well — it's the proven hook that gets people in the door. We don't out-build them there. Everything below that row is white space nobody has bundled with it.</p>
+      <p class="sources">Taxfix: live-verified via taxfix.de (marketing/pricing/feature-comparison pages). Sozialplattform: live-verified via its Sozialleistungsfinder intake flow. LeistungsLotse: public company info. Not a full signed-up account flow on any. 2026-09-10.</p>
+
+      <div class="impact-box">
+        <div class="impact-figure">≈ €260 Mio.<span class="unit">/ Jahr</span></div>
+        <p class="impact-label">stays unclaimed — from <b>just one</b> of the five rows above, among Germany's foreign workers.</p>
+        <div class="impact-math">
+          <span>6.53M foreign workers</span><span class="op">×</span><span>10% miss Homeoffice-Pauschale</span><span class="op">×</span><span>≈€400/year each</span><span class="op">=</span><span class="result">≈€261M/year</span>
+        </div>
+        <p class="impact-caveat">Illustrative back-of-envelope, not a verified market study — the other four rows aren't even counted here.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-n="9">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 09 / 13 — Business Model</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Business Model</span>
+      <h2>Free where people can't pay. Paid where the value lands.</h2>
+      <div class="cols">
+        <div class="col">
+          <span class="tag">B2C</span>
+          <h3>Free, always</h3>
+          <p>The scan costs nothing. It's the acquisition channel and the trust layer — not the revenue line.</p>
+        </div>
+        <div class="col">
+          <span class="tag">B2B</span>
+          <h3>Paid</h3>
+          <p>Corporate HR — an onboarding benefit for international hires. Relocation providers — a bundled add-on to services they already charge for.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-n="10">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 10 / 13 — Go-to-Market</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Go-to-Market</span>
+      <h2>Start narrow. Hessen and Hamburg, then outward.</h2>
+      <div class="path">
+        <div class="stage"><b>Foreign-worker communities</b>Hessen, Frankfurt & Hamburg — expat groups, company ERGs, the hackathon network itself</div>
+        <span class="arrow">→</span>
+        <div class="stage"><b>Word of mouth</b>Referral inside the same networks</div>
+        <span class="arrow">→</span>
+        <div class="stage"><b>Corporate HR</b>Bundled into onboarding for international hires</div>
+      </div>
+      <p class="note">A narrow entry point — not a small market. Hamburg first because that's where the earliest believers already are.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-n="11">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 11 / 13 — Financial Model</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Where This Goes</span>
+      <h2>The model, not a promise.</h2>
+      <div class="years">
+        <div class="year-card">
+          <span class="yr">Year 1 — Pilot</span>
+          <span class="arr">≈€12K ARR</span>
+          <div class="metric"><span>Free scan users</span><b>3,000</b></div>
+          <div class="metric"><span>Paying B2B accounts</span><b>3</b></div>
+          <p class="focus">Hessen, Frankfurt & Hamburg. Prove the scan finds real money; land 3 corporate HR pilots.</p>
+        </div>
+        <div class="year-card">
+          <span class="yr">Year 3 — National</span>
+          <span class="arr">≈€240K ARR</span>
+          <div class="metric"><span>Free scan users</span><b>60,000</b></div>
+          <div class="metric"><span>Paying B2B accounts</span><b>45</b></div>
+          <p class="focus">IHK and relocation-firm channels live. First renewals prove retention, not just a first sale.</p>
+        </div>
+        <div class="year-card">
+          <span class="yr">Year 5 — Category</span>
+          <span class="arr">≈€1.6M ARR</span>
+          <div class="metric"><span>Free scan users</span><b>250,000</b></div>
+          <div class="metric"><span>Paying B2B accounts</span><b>190</b></div>
+          <p class="focus">Category default for onboarding international hires. Adjacent markets (AT, NL) open next.</p>
+        </div>
+      </div>
+      <p class="impact-caveat">Illustrative model, assumptions shown so they can be stress-tested — not verified financials. B2C: 5→10% of free-scan users convert to a €10–15 paid filing-assist action. B2B: €20–25 per employee/year via corporate HR (avg. ~150 employees/account), plus flat annual bundle fees from relocation-provider partners.</p>
+    </div>
+  </section>
+
+  <section class="slide" data-n="12">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 12 / 13 — Why Me</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Why Me</span>
+      <h2>Why me</h2>
+      <ul class="whyme">
+        <li><span class="label">Commercial</span><span class="txt">10 years in FMCG commercial planning — reading regulation and margin at the same time.</span></li>
+        <li><span class="label">Technical</span><span class="txt">Background in data scraping and analysis — I build the evidence, I don't just claim it.</span></li>
+        <li><span class="label">Personal</span><span class="txt">I'm the target user: the foreigner working in Hessen who almost let paid days expire without knowing they existed.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide" data-n="13">
+    <div class="chrome"><span class="brand">ANSPRUCH</span><span>§ 13 / 13 — Ask</span></div>
+    <div class="slide-body">
+      <span class="eyebrow">Ask</span>
+      <h2>What we need next — pick on the day.</h2>
+      <div class="asks">
+        <div class="ask-card">
+          <span class="tag">If solo</span>
+          <h3>A technical teammate</h3>
+          <p>For the next 48 hours, plus one warm intro to a Hessen-based corporate HR contact to pilot the free scan.</p>
+        </div>
+        <div class="ask-card">
+          <span class="tag">If team forms</span>
+          <h3>A shared commit</h3>
+          <p>Two working demo screens by 6pm Day 1, and agreement to run the interview validation before building further.</p>
+        </div>
+        <div class="ask-card">
+          <span class="tag">If pitching judges</span>
+          <h3>A reality check + intro</h3>
+          <p>Feedback on whether corporate HR is the right first payer, and one intro to a relocation firm or IHK contact.</p>
+        </div>
+      </div>
+      <p class="note">Drafted now so nothing is decided from a blank slide — final pick happens once the team and room are known.</p>
+    </div>
+  </section>
+
+</div>
+
+<nav class="navdots" id="navdots" aria-label="Slide navigation"></nav>
+<div class="counter" id="counter">01 / 13</div>
+
+<script>
+  (function () {
+    var slides = Array.from(document.querySelectorAll('.slide'));
+    var dotsEl = document.getElementById('navdots');
+    var counterEl = document.getElementById('counter');
+
+    slides.forEach(function (s, i) {
+      var b = document.createElement('button');
+      b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      b.addEventListener('click', function () {
+        s.scrollIntoView({ behavior: 'smooth' });
+      });
+      dotsEl.appendChild(b);
+    });
+    var dots = Array.from(dotsEl.children);
+
+    var current = 0;
+    function setCurrent(i) {
+      current = i;
+      dots.forEach(function (d, j) { d.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+      counterEl.textContent = String(i + 1).padStart(2, '0') + ' / ' + slides.length;
+    }
+    setCurrent(0);
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && e.intersectionRatio > 0.55) {
+          var idx = slides.indexOf(e.target);
+          if (idx > -1) setCurrent(idx);
+        }
+      });
+    }, { threshold: [0.55] });
+    slides.forEach(function (s) { io.observe(s); });
+
+    document.addEventListener('keydown', function (e) {
+      var tag = (e.target && e.target.tagName) || '';
+      if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown') {
+        e.preventDefault();
+        var next = slides[Math.min(current + 1, slides.length - 1)];
+        next.scrollIntoView({ behavior: 'smooth' });
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        var prev = slides[Math.max(current - 1, 0)];
+        prev.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  })();
+
+  // ---- Anspruch scanner (rule-based demo, slide 7) ----
+  (function () {
+    var ids = ['bl', 'months', 'used', 'salary', 'ho', 'moved', 'family', 'filed'];
+    var els = {};
+    ids.forEach(function (id) { els[id] = document.getElementById(id); });
+    if (!els.bl) return;
+
+    function fmt(n) { return Math.round(n).toLocaleString('de-DE'); }
+
+    var BL_INFO = {
+      hessen: { eligible: true, term: 'Bildungsurlaub', maxDays: 5, expiry: 'verfällt 31.12.', hint: '6 Monate Wartezeit · Antrag 6 Wochen vorher · 5 Tage pro Kalenderjahr (HBUG)' },
+      berlin: { eligible: true, term: 'Bildungszeit', maxDays: 5, expiry: 'verfällt 31.12.', hint: '6 Monate Wartezeit · Antrag 6 Wochen vorher · Betriebe bis 20 Beschäftigte können ablehnen · mit Zustimmung auf 10 Tage kombinierbar (BiZeitG 2021)' },
+      hamburg: { eligible: true, term: 'Bildungsurlaub', maxDays: 10, expiry: 'verfällt am Ende des 2-Jahres-Zeitraums', hint: '10 Arbeitstage pro 2-Jahres-Zeitraum (nicht pro Kalenderjahr, 12 Tage bei 6-Tage-Woche) · Zeitraum beginnt 1. Januar nach Einstellung · Antrag 6 Wochen vorher (HmbBUG)' },
+      none: { eligible: false, term: 'Bildungsurlaub', maxDays: 0, expiry: '', hint: 'Kein gesetzlicher Anspruch in diesem Bundesland' },
+      other: { eligible: true, term: 'Bildungsurlaub', maxDays: 5, expiry: 'verfällt 31.12.', hint: 'In den meisten übrigen Bundesländern ebenfalls 5 Tage/Jahr — genaue Regeln vorher prüfen' }
+    };
+
+    function recalc() {
+      var blInfo = BL_INFO[els.bl.value] || BL_INFO.other;
+      var stateEligible = blInfo.eligible;
+      document.getElementById('blHint').textContent = blInfo.hint;
+      els.used.max = blInfo.maxDays || 10;
+      var months = parseFloat(els.months.value) || 0;
+      var used = parseFloat(els.used.value) || 0;
+      var salary = parseFloat(els.salary.value) || 0;
+      var ho = parseFloat(els.ho.value) || 0;
+      var moved = els.moved.checked;
+      var family = parseFloat(els.family.value) || 0;
+      var filed = els.filed.checked;
+
+      document.getElementById('familyField').style.display = moved ? '' : 'none';
+
+      var lines = [];
+      var total = 0;
+
+      if (!stateEligible) {
+        lines.push({ label: blInfo.term + ' — in diesem Bundesland kein Anspruch', amt: '—' });
+      } else if (months < 6) {
+        lines.push({ label: blInfo.term + ' — erst ab 6 Monaten Betriebszugehörigkeit', amt: '—' });
+      } else {
+        var remaining = Math.max(0, blInfo.maxDays - used);
+        if (remaining > 0) {
+          var dailyWage = salary > 0 ? salary / 21.75 : 0;
+          var value = Math.round(remaining * dailyWage);
+          lines.push({
+            label: remaining + ' bezahlte ' + blInfo.term + 'stage offen (' + blInfo.expiry + ')',
+            amt: value > 0 ? ('≈ ' + fmt(value) + ' €') : '— (Gehalt fehlt)'
+          });
+          total += value;
+        } else {
+          lines.push({ label: blInfo.term + ' in diesem Zeitraum bereits ausgeschöpft', amt: '0 €' });
+        }
+      }
+
+      var hoDays = Math.min(ho * 46, 210);
+      var hoValue = Math.round(hoDays * 6);
+      lines.push({ label: 'Homeoffice-Pauschale (' + Math.round(hoDays) + ' Tage × 6 €)', amt: fmt(hoValue) + ' €' });
+      total += hoValue;
+
+      if (moved) {
+        var reloValue = 964 + family * 643;
+        lines.push({ label: 'Umzugskostenpauschale (+ ' + family + ' Familienmitglieder)', amt: fmt(reloValue) + ' €' });
+        total += reloValue;
+      }
+
+      if (!filed) {
+        lines.push({ label: 'Steuererklärung noch offen — Ø Erstattung (separat)', amt: '800–1.500 €' });
+      }
+
+      var linesEl = document.getElementById('receiptLines');
+      linesEl.innerHTML = '';
+      lines.forEach(function (l) {
+        var row = document.createElement('div');
+        row.className = 'receipt-line';
+        row.innerHTML = '<span>' + l.label + '</span><span class="amt">' + l.amt + '</span>';
+        linesEl.appendChild(row);
+      });
+      document.getElementById('receiptTotal').textContent = fmt(total) + ' €' + (!filed ? ' + Erstattung' : '');
+    }
+
+    ids.forEach(function (id) {
+      els[id].addEventListener('input', recalc);
+      els[id].addEventListener('change', recalc);
+    });
+    recalc();
+  })();
+</script>
