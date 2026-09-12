@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../vendor/shadcn-tailwind-4.13.0.css";
+
+:root {
+  --background: #f7f8f2;
+  --foreground: #122427;
+  --card: #ffffff;
+  --card-foreground: #122427;
+  --popover: #ffffff;
+  --popover-foreground: #122427;
+  --primary: #14383d;
+  --primary-foreground: #f7fff8;
+  --secondary: #e8eee7;
+  --secondary-foreground: #17383d;
+  --muted: #edf0ea;
+  --muted-foreground: #617072;
+  --accent: #d9ff7b;
+  --accent-foreground: #183026;
+  --destructive: #b93a36;
+  --border: #dce2da;
+  --input: #cfd8cf;
+  --ring: #39747b;
+  --chart-1: #14383d;
+  --chart-2: #78aab0;
+  --chart-3: #d9ff7b;
+  --chart-4: #f0ba63;
+  --chart-5: #915b76;
+  --radius: 0.9rem;
+  --sidebar: #eef2ec;
+  --sidebar-foreground: #122427;
+  --sidebar-primary: #14383d;
+  --sidebar-primary-foreground: #f7fff8;
+  --sidebar-accent: #d9ff7b;
+  --sidebar-accent-foreground: #183026;
+  --sidebar-border: #dce2da;
+  --sidebar-ring: #39747b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+}
+
+* { border-color: var(--border); }
+html { background: var(--background); }
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+button, a, input, select { -webkit-tap-highlight-color: transparent; }
+::selection { background: #d9ff7b; color: #122427; }
