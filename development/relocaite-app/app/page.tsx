@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import {
   ArrowLeft,
   ArrowRight,
@@ -81,12 +82,14 @@ const emptyFields: ExtractedFields = {
 
 function Brand() {
   return (
-    <div className="flex items-center gap-3" aria-label="Relocaite">
-      <div className="grid size-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[0_8px_24px_rgba(18,36,39,.16)]">
-        <span className="text-lg font-bold">R</span>
-      </div>
-      <span className="text-xl font-semibold tracking-[-0.03em]">Relocaite</span>
-    </div>
+    <Image
+      src="/relocaite-logo.svg"
+      alt="RelocAIte"
+      width={174}
+      height={39}
+      className="h-auto w-[152px] sm:w-[174px]"
+      priority
+    />
   );
 }
 
@@ -99,7 +102,7 @@ function AppHeader({
 }) {
   const index = stepOrder.indexOf(step);
   return (
-    <header className="border-b border-border/80 bg-background/90 backdrop-blur">
+    <header className="border-b border-border bg-white/95 shadow-[0_1px_12px_rgba(39,79,132,.04)] backdrop-blur">
       <div className="mx-auto flex w-full max-w-[1240px] items-center justify-between gap-4 px-5 py-4 md:px-10">
         <div className="flex items-center gap-3">
           <Button
@@ -120,12 +123,12 @@ function AppHeader({
           </span>
           <Progress
             value={((index + 1) / stepOrder.length) * 100}
-            className="w-36 bg-primary/10 [&_[data-slot=progress-indicator]]:bg-[#87b44d]"
+            className="w-36 bg-primary/10 [&_[data-slot=progress-indicator]]:bg-primary"
           />
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <LockKeyhole className="size-4" aria-hidden="true" />
-          <span className="hidden md:inline">Private by design</span>
+          <span className="hidden md:inline">Private & secure</span>
         </div>
       </div>
     </header>
@@ -134,34 +137,41 @@ function AppHeader({
 
 function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void }) {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="mx-auto flex w-full max-w-[1240px] items-center justify-between px-5 py-5 md:px-10">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_82%_10%,rgba(47,128,237,.10),transparent_25%),linear-gradient(180deg,#fbfdff_0%,#f4f8fe_100%)] text-foreground">
+      <header className="mx-auto flex w-full max-w-[1240px] items-center justify-between border-b border-border/70 px-5 py-5 md:px-10">
         <Brand />
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <LockKeyhole className="size-4" aria-hidden="true" />
-          Your data stays private
+        <div className="flex items-center gap-5">
+          <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex" aria-label="Preview navigation">
+            <span className="text-primary">Home</span>
+            <span>My journey</span>
+            <span>Documents</span>
+          </nav>
+          <div className="flex items-center gap-2 rounded-full border border-border bg-white px-3 py-2 text-sm text-muted-foreground shadow-sm">
+            <LockKeyhole className="size-4 text-primary" aria-hidden="true" />
+            <span className="hidden sm:inline">Private & secure</span>
+          </div>
         </div>
       </header>
 
       <section className="mx-auto grid w-full max-w-[1240px] gap-8 px-5 pb-10 pt-5 md:px-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,.95fr)] lg:items-center lg:py-14">
         <div className="max-w-2xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3 py-1.5 text-sm font-medium text-primary">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#bcd8ff] bg-[#eaf3ff] px-3 py-1.5 text-sm font-medium text-[#1768d3]">
             <Sparkles className="size-4" aria-hidden="true" />
-            Money & rights check · built for newcomers
+            Your relocation co-pilot
           </div>
           <h1 className="max-w-[720px] text-[clamp(2.7rem,7vw,5.7rem)] font-semibold leading-[.94] tracking-[-0.065em]">
-            Find what Germany may owe you.
+            Your Germany journey, made clearer.
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-8 text-muted-foreground">
-            Turn your payslip and a few life details into a clear, sourced plan for your money, work rights, and relocation deadlines.
+            Understand your next steps—from documents and deadlines to money and workplace opportunities—in one clear, sourced plan.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button
               size="lg"
-              className="h-12 rounded-xl px-6 text-base shadow-[0_10px_28px_rgba(18,36,39,.2)]"
+              className="h-12 rounded-xl px-6 text-base shadow-[0_10px_28px_rgba(47,128,237,.24)]"
               onClick={onStart}
             >
-              Check my situation <ArrowRight />
+              Start my journey <ArrowRight />
             </Button>
             <Button
               variant="ghost"
@@ -169,13 +179,13 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
               className="h-12 rounded-xl px-5 text-base"
               onClick={onDemo}
             >
-              Use demo profile
+              Explore demo
             </Button>
           </div>
           <ul className="mt-8 grid gap-3 text-sm text-muted-foreground sm:grid-cols-3">
             {["Takes about 3 minutes", "Official sources included", "No legal jargon"].map((item) => (
               <li className="flex items-center gap-2" key={item}>
-                <CircleCheck className="size-4 text-emerald-700" aria-hidden="true" />
+                <CircleCheck className="size-4 text-[#16a085]" aria-hidden="true" />
                 {item}
               </li>
             ))}
@@ -183,17 +193,17 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
         </div>
 
         <div className="relative mx-auto w-full max-w-[520px]">
-          <div className="absolute -inset-5 -z-10 rounded-[2.2rem] bg-[radial-gradient(circle_at_30%_20%,rgba(205,255,98,.35),transparent_48%),radial-gradient(circle_at_80%_80%,rgba(80,174,184,.24),transparent_48%)] blur-xl" />
-          <div className="overflow-hidden rounded-[2rem] border border-primary/10 bg-card shadow-[0_30px_80px_rgba(18,36,39,.14)]">
+          <div className="absolute -inset-5 -z-10 rounded-[2.2rem] bg-[radial-gradient(circle_at_30%_20%,rgba(47,128,237,.18),transparent_48%),radial-gradient(circle_at_80%_80%,rgba(38,185,154,.14),transparent_48%)] blur-xl" />
+          <div className="overflow-hidden rounded-[1.5rem] border border-border bg-card shadow-[0_24px_64px_rgba(39,79,132,.12)]">
             <div className="flex items-center justify-between border-b border-border px-6 py-5">
               <div>
-                <p className="text-sm text-muted-foreground">Priya’s overview</p>
-                <p className="mt-1 text-lg font-semibold">3 opportunities found</p>
+                <p className="text-sm text-muted-foreground">Hi Priya 👋</p>
+                <p className="mt-1 text-lg font-semibold">Here are your next steps</p>
               </div>
-              <span className="rounded-full bg-[#d9ff7b] px-3 py-1.5 text-sm font-semibold text-[#183026]">Demo</span>
+              <span className="rounded-full bg-[#dff8f1] px-3 py-1.5 text-sm font-semibold text-[#087663]">Demo</span>
             </div>
             <div className="space-y-3 p-4 sm:p-6">
-              <article className="rounded-2xl bg-[#14383d] p-5 text-white">
+              <article className="rounded-2xl bg-[linear-gradient(135deg,#2f80ed,#1768d3)] p-5 text-white">
                 <div className="flex items-start justify-between gap-4">
                   <p className="font-medium">Relocation costs</p>
                   <span className="rounded-full bg-white/12 px-2.5 py-1 text-xs">Worth checking</span>
@@ -251,8 +261,8 @@ function ProfileStep({
   return (
     <StepShell
       eyebrow="About you"
-      title="Let’s understand your move."
-      description="We only ask for facts that can change your action plan. You can review everything before analysis."
+      title="Let’s personalize your journey."
+      description="A few details help us show the steps that matter to you. Review everything before we build your plan."
       side={<ProfileAside />}
     >
       <div className="grid gap-5 sm:grid-cols-2">
@@ -443,7 +453,7 @@ function ProfileStep({
 function ProfileAside() {
   return (
     <div className="space-y-6">
-      <div className="grid size-12 place-items-center rounded-2xl bg-[#d9ff7b] text-[#14383d]">
+      <div className="grid size-12 place-items-center rounded-2xl bg-[#dff8f1] text-[#087663]">
         <ShieldCheck className="size-6" />
       </div>
       <div>
@@ -475,12 +485,12 @@ function StepShell({
   return (
     <main className="mx-auto grid w-full max-w-[1160px] gap-8 px-5 py-9 md:px-10 md:py-14 lg:grid-cols-[minmax(0,1fr)_300px]">
       <section>
-        <p className="text-sm font-semibold uppercase tracking-[.13em] text-[#477379]">{eyebrow}</p>
+        <p className="text-sm font-semibold uppercase tracking-[.13em] text-[#1768d3]">{eyebrow}</p>
         <h1 className="mt-3 max-w-2xl text-[clamp(2.15rem,5vw,3.7rem)] font-semibold leading-[1.02] tracking-[-0.055em]">{title}</h1>
         <p className="mb-9 mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">{description}</p>
         {children}
       </section>
-      {side ? <aside className="h-fit rounded-[1.6rem] bg-[#e8efea] p-6 lg:sticky lg:top-8">{side}</aside> : null}
+      {side ? <aside className="h-fit rounded-[1.25rem] border border-[#dce8f8] bg-[#eef5ff] p-6 shadow-[0_12px_36px_rgba(39,79,132,.06)] lg:sticky lg:top-8">{side}</aside> : null}
     </main>
   );
 }
@@ -525,18 +535,18 @@ function UploadStep({
       description="We’ll extract only the fields needed for this assessment. You confirm them before anything is evaluated."
       side={
         <div>
-          <FileCheck2 className="size-8 text-[#366970]" />
+          <FileCheck2 className="size-8 text-[#2f80ed]" />
           <p className="mt-5 text-lg font-semibold">What we look for</p>
           <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
             {["Gross and net salary", "Tax class", "Employer and pay period", "Health insurance label"].map((item) => (
-              <li className="flex gap-2" key={item}><Check className="mt-1 size-4 shrink-0 text-[#4d7a42]" />{item}</li>
+              <li className="flex gap-2" key={item}><Check className="mt-1 size-4 shrink-0 text-[#16a085]" />{item}</li>
             ))}
           </ul>
         </div>
       }
     >
       <div
-        className="grid min-h-[330px] place-items-center rounded-[1.8rem] border-2 border-dashed border-[#9db7af] bg-white/70 p-6 text-center transition-colors hover:bg-white"
+        className="grid min-h-[330px] place-items-center rounded-[1.5rem] border-2 border-dashed border-[#b8ccec] bg-white/80 p-6 text-center shadow-[0_12px_38px_rgba(39,79,132,.05)] transition-colors hover:border-primary hover:bg-white"
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {
           event.preventDefault();
@@ -545,7 +555,7 @@ function UploadStep({
         }}
       >
         <div className="max-w-md">
-          <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#e5f1ed] text-[#24545a]">
+          <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#eaf3ff] text-[#2f80ed]">
             <UploadCloud className="size-8" />
           </div>
           <h2 className="mt-6 text-xl font-semibold">Drop your payslip here</h2>
@@ -628,7 +638,7 @@ function ConfirmStep({
       description="Please confirm the extracted values. Corrections here become verified facts for the rules engine."
       side={
         <div>
-          <div className="grid size-12 place-items-center rounded-2xl bg-[#d9ff7b] text-[#14383d]"><FileCheck2 /></div>
+          <div className="grid size-12 place-items-center rounded-2xl bg-[#dff8f1] text-[#087663]"><FileCheck2 /></div>
           <p className="mt-5 font-semibold">Document read</p>
           <p className="mt-1 break-all text-sm leading-6 text-muted-foreground">{fileName}</p>
           <div className="mt-5 border-t border-border pt-5 text-sm leading-6 text-muted-foreground">
@@ -645,13 +655,13 @@ function ConfirmStep({
               {row.suffix ? <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">{row.suffix}</span> : null}
               <Input
                 id={row.key}
-                className={`h-10 rounded-lg bg-[#f8faf7] ${row.suffix ? "pl-7" : ""}`}
+                className={`h-10 rounded-lg bg-[#f7faff] ${row.suffix ? "pl-7" : ""}`}
                 value={fields[row.key]}
                 onChange={(event) => setFields({ ...fields, [row.key]: event.target.value })}
               />
             </div>
-            <span className={`flex items-center gap-1.5 text-xs font-medium ${row.confidence.startsWith("High") ? "text-[#51754b]" : "text-[#9a651d]"}`}>
-              <span className={`size-2 rounded-full ${row.confidence.startsWith("High") ? "bg-[#79a06e]" : "bg-[#e2a547]"}`} />
+            <span className={`flex items-center gap-1.5 text-xs font-medium ${row.confidence.startsWith("High") ? "text-[#087663]" : "text-[#9a651d]"}`}>
+              <span className={`size-2 rounded-full ${row.confidence.startsWith("High") ? "bg-[#26b99a]" : "bg-[#e2a547]"}`} />
               {row.confidence}
             </span>
           </div>
@@ -660,7 +670,7 @@ function ConfirmStep({
       {error ? <p role="alert" className="mt-4 text-sm text-destructive">{error}</p> : null}
       <div className="mt-8 flex justify-end">
         <Button size="lg" className="h-12 rounded-xl px-6 text-base" onClick={onAssess} disabled={busy}>
-          {busy ? <><RefreshCw className="animate-spin" /> Building your plan</> : <>Create my action plan <Sparkles /></>}
+          {busy ? <><RefreshCw className="animate-spin" /> Building your plan</> : <>Show my next steps <Sparkles /></>}
         </Button>
       </div>
     </StepShell>
@@ -668,9 +678,9 @@ function ConfirmStep({
 }
 
 const categoryMeta = {
-  money: { icon: WalletCards, label: "Money opportunity", tone: "bg-[#d9ff7b] text-[#183026]" },
+  money: { icon: WalletCards, label: "Money opportunity", tone: "bg-[#dff8f1] text-[#087663]" },
   deadline: { icon: CalendarClock, label: "Deadline", tone: "bg-[#ffddb0] text-[#603c12]" },
-  work: { icon: BriefcaseBusiness, label: "Work & records", tone: "bg-[#dcebed] text-[#234f55]" },
+  work: { icon: BriefcaseBusiness, label: "Work & records", tone: "bg-[#eaf3ff] text-[#1768d3]" },
   expert: { icon: Landmark, label: "Expert review", tone: "bg-[#e7dfe5] text-[#5a3548]" },
 };
 
@@ -694,7 +704,7 @@ function ResultsStep({
     <main className="mx-auto w-full max-w-[1160px] px-5 py-8 md:px-10 md:py-12">
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[.13em] text-[#477379]">Your money & rights action plan</p>
+          <p className="text-sm font-semibold uppercase tracking-[.13em] text-[#1768d3]">Your next steps</p>
           <h1 className="mt-3 text-[clamp(2.4rem,6vw,4.5rem)] font-semibold leading-none tracking-[-0.06em]">
             {profile.name}, here’s what to do next.
           </h1>
@@ -708,12 +718,12 @@ function ResultsStep({
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl bg-[#14383d] p-5 text-white">
+        <div className="rounded-2xl bg-[linear-gradient(135deg,#2f80ed,#1768d3)] p-5 text-white shadow-[0_14px_32px_rgba(47,128,237,.18)]">
           <p className="text-sm text-white/65">Actions identified</p>
           <p className="mt-3 text-3xl font-semibold">{findings.length}</p>
         </div>
-        <div className="rounded-2xl bg-[#d9ff7b] p-5 text-[#183026]">
-          <p className="text-sm text-[#183026]/65">Expenses to review</p>
+        <div className="rounded-2xl bg-[#dff8f1] p-5 text-[#087663]">
+          <p className="text-sm text-[#087663]/70">Expenses to review</p>
           <p className="mt-3 text-3xl font-semibold">€{moneyTotal.toLocaleString("en-DE")}</p>
         </div>
         <div className="rounded-2xl border border-border bg-white p-5">
@@ -748,7 +758,7 @@ function ResultsStep({
                 {isOpen ? <ChevronUp /> : <ChevronDown />}
               </button>
               {isOpen ? (
-                <div className="border-t border-border bg-[#f7f9f5] px-5 py-5 md:px-[88px] md:py-6">
+                <div className="border-t border-border bg-[#f7faff] px-5 py-5 md:px-[88px] md:py-6">
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
                       <p className="text-sm font-semibold">Why this appeared</p>
@@ -792,7 +802,7 @@ function ResultsStep({
                     </div>
                   ) : null}
                   <a
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#275f66] underline decoration-[#85a8a4] underline-offset-4"
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#1768d3] underline decoration-[#8abcf5] underline-offset-4"
                     href={finding.source.url}
                     target="_blank"
                     rel="noreferrer"
@@ -806,8 +816,8 @@ function ResultsStep({
         })}
       </div>
 
-      <div className="mt-8 flex items-start gap-3 rounded-2xl border border-border bg-[#edf1ec] p-5 text-sm leading-6 text-muted-foreground">
-        <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#477379]" />
+      <div className="mt-8 flex items-start gap-3 rounded-2xl border border-[#dce8f8] bg-[#eef5ff] p-5 text-sm leading-6 text-muted-foreground">
+        <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#1768d3]" />
         <p>{disclaimer}</p>
       </div>
     </main>

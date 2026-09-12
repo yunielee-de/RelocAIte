@@ -3,38 +3,38 @@
 @import "../vendor/shadcn-tailwind-4.13.0.css";
 
 :root {
-  --background: #f7f8f2;
-  --foreground: #122427;
+  --background: #f6f9fe;
+  --foreground: #10183f;
   --card: #ffffff;
-  --card-foreground: #122427;
+  --card-foreground: #10183f;
   --popover: #ffffff;
-  --popover-foreground: #122427;
-  --primary: #14383d;
-  --primary-foreground: #f7fff8;
-  --secondary: #e8eee7;
-  --secondary-foreground: #17383d;
-  --muted: #edf0ea;
-  --muted-foreground: #617072;
-  --accent: #d9ff7b;
-  --accent-foreground: #183026;
-  --destructive: #b93a36;
-  --border: #dce2da;
-  --input: #cfd8cf;
-  --ring: #39747b;
-  --chart-1: #14383d;
-  --chart-2: #78aab0;
-  --chart-3: #d9ff7b;
-  --chart-4: #f0ba63;
-  --chart-5: #915b76;
-  --radius: 0.9rem;
-  --sidebar: #eef2ec;
-  --sidebar-foreground: #122427;
-  --sidebar-primary: #14383d;
-  --sidebar-primary-foreground: #f7fff8;
-  --sidebar-accent: #d9ff7b;
-  --sidebar-accent-foreground: #183026;
-  --sidebar-border: #dce2da;
-  --sidebar-ring: #39747b;
+  --popover-foreground: #10183f;
+  --primary: #2f80ed;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf3ff;
+  --secondary-foreground: #175fbf;
+  --muted: #eff4fb;
+  --muted-foreground: #64718c;
+  --accent: #dff8f1;
+  --accent-foreground: #087663;
+  --destructive: #c33e4a;
+  --border: #dfe7f3;
+  --input: #cfdaea;
+  --ring: #2f80ed;
+  --chart-1: #2f80ed;
+  --chart-2: #26b99a;
+  --chart-3: #78b7ff;
+  --chart-4: #f2b84b;
+  --chart-5: #6e7da3;
+  --radius: 1rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #10183f;
+  --sidebar-primary: #2f80ed;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eaf3ff;
+  --sidebar-accent-foreground: #175fbf;
+  --sidebar-border: #dfe7f3;
+  --sidebar-ring: #2f80ed;
 }
 
 @theme inline {
@@ -65,7 +65,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --font-sans: Inter, "SF Pro Display", "Segoe UI", sans-serif;
 }
 
 * { border-color: var(--border); }
@@ -76,4 +76,4 @@ body {
   font-family: var(--font-sans);
 }
 button, a, input, select { -webkit-tap-highlight-color: transparent; }
-::selection { background: #d9ff7b; color: #122427; }
+::selection { background: #dcecff; color: #10183f; }
