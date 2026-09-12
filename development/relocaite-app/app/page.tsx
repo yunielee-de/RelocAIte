@@ -5,17 +5,25 @@ import Image from "next/image";
 import {
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   BriefcaseBusiness,
   CalendarClock,
   Check,
   ChevronDown,
   ChevronUp,
-  CircleCheck,
   ExternalLink,
   FileCheck2,
   FileText,
+  FolderOpen,
+  HomeIcon,
+  House,
   Landmark,
   LockKeyhole,
+  LogOut,
+  MessageSquare,
+  Route,
+  Search,
+  Settings,
   RefreshCw,
   ShieldCheck,
   Sparkles,
@@ -93,6 +101,36 @@ function Brand() {
   );
 }
 
+function Sidebar({ active = "Home" }: { active?: "Home" | "My journey" }) {
+  const navigation = [
+    { label: "Home", icon: HomeIcon },
+    { label: "My journey", icon: Route },
+    { label: "Documents", icon: FolderOpen },
+    { label: "AI assistant", icon: MessageSquare },
+    { label: "Resources", icon: BookOpen },
+  ];
+  return (
+    <aside className="hidden min-h-screen flex-col border-r border-border bg-white px-4 py-6 lg:flex">
+      <div className="px-2"><Brand /></div>
+      <nav className="mt-10 space-y-2" aria-label="Primary navigation">
+        {navigation.map(({ label, icon: Icon }) => (
+          <button
+            type="button"
+            key={label}
+            className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors ${active === label ? "bg-[#eaf3ff] text-primary" : "text-[#52617d] hover:bg-[#f5f8fc]"}`}
+          >
+            <Icon className="size-5" /> {label}
+          </button>
+        ))}
+      </nav>
+      <div className="mt-auto space-y-2 border-t border-border pt-5">
+        <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#52617d]"><Settings className="size-5" /> Settings</button>
+        <button type="button" className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#52617d]"><LogOut className="size-5" /> Log out</button>
+      </div>
+    </aside>
+  );
+}
+
 function AppHeader({
   step,
   onBack,
@@ -115,7 +153,7 @@ function AppHeader({
           >
             <ArrowLeft />
           </Button>
-          <Brand />
+          <div className="lg:hidden"><Brand /></div>
         </div>
         <div className="hidden items-center gap-3 sm:flex">
           <span className="text-sm text-muted-foreground">
@@ -136,98 +174,84 @@ function AppHeader({
 }
 
 function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void }) {
+  const journey = [
+    { title: "Job Offer & Contract", description: "Check, accept and understand your offer.", icon: BriefcaseBusiness, status: "Completed" },
+    { title: "Visa Application", description: "Get the right visa with the right documents.", icon: FileText, status: "Completed" },
+    { title: "Accommodation", description: "Find a place to call home and get registered.", icon: House, status: "In progress" },
+    { title: "Compliance & Setup", description: "Insurance, housing, legal essentials and your Tax ID.", icon: ShieldCheck, status: "Not started" },
+    { title: "Tax Basics", description: "Stay compliant and keep your receipts.", icon: Landmark, status: "Not started" },
+    { title: "Tax Refund & Benefits", description: "Check what may apply to your situation.", icon: WalletCards, status: "Ready" },
+  ];
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_82%_10%,rgba(47,128,237,.10),transparent_25%),linear-gradient(180deg,#fbfdff_0%,#f4f8fe_100%)] text-foreground">
-      <header className="mx-auto flex w-full max-w-[1240px] items-center justify-between border-b border-border/70 px-5 py-5 md:px-10">
-        <Brand />
-        <div className="flex items-center gap-5">
-          <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex" aria-label="Preview navigation">
-            <span className="text-primary">Home</span>
-            <span>My journey</span>
-            <span>Documents</span>
-          </nav>
-          <div className="flex items-center gap-2 rounded-full border border-border bg-white px-3 py-2 text-sm text-muted-foreground shadow-sm">
-            <LockKeyhole className="size-4 text-primary" aria-hidden="true" />
-            <span className="hidden sm:inline">Private & secure</span>
-          </div>
-        </div>
-      </header>
-
-      <section className="mx-auto grid w-full max-w-[1240px] gap-8 px-5 pb-10 pt-5 md:px-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,.95fr)] lg:items-center lg:py-14">
-        <div className="max-w-2xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#bcd8ff] bg-[#eaf3ff] px-3 py-1.5 text-sm font-medium text-[#1768d3]">
-            <Sparkles className="size-4" aria-hidden="true" />
-            Your relocation co-pilot
-          </div>
-          <h1 className="max-w-[720px] text-[clamp(2.7rem,7vw,5.7rem)] font-semibold leading-[.94] tracking-[-0.065em]">
-            Your Germany journey, made clearer.
-          </h1>
-          <p className="mt-7 max-w-xl text-lg leading-8 text-muted-foreground">
-            Understand your next steps—from documents and deadlines to money and workplace opportunities—in one clear, sourced plan.
-          </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button
-              size="lg"
-              className="h-12 rounded-xl px-6 text-base shadow-[0_10px_28px_rgba(47,128,237,.24)]"
-              onClick={onStart}
-            >
-              Start my journey <ArrowRight />
-            </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="h-12 rounded-xl px-5 text-base"
-              onClick={onDemo}
-            >
-              Explore demo
-            </Button>
-          </div>
-          <ul className="mt-8 grid gap-3 text-sm text-muted-foreground sm:grid-cols-3">
-            {["Takes about 3 minutes", "Official sources included", "No legal jargon"].map((item) => (
-              <li className="flex items-center gap-2" key={item}>
-                <CircleCheck className="size-4 text-[#16a085]" aria-hidden="true" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="relative mx-auto w-full max-w-[520px]">
-          <div className="absolute -inset-5 -z-10 rounded-[2.2rem] bg-[radial-gradient(circle_at_30%_20%,rgba(47,128,237,.18),transparent_48%),radial-gradient(circle_at_80%_80%,rgba(38,185,154,.14),transparent_48%)] blur-xl" />
-          <div className="overflow-hidden rounded-[1.5rem] border border-border bg-card shadow-[0_24px_64px_rgba(39,79,132,.12)]">
-            <div className="flex items-center justify-between border-b border-border px-6 py-5">
-              <div>
-                <p className="text-sm text-muted-foreground">Hi Priya 👋</p>
-                <p className="mt-1 text-lg font-semibold">Here are your next steps</p>
-              </div>
-              <span className="rounded-full bg-[#dff8f1] px-3 py-1.5 text-sm font-semibold text-[#087663]">Demo</span>
+    <div className="min-h-screen bg-[#f7faff] text-foreground lg:grid lg:grid-cols-[220px_minmax(0,1fr)]">
+      <Sidebar />
+      <main className="min-w-0">
+        <header className="flex h-[82px] items-center justify-between gap-5 border-b border-border bg-white px-5 md:px-8">
+          <div className="lg:hidden"><Brand /></div>
+          <div className="ml-auto flex items-center gap-4">
+            <div className="hidden h-11 w-[290px] items-center gap-3 rounded-xl border border-border bg-[#fbfcff] px-4 text-sm text-muted-foreground shadow-sm sm:flex">
+              <Search className="size-5" /> Search anything...
             </div>
-            <div className="space-y-3 p-4 sm:p-6">
-              <article className="rounded-2xl bg-[linear-gradient(135deg,#2f80ed,#1768d3)] p-5 text-white">
-                <div className="flex items-start justify-between gap-4">
-                  <p className="font-medium">Relocation costs</p>
-                  <span className="rounded-full bg-white/12 px-2.5 py-1 text-xs">Worth checking</span>
+            <div className="grid size-11 place-items-center rounded-full bg-[#111b42] text-sm font-semibold text-white">PR</div>
+          </div>
+        </header>
+
+        <div className="mx-auto max-w-[1120px] px-5 py-7 md:px-8 md:py-9">
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-end">
+            <div>
+              <h1 className="text-[clamp(2rem,4vw,3rem)] font-semibold tracking-[-0.045em]">Hi Priya 👋</h1>
+              <p className="mt-1 text-lg text-muted-foreground">Let’s get you set up in Germany.</p>
+              <div className="mt-6 rounded-2xl border border-border bg-white p-5 shadow-[0_8px_28px_rgba(39,79,132,.06)]">
+                <div className="flex items-end justify-between">
+                  <div><p className="font-semibold">Your journey</p><p className="mt-1 text-sm text-muted-foreground">2 of 6 steps completed</p></div>
+                  <span className="text-lg font-semibold text-primary">33%</span>
                 </div>
-                <p className="mt-6 text-3xl font-semibold tracking-[-0.04em]">€2,400</p>
-                <p className="mt-2 text-sm leading-6 text-white/70">Unreimbursed expenses to review before filing.</p>
-              </article>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <article className="rounded-2xl border border-border p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[.11em] text-muted-foreground">Deadline</p>
-                  <p className="mt-3 font-semibold">Residence permit</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Review in 43 days</p>
-                </article>
-                <article className="rounded-2xl border border-border p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[.11em] text-muted-foreground">Payslip</p>
-                  <p className="mt-3 font-semibold">Core fields identified</p>
-                  <p className="mt-1 text-sm text-muted-foreground">1 item to confirm</p>
-                </article>
+                <Progress value={33} className="mt-4 h-3 bg-[#e8eef7] [&_[data-slot=progress-indicator]]:bg-primary" />
+              </div>
+            </div>
+            <div className="relative min-h-[188px] overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#d9efff_0%,#f2f8ff_58%,#c7e2f6_100%)] p-7 shadow-[0_8px_28px_rgba(39,79,132,.08)]">
+              <p className="relative z-10 text-xl font-medium leading-7">A new chapter<br />awaits.</p>
+              <div className="mt-4 h-0.5 w-8 bg-foreground" />
+              <div className="absolute bottom-0 right-5 flex h-24 items-end gap-2 opacity-45" aria-hidden="true">
+                {[38,62,48,86,54,70].map((height, index) => <span key={index} className="w-7 rounded-t-sm bg-[#367ca6]" style={{ height }} />)}
+                <span className="mb-0 h-32 w-1 bg-[#18395a]" />
               </div>
             </div>
           </div>
+
+          <h2 className="mb-4 mt-7 text-xl font-semibold">Your steps</h2>
+          <div className="space-y-3">
+            {journey.map(({ title, description, icon: Icon, status }, index) => {
+              const active = status === "In progress";
+              const ready = status === "Ready";
+              const complete = status === "Completed";
+              return (
+                <article key={title} className={`grid gap-4 rounded-2xl border bg-white p-4 shadow-[0_5px_20px_rgba(39,79,132,.045)] sm:grid-cols-[40px_64px_minmax(0,1fr)_auto_24px] sm:items-center ${active || ready ? "border-[#9cc8ff]" : "border-border"}`}>
+                  <span className="grid size-9 place-items-center rounded-full bg-[#f0f4fa] text-sm font-semibold text-[#536481]">{index + 1}</span>
+                  <span className={`grid size-14 place-items-center rounded-xl ${complete ? "bg-[#e6f8f3] text-[#13a487]" : ready || active ? "bg-[#eaf3ff] text-primary" : "bg-[#f1f4f9] text-[#536481]"}`}><Icon className="size-7" /></span>
+                  <div>
+                    <h3 className="font-semibold">{title}</h3>
+                    <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>
+                    {active ? <button type="button" onClick={onDemo} className="mt-2 rounded-full bg-primary px-6 py-2 text-sm font-medium text-white">Continue</button> : null}
+                    {ready ? <button type="button" onClick={onStart} className="mt-2 text-sm font-semibold text-primary">Start check</button> : null}
+                  </div>
+                  <span className={`w-fit rounded-full px-3 py-1.5 text-xs font-medium ${complete ? "bg-[#def7f0] text-[#07866f]" : active ? "bg-[#eaf3ff] text-[#1768d3]" : ready ? "bg-[#eaf3ff] text-[#1768d3]" : "bg-[#f1f4f8] text-[#52617d]"}`}>
+                    {complete ? "✓ Completed" : status}
+                  </span>
+                  <ArrowRight className="hidden size-5 text-[#536481] sm:block" />
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 flex flex-col gap-4 rounded-2xl border border-border bg-white p-4 shadow-[0_5px_20px_rgba(39,79,132,.045)] sm:flex-row sm:items-center">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#eaf3ff] text-primary"><Sparkles className="size-5" /></span>
+            <div className="flex-1"><p className="font-semibold">Need help with your next step?</p><p className="text-sm text-muted-foreground">Ask our AI assistant about working and living in Germany.</p></div>
+            <Button variant="secondary" className="rounded-full"><MessageSquare /> Ask AI assistant</Button>
+          </div>
         </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
 
@@ -880,7 +904,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[220px_minmax(0,1fr)]">
+      <Sidebar active="My journey" />
+      <div className="min-w-0">
       <AppHeader step={step} onBack={() => goTo(previousStep[step])} />
       {step === "profile" ? (
         <ProfileStep profile={profile} setProfile={setProfile} onNext={() => goTo("upload")} />
@@ -928,6 +954,7 @@ export default function Home() {
           }}
         />
       ) : null}
+      </div>
     </div>
   );
 }
