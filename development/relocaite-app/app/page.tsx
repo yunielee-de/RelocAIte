@@ -198,7 +198,6 @@ function Welcome({ onStart, onDemo }: { onStart: () => void; onDemo: () => void 
                 <img src="/priya-profile.png" alt="Priya’s profile" className="size-11 rounded-full object-cover ring-2 ring-white" />
                 <div><p className="type-label text-muted-foreground">Priya’s preview</p><p className="mt-1 type-body font-semibold">3 next steps identified</p></div>
               </div>
-              <span className="rounded-full bg-[#dff8f1] px-3 py-1.5 type-label font-semibold text-[#087663]">Demo</span>
             </div>
             <div className="space-y-3 p-4 sm:p-6">
               <article className="rounded-2xl bg-[linear-gradient(135deg,#2f80ed,#1768d3)] p-5 text-white"><div className="flex items-start justify-between gap-4"><p className="font-medium">Relocation costs</p><span className="rounded-full bg-white/12 px-2.5 py-1 type-label">Worth checking</span></div><p className="mt-6 type-heading font-semibold tracking-[-0.04em]">€2,400</p><p className="mt-2 type-label leading-6 text-white/70">Unreimbursed expenses to review before filing.</p></article>
