@@ -12,7 +12,16 @@ npm.cmd ci
 npm.cmd run dev
 ```
 
-Open http://localhost:3000. No API key, database or account is required.
+Open http://localhost:3000. The demo and manual-entry journeys work without an API key, database or account.
+
+To extract facts from a newly uploaded contract, create `.env.local` from `.env.example` and set a server-side OpenAI API key:
+
+```powershell
+Copy-Item .env.example .env.local
+# Edit .env.local and set OPENAI_API_KEY, then restart the dev server.
+```
+
+The optional `OPENAI_CONTRACT_MODEL` setting defaults to `gpt-5-mini`. Use a dedicated, restricted project key. In a deployment, configure both values in the hosting environment rather than committing `.env.local`.
 
 This machine also has a portable Node runtime already used for validation. With the existing dependencies:
 
@@ -53,10 +62,11 @@ For a standard-case example, explicitly report recognition as confirmed. This is
 
 - Original logo, blue/white sidebar, five horizontal cards, real progress, current stage, next action and responsive mobile navigation.
 - Two-column contract preview and findings, with linked demo excerpts, manual editing, confirmation, salary annualisation, insights and a copyable HR request.
-- **No arbitrary PDF extraction or OCR.** Personal files can be previewed locally during the current visit; only metadata persists. The fictional sample uses prepared fields matched to the sample PDF.
+- Personal PDF, JPG and PNG contracts can be analyzed through `POST /api/extract-contract` when `OPENAI_API_KEY` is configured. Extracted fields and short source excerpts remain unconfirmed until the user reviews them. The fictional sample still uses prepared fields matched to the sample PDF.
 - Shared Vault: stable ID, document type, filename, added/updated dates, status and stages using the record. Replacement keeps the record ID and other documents.
-- **File bytes are not uploaded or persisted.** Keep originals. “Already provided” means metadata exists; “Reported ready” means user-reported availability without selecting a file. Neither verifies evidence; samples are not application documents.
-- Summaries and the AI Assistant preview use templates, not a live model.
+- **File bytes are not persisted by RelocAIte.** A selected contract is sent transiently through the server to the configured OpenAI account for extraction with response storage disabled; the Journey Profile and Vault retain fields and metadata only. Keep originals. “Already provided” means metadata exists; “Reported ready” means user-reported availability without selecting a file. Neither verifies evidence; samples are not application documents.
+- The extraction route rejects cross-site browser requests and oversized bodies, applies a small per-instance request limit, disables response caching and never logs the key or contract contents.
+- Journey summaries and the AI Assistant preview use templates. The live model is limited to contract extraction.
 - Visa rules support EU/EEA/Swiss, standard academic Blue Card and formally qualified skilled-worker preparation. Conditional checklist, sources, next action, export and D-visa timeline.
 - Lightweight housing, Anmeldung, insurance/tax setup and opportunity guides. No booking, government submission, insurance purchase or tax filing.
 - No auth, cloud storage, database or cross-device sync.
@@ -84,6 +94,7 @@ The responsible mission or authority determines the full document requirements. 
 - `lib/journey-profile.ts`, `journey-storage.ts`: validation, migration and persistence.
 - `lib/document-vault.ts`, `journey-stages.ts`: document records and progress.
 - `lib/demo-contract.ts`, `mvp-visa-rules.ts`, `visa-assessment.ts`: fixtures, sources and rules.
+- `app/api/extract-contract/route.ts`, `lib/contract-extraction.ts`: transient contract analysis and validated profile mapping.
 - `tests/journey.test.ts`: rule boundaries, migration, reuse, progress and API failures.
 
 ## Five-stage upgrade inventory
@@ -116,7 +127,7 @@ The supplied screenshots and HTML mockup inform layout and interactions only. Th
 - Step 1 places document preview on the left and findings on the right. Demo highlights and numbered findings link in both directions using keyboard-accessible buttons.
 - **Confirmed** means the user reviewed all facts in that finding; it is not a legal finding. **Worth checking** covers unconfirmed or unclear information. **Missing** covers absent, not-found or unknown fields. Counts are computed from the profile.
 - Edited values update findings and the shared profile. Linked demo excerpts retain the original source values; corrections are explicitly marked.
-- Personal PDF/image previews use temporary object URLs. File contents are never added to the saved profile or sent to the extraction endpoint. On navigation/reload, select the recorded file again to preview it without clearing existing facts. Interactive highlights are available for the prepared demo excerpts only.
+- Personal PDF/image previews use temporary object URLs. New uploads are sent to the extraction endpoint when it is configured, but file bytes are never added to the saved profile. On navigation/reload, select the recorded file again to preview it without clearing existing facts. Interactive highlights are available for the prepared demo excerpts only; uploaded contracts show returned source excerpts beside their corresponding fields.
 - The persistent confirmation/continue bar provides the path to Stage 2. Detailed working-benefit and threshold explanations remain available in expandable sections.
 
 Created: `components/contract-preview.tsx`, `components/journey-overview.tsx`, `lib/contract-review.ts`, `tests/contract-review.test.ts`.

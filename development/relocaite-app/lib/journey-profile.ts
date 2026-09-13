@@ -15,7 +15,7 @@ export const qualificationKeys = [
 ] as const;
 export type EmploymentKey = typeof employmentKeys[number];
 export type QualificationKey = typeof qualificationKeys[number];
-export type Origin = "unknown" | "manual" | "demo-contract" | "demo-profile";
+export type Origin = "unknown" | "manual" | "contract-extraction" | "demo-contract" | "demo-profile";
 export type ProfileField = {
   value: string;
   extractedValue: string | null;
@@ -124,7 +124,7 @@ export function parseProfile(input: unknown): JourneyProfile {
     for (const key of keys) {
       const field = record[key];
       if (!isRecord(field) || typeof field.value !== "string" || field.value.length > 2000 || typeof field.confirmed !== "boolean"
-        || !["unknown", "manual", "demo-contract", "demo-profile"].includes(String(field.origin))
+        || !["unknown", "manual", "contract-extraction", "demo-contract", "demo-profile"].includes(String(field.origin))
         || !(field.extractedValue === null || typeof field.extractedValue === "string" && field.extractedValue.length <= 2000)
         || !(field.evidence === undefined || typeof field.evidence === "string" && field.evidence.length <= 2000)) throw new Error(`Invalid field: ${key}.`);
       if (field.value && options[key] && !options[key]!.includes(field.value)) throw new Error(`Invalid choice: ${key}.`);
