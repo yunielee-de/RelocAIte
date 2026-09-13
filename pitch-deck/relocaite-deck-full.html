@@ -1,0 +1,834 @@
+<!doctype html>
+<title>RelocAIte Full Deck</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Deliberately single-theme: transcribes the existing RelocAIte deck
+     (RelocAlte Hackathon Pitch Deck.pdf) 1:1 into editable HTML. Same tokens,
+     same layout language, same content, page for page — nothing restyled. */
+  :root {
+    --page-bg: #DEE1EA;
+    --slide-bg: #F7F8FB;
+    --card-bg: #FFFFFF;
+    --border: #E6E8F0;
+    --ink: #14163A;
+    --muted: #6B7280;
+    --indigo: #4F46E5;
+    --indigo-tint: #EEF0FD;
+    --blue-solid: #2F5CFF;
+    --teal: #0F9488;
+    --teal-tint: #E3F6F3;
+    --rose: #D3453A;
+    --rose-tint: #FBE7E5;
+    --amber: #B4790A;
+    --amber-tint: #FBEFD8;
+    --green: #178A53;
+    --green-tint: #E5F8EE;
+    --pink: #E23F92;
+    --pink-tint: #FCE4F0;
+    --font: "Plus Jakarta Sans", -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page-bg); color: var(--ink); font-family: var(--font);
+    -webkit-font-smoothing: antialiased; padding: 28px 16px 80px;
+    display: flex; flex-direction: column; align-items: center; gap: 30px;
+  }
+  .slide-wrap { width: 100%; max-width: 1220px; display: flex; flex-direction: column; gap: 6px; scroll-margin-top: 20px; }
+  .page-tag { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #8B8FA3; padding: 0 4px; }
+  .gslide {
+    width: 100%; aspect-ratio: 16 / 9; background: var(--slide-bg);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+    display: flex; flex-direction: column; box-shadow: 0 1px 3px rgba(20,22,58,.08);
+    position: relative;
+  }
+  @media (max-width: 760px) { .gslide { aspect-ratio: auto; min-height: 560px; } }
+  .gradbar { height: 6px; background: linear-gradient(90deg,#7C3AED,#3B82F6,#14B8A6); flex-shrink: 0; }
+  .gbody { flex: 1; min-height: 0; padding: clamp(18px, 2.6vw, 38px) clamp(22px, 3.6vw, 48px); display: flex; flex-direction: column; gap: clamp(8px, 1.4vw, 14px); }
+
+  .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--blue-solid); }
+  h1 { font-size: clamp(18px, 2.3vw, 27px); font-weight: 800; line-height: 1.2; margin: 0; color: var(--ink); text-wrap: balance; }
+  h1.huge { font-size: clamp(30px, 4.4vw, 52px); }
+  p.sub { font-size: 12.5px; color: var(--muted); margin: 0; line-height: 1.5; max-width: 84ch; }
+
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(16,24,64,.04), 0 10px 24px -12px rgba(16,24,64,.10);
+  }
+
+  .icon-badge { width: 34px; height: 34px; border-radius: 10px; background: var(--indigo-tint); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .icon-badge svg { width: 17px; height: 17px; stroke: var(--indigo); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-badge.rose { background: var(--rose-tint); } .icon-badge.rose svg { stroke: var(--rose); }
+  .icon-badge.teal { background: var(--teal-tint); } .icon-badge.teal svg { stroke: var(--teal); }
+  .icon-badge.amber { background: var(--amber-tint); } .icon-badge.amber svg { stroke: var(--amber); }
+  .icon-badge.sm { width: 28px; height: 28px; border-radius: 8px; } .icon-badge.sm svg { width: 14px; height: 14px; }
+
+  .chip { display: inline-flex; flex-direction: column; gap: 1px; border-radius: 12px; padding: 7px 14px; width: fit-content; }
+  .chip .cl { font-size: 9.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; opacity: .85; }
+  .chip .cv { font-size: 17px; font-weight: 800; }
+  .chip.solid-blue { background: var(--blue-solid); color: #fff; }
+  .chip.solid-rose { background: var(--rose); color: #fff; }
+  .chip.tint-green { background: var(--green-tint); color: var(--green); }
+  .chip.tint-amber { background: var(--amber-tint); color: var(--amber); }
+  .chip.outline { background: #fff; color: var(--ink); border: 1px solid var(--border); }
+
+  .avatar-circle { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; flex-shrink: 0; }
+
+  .footnote { font-size: 10px; color: #8B8FA3; }
+  .foot-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-top: auto; }
+  .foot-note { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: #8B8FA3; }
+  .brand-caption { font-size: 11.5px; font-weight: 700; color: var(--ink); }
+  .tag-pill { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .pos-tr { position: absolute; top: 16px; right: 20px; }
+
+  .pencil { } /* spacer */
+</style>
+
+<!-- ============ PAGE 1 — Title ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 1</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="align-items:center;text-align:center;justify-content:center;gap:14px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <svg width="30" height="30" viewBox="0 0 24 24"><path d="M4 20 Q4 10 14 10 L14 5 L20 10 L14 15 L14 12 Q8 12 8 20 Z" fill="var(--blue-solid)"/></svg>
+        <span style="font-size:30px;font-weight:800;color:var(--ink);">Reloc<span style="color:var(--blue-solid);">AI</span>te</span>
+      </div>
+      <h1 class="huge" style="max-width:16ch;">AI-powered Relocation. Seamless German Behörden Integration.</h1>
+      <p class="sub" style="max-width:70ch;">Supporting international talented workforce throughout every administrative milestone to arrive and start working in Germany.</p>
+      <div style="font-size:12.5px;font-weight:700;margin-top:6px;">Presented by Hackathon Team:</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+        <div class="card" style="padding:12px 22px;display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="avatar-circle" style="width:44px;height:44px;background:#4F46E5;font-size:15px;">Y</div><span style="font-size:12px;font-weight:700;">Yunie</span></div>
+        <div class="card" style="padding:12px 22px;display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="avatar-circle" style="width:44px;height:44px;background:#0F9488;font-size:15px;">R</div><span style="font-size:12px;font-weight:700;">Roya</span></div>
+        <div class="card" style="padding:12px 22px;display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="avatar-circle" style="width:44px;height:44px;background:#D3453A;font-size:15px;">M</div><span style="font-size:12px;font-weight:700;">Mari</span></div>
+        <div class="card" style="padding:12px 22px;display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="avatar-circle" style="width:44px;height:44px;background:#B4790A;font-size:15px;">M</div><span style="font-size:12px;font-weight:700;">Mary</span></div>
+        <div class="card" style="padding:12px 22px;display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="avatar-circle" style="width:44px;height:44px;background:#E23F92;font-size:15px;">E</div><span style="font-size:12px;font-weight:700;">Evelyn</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 2 — Structural Crisis ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 2</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="flex-direction:row;gap:24px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px;min-width:0;">
+        <h1>Structural Crisis: Ausländerbehörde</h1>
+        <p class="sub">In times of demographic change Germany is in need of talented foreign workforce. Severe administrative backlogs and paper-based workflows in local German authorities create critical bottlenecks.</p>
+        <div style="border-left:4px solid var(--rose);background:var(--rose-tint);padding:10px 16px;border-radius:6px;">
+          <div style="font-size:26px;font-weight:800;color:var(--rose);">370,000+</div>
+          <div style="font-size:11px;color:var(--rose);">Deficit of Skilled Workers Across Germany</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div class="icon-badge sm rose"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <div><div style="font-size:12.5px;font-weight:700;">Month-Long Waiting Periods</div><div style="font-size:11px;color:var(--muted);">Overcrowded offices require camping outside at dawn or waiting months just for an initial appointment.</div></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div class="icon-badge sm rose"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 11h6M9 15h6"/></svg></div>
+          <div><div style="font-size:12.5px;font-weight:700;">Bureaucratic Friction &amp; Relocation Deterrence</div><div style="font-size:11px;color:var(--muted);">Complex, non-digitalized legal hurdles deter global professionals exactly when Germany needs them most.</div></div>
+        </div>
+      </div>
+      <div style="flex:0 0 40%;border-radius:14px;overflow:hidden;"><img src="assets/ausl-queue-photo.jpg" alt="Queue outside an Ausländerbehörde office" style="width:100%;height:100%;object-fit:cover;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 3 — Human Impact (original) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 3</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>Human Impact: Mari &amp; Yunie's Journey</h1>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0;">
+        <div class="card" style="border-top:4px solid #7C5CFF;padding:16px 18px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;"><div class="avatar-circle" style="width:32px;height:32px;background:#7C5CFF;font-size:12px;">M</div><div><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;">EU Blue Card Eligibility Friction</div><div style="font-size:16px;font-weight:800;">Mari's €100 Gap</div></div></div>
+          <span class="chip" style="background:var(--rose-tint);color:var(--rose);padding:4px 10px;"><span class="cv" style="font-size:11.5px;">&#9888; Missed Visa Threshold</span></span>
+          <p style="margin:0;font-size:11.5px;color:#3A3A45;line-height:1.5;">Mari missed her EU Blue Card visa eligibility by just <b>€100 per year</b> because she lacked real-time, immediate AI contract clause feedback during her salary negotiation.</p>
+          <div style="border:1.5px dashed var(--border);border-radius:8px;padding:8px 10px;margin-top:auto;"><span style="font-size:11px;"><b>Impact:</b> Small information gaps lead to massive visa status delays and avoidable legal headaches.</span></div>
+        </div>
+        <div class="card" style="border-top:4px solid #14B8A6;padding:16px 18px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;"><div class="avatar-circle" style="width:32px;height:32px;background:#14B8A6;font-size:12px;">Y</div><div><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;">Isolated Bureaucracy Navigation</div><div style="font-size:16px;font-weight:800;">Yunie's Solo Journey</div></div></div>
+          <span class="chip tint-amber" style="padding:4px 10px;"><span class="cv" style="font-size:11.5px;">&#128100; High Corporate Expense</span></span>
+          <p style="margin:0;font-size:11.5px;color:#3A3A45;line-height:1.5;">Navigated Germany's overwhelming bureaucracy completely alone—a painful, high-friction process that large corporations routinely pay external agencies thousands of Euros to manage.</p>
+          <div style="border:1.5px dashed var(--border);border-radius:8px;padding:8px 10px;margin-top:auto;"><span style="font-size:11px;"><b>Impact:</b> Unassisted immigrants face extreme stress without dedicated relocation support.</span></div>
+        </div>
+      </div>
+      <div class="foot-note">&#128161; Personal struggles highlight a urgent need for real-time guidance, contract transparency, and automated immigration assistance to retain global talent.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 4 — kept as previously approved (Human Impact, Product View) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 4 — kept as approved</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <span class="eyebrow">Human Impact · Product View</span>
+      <h1>Same two near-misses, this time caught by the product</h1>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0;">
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="icon-badge rose"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/></svg></div>
+            <div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;">EU Blue Card Eligibility</div><div style="font-size:15px;font-weight:700;">Mari's gap, caught in the offer</div></div>
+          </div>
+          <svg viewBox="0 0 480 120" style="width:100%;height:auto;">
+            <line x1="34" y1="94" x2="446" y2="94" stroke="#E6E8F0" stroke-width="1"/>
+            <rect x="34" y="60" width="223" height="22" rx="3" fill="var(--rose)"/>
+            <text x="40" y="54" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="var(--rose)">Mari's salary &middot; &#8364;50,500</text>
+            <line x1="346" y1="34" x2="346" y2="94" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 4"/>
+            <text x="346" y="26" font-family="Plus Jakarta Sans" font-size="10.5" fill="var(--ink)" text-anchor="middle" font-weight="600">2026 threshold</text>
+            <path d="M257 71 L 340 71" stroke="var(--rose)" stroke-width="1.5" fill="none" marker-end="url(#a4)"/>
+            <text x="298" y="66" font-family="Plus Jakarta Sans" font-size="10" fill="var(--rose)" text-anchor="middle" font-weight="700">&#8364;200 short</text>
+            <text x="34" y="110" font-family="Plus Jakarta Sans" font-size="10" fill="#9AA0B4">&#8364;50,000</text>
+            <text x="346" y="110" font-family="Plus Jakarta Sans" font-size="10" fill="#9AA0B4" text-anchor="middle">&#8364;50,700</text>
+            <text x="446" y="110" font-family="Plus Jakarta Sans" font-size="10" fill="#9AA0B4" text-anchor="end">&#8364;51,000</text>
+            <defs><marker id="a4" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="var(--rose)"/></marker></defs>
+          </svg>
+          <span class="chip solid-rose"><span class="cl">Fix before signing</span><span class="cv">&#8364;200 / yr</span></span>
+          <p style="margin:0;font-size:11.5px;color:var(--muted);line-height:1.5;">Flagged red in the contract-review step, before signing — not discovered four months later at the Ausländerbehörde.</p>
+          <p class="footnote">Working prototype &middot; step1-contract-review-mockup.html</p>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="icon-badge teal"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;">Rights &amp; Tax</div><div style="font-size:15px;font-weight:700;">Yunie's near-miss, surfaced automatically</div></div>
+          </div>
+          <svg viewBox="0 0 480 100" style="width:100%;height:auto;">
+            <line x1="34" y1="46" x2="446" y2="46" stroke="#E6E8F0" stroke-width="2"/>
+            <g font-family="Plus Jakarta Sans" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="600">
+              <rect x="26" y="38" width="16" height="16" rx="5" fill="#fff" stroke="var(--indigo)" stroke-width="1.6"/>
+              <text x="34" y="72">Offer</text>
+              <rect x="130" y="38" width="16" height="16" rx="5" fill="#fff" stroke="var(--indigo)" stroke-width="1.6"/>
+              <text x="138" y="72">Visa</text>
+              <rect x="234" y="38" width="16" height="16" rx="5" fill="#fff" stroke="var(--indigo)" stroke-width="1.6"/>
+              <text x="242" y="72">Home</text>
+              <rect x="330" y="38" width="16" height="16" rx="5" fill="#fff" stroke="var(--indigo)" stroke-width="1.6"/>
+              <text x="338" y="72">Insurance</text>
+            </g>
+            <circle cx="438" cy="46" r="16" fill="var(--teal-tint)"/>
+            <rect x="430" y="38" width="16" height="16" rx="5" fill="var(--teal)"/>
+            <text x="438" y="80" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="var(--teal)" text-anchor="middle">Rights &amp; Tax</text>
+          </svg>
+          <span class="chip" style="background:var(--teal-tint);color:var(--teal);"><span class="cl">Built today</span><span class="cv">5 paid days</span></span>
+          <p style="margin:0;font-size:11.5px;color:var(--muted);line-height:1.5;">Bildungsurlaub days that would've expired unclaimed — surfaced on day one of the scan, not by chance.</p>
+          <p class="footnote">Live logic &middot; Anspruch Scan &mdash; 3 state rule sets</p>
+        </div>
+      </div>
+      <div class="foot-row">
+        <div class="foot-note">&#128161; Same near-misses. This time, caught by the product instead of by chance.</div>
+        <span class="brand-caption">RelocAIte Intelligent Guidance</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 5 — The Real Human & Structural Crisis ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 5</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="flex-direction:row;gap:24px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;min-width:0;">
+        <h1>The Real Human &amp; Structural Crisis</h1>
+        <div style="font-size:13px;font-weight:800;margin-top:6px;">Personal Struggles in a Rigid System</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div class="avatar-circle" style="width:30px;height:30px;background:#7C5CFF;font-size:11px;">M</div>
+          <p style="margin:0;font-size:11.5px;line-height:1.5;"><b>Mari's €100 Gap:</b> Mari missed her EU Blue Card visa eligibility by just €100/year because she lacked immediate AI contract clause feedback during salary negotiation.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div class="avatar-circle" style="width:30px;height:30px;background:#14B8A6;font-size:11px;">Y</div>
+          <p style="margin:0;font-size:11.5px;line-height:1.5;"><b>Yunie's Solo Journey:</b> Navigated the overwhelming bureaucracy alone—a painful process that corporations pay external agencies thousands of Euros to manage.</p>
+        </div>
+        <div style="border-left:3px solid var(--indigo);background:var(--indigo-tint);padding:9px 14px;border-radius:6px;margin-top:auto;">
+          <span style="font-size:11px;"><b>Macro Impact:</b> Germany faces a deficit of 370,000+ skilled workers. Bureaucratic friction deters global talent when Germany needs them most.</span>
+        </div>
+      </div>
+      <div style="flex:0 0 38%;border-radius:14px;overflow:hidden;"><img src="assets/ausl-queue-photo.jpg" alt="Queue outside an Ausländerbehörde office" style="width:100%;height:100%;object-fit:cover;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 6 — Hurdles ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 6</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>The Hurdles of Relocation of skilled Workforce in German Authorities.</h1>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;">
+        <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M4 20l3-1 10-10-2-2L5 17l-1 3z"/><path d="M14 6l2-2 2 2-2 2"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Bureaucratic Friction</div>
+          <p style="margin:0;font-size:11.5px;color:var(--muted);line-height:1.5;">Endless paperwork, obscure legal terms (Probezeit, Kündigungsfrist), and strict compliance requirements at every step.</p>
+        </div>
+        <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 10h3M8 14h5M13 9v6l3-2"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Cultural &amp; Language Barrier</div>
+          <p style="margin:0;font-size:11.5px;color:var(--muted);line-height:1.5;">German-only official communications and complex administrative jargon create anxiety and frequent errors in filing.</p>
+        </div>
+        <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M9 4l6 2 5-2v14l-5 2-6-2-5 2V6l5-2z"/><path d="M9 4v14M15 6v14"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Fragmented State Rules</div>
+          <p style="margin:0;font-size:11.5px;color:var(--muted);line-height:1.5;">Visa and registration requirements differ significantly across federal states (e.g., Hamburg Welcome Center vs. Berlin).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 7 — Solution intro ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 7</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>Solution: RelocAIte Digital Copilot</h1>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;">
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <span class="chip outline" style="padding:4px 10px;"><span class="cv" style="font-size:10px;font-weight:700;">END-TO-END COVERAGE</span></span>
+          <div style="font-size:16px;font-weight:800;">One Unified Web Application</div>
+          <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.6;">RelocAIte guides international talent through the entire German relocation lifecycle—starting before job offer acceptance and ending with their first end-of-year tax refund.</p>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <span class="chip outline" style="padding:4px 10px;"><span class="cv" style="font-size:10px;font-weight:700;">AI-POWERED COMPLIANCE</span></span>
+          <div style="font-size:16px;font-weight:800;">Intelligent Pre-Verification</div>
+          <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.6;">Automated document parsing, clause analysis, and state-level compliance checks eliminate costly administrative mistakes before official Behörde submission.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 8 — Solution detail ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 8</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <span class="tag-pill" style="position:absolute;top:14px;right:18px;background:var(--indigo-tint);color:var(--indigo);">AI-Powered Relocation</span>
+      <h1>Our Solution: RelocAIte acts as Personal Digital Copilot on your Journey of relocating to Germany</h1>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0;">
+        <div class="card" style="border-top:4px solid #7C5CFF;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+          <span class="chip" style="background:var(--indigo-tint);color:var(--indigo);padding:3px 9px;"><span class="cv" style="font-size:10px;font-weight:700;">&#128274; ALL-IN-ONE UNIFIED HUB</span></span>
+          <div style="font-size:13.5px;font-weight:800;">One Unified Web Application</div>
+          <p style="margin:0;font-size:10.5px;color:var(--muted);line-height:1.5;">Consolidates every fragmented relocation milestone into a single source of truth—guiding international talent seamlessly from initial offer letter to tax refunds.</p>
+          <img src="assets/solution-hub-illustration.jpg" alt="Unified web application dashboard illustration" style="width:100%;border-radius:8px;border:1px solid var(--border);">
+          <p style="margin:0;font-size:10.5px;line-height:1.5;"><b>Single Sign-On Hub:</b> Replaces scattered PDFs &amp; email threads.<br><b>Full Lifecycle Tracking:</b> Step-by-step progress from day 1 to arrival.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="tag-pill" style="background:var(--indigo);color:#fff;">&#128188;Job Offer</span>
+            <span class="tag-pill" style="background:var(--indigo);color:#fff;">&#128696;Visa</span>
+            <span class="tag-pill" style="background:var(--indigo);color:#fff;">&#127968;Residence</span>
+            <span class="tag-pill" style="background:#fff;color:var(--ink);border:1px solid var(--border);">&#129534;Tax Return</span>
+          </div>
+        </div>
+        <div class="card" style="border-top:4px solid #14B8A6;padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+          <span class="chip" style="background:var(--teal-tint);color:var(--teal);padding:3px 9px;"><span class="cv" style="font-size:10px;font-weight:700;">&#9989; AI CUSTOMIZATION &amp; AUDIT</span></span>
+          <div style="font-size:13.5px;font-weight:800;">State-Aware Pre-Verification</div>
+          <p style="margin:0;font-size:10.5px;color:var(--muted);line-height:1.5;">Adapts dynamically to individual talent profiles and all 16 German state regulations (Bundesländer). Automatically audits uploaded contracts before official submission.</p>
+          <img src="assets/solution-preverification-illustration.jpg" alt="Document parsing and verification illustration" style="width:100%;border-radius:8px;border:1px solid var(--border);">
+          <p style="margin:0;font-size:10.5px;line-height:1.5;"><b>Contract Clause Parsing:</b> Detects salary thresholds instantly.<br><b>16 Bundesland Rules:</b> Tailored checklist per state Behörde.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="tag-pill tint-green" style="background:var(--green-tint);color:var(--green);">&#9989;Contract Verified (EU Blue Card Compliant)</span>
+            <span class="tag-pill" style="background:#fff;color:var(--ink);border:1px solid var(--border);">&#9881;State Rule: Bayern</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 9 — Unique Value Proposition ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 9</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>Our Unique Value Proposition</h1>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1;align-content:center;">
+        <div class="card" style="padding:20px 22px;display:flex;flex-direction:column;gap:10px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M12 3l3 2v3l-3 2-3-2V5l3-2z"/><path d="M5 8l3 2v4l-3 2-3-2V10l3-2z" transform="translate(1,4)"/><path d="M19 8l-3 2v4l3 2 3-2V10l-3-2z" transform="translate(-1,4)"/></svg></div>
+          <div style="font-size:16px;font-weight:800;">Centralized Hub</div>
+          <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.6;">Eliminates scattered bookmarks and conflicting online advice by consolidating every step into one clear 6-step dashboard.</p>
+        </div>
+        <div class="card" style="padding:20px 22px;display:flex;flex-direction:column;gap:10px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="1.6" fill="var(--indigo)"/><circle cx="15" cy="12" r="1.6" fill="var(--indigo)"/><circle cx="7" cy="18" r="1.6" fill="var(--indigo)"/></svg></div>
+          <div style="font-size:16px;font-weight:800;">Hyper-Personalized</div>
+          <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.6;">Tailors recommendations directly to user nationality, salary level, family situation, and local state regulations.</p>
+        </div>
+        <div class="card" style="padding:20px 22px;display:flex;flex-direction:column;gap:10px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 21v-8M8 7l4 4 4-4"/><path d="M6 11h12a6 6 0 0 1-12 0z"/></svg></div>
+          <div style="font-size:16px;font-weight:800;">Hamburg Specialized</div>
+          <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.6;">Deep localized integration with Hamburg Welcome Center standards, expandable to all 16 German federal states.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 10 — kept as previously approved (Customer Journey) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 10 — kept as approved</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <span class="eyebrow">Customer Journey</span>
+      <h1>Moving to Germany is not one task. It is five opaque systems.</h1>
+      <p class="sub">A foreign professional must manage a contract, visa, housing, insurance, and tax/rights — across five separate systems, five separate deadlines.</p>
+      <svg viewBox="0 0 1080 74" style="width:100%;height:auto;">
+        <line x1="46" y1="30" x2="1034" y2="30" stroke="#E6E8F0" stroke-width="2"/>
+        <g font-family="Plus Jakarta Sans" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle">
+          <rect x="30" y="18" width="32" height="24" rx="8" fill="var(--indigo-tint)" stroke="var(--indigo)" stroke-width="1.6"/>
+          <text x="46" y="34" fill="var(--indigo)" font-size="11">01</text><text x="46" y="60">Offer</text>
+          <rect x="238" y="18" width="32" height="24" rx="8" fill="var(--indigo-tint)" stroke="var(--indigo)" stroke-width="1.6"/>
+          <text x="254" y="34" fill="var(--indigo)" font-size="11">02</text><text x="254" y="60">Visa</text>
+          <rect x="446" y="18" width="32" height="24" rx="8" fill="var(--indigo-tint)" stroke="var(--indigo)" stroke-width="1.6"/>
+          <text x="462" y="34" fill="var(--indigo)" font-size="11">03</text><text x="462" y="60">Home</text>
+          <rect x="654" y="18" width="32" height="24" rx="8" fill="var(--indigo-tint)" stroke="var(--indigo)" stroke-width="1.6"/>
+          <text x="670" y="34" fill="var(--indigo)" font-size="11">04</text><text x="670" y="60">Insurance</text>
+        </g>
+        <rect x="978" y="14" width="42" height="32" rx="9" fill="var(--rose-tint)" stroke="var(--rose)" stroke-width="1.8"/>
+        <text x="999" y="34" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="var(--rose)" text-anchor="middle">05</text>
+        <text x="999" y="62" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="700" fill="var(--rose)" text-anchor="middle">Rights &amp; Tax</text>
+      </svg>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;flex:1;min-height:0;">
+        <div class="card" style="padding:14px;display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:10px;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:.03em;">Offer</span>
+          <span style="font-size:12.5px;font-style:italic;font-weight:600;line-height:1.35;">&ldquo;Does this contract meet the visa threshold?&rdquo;</span>
+          <span style="font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:6px;line-height:1.4;">2026 Blue Card: &#8364;50,700</span>
+          <span style="font-size:10.5px;color:var(--rose);line-height:1.4;">May miss eligibility entirely.</span>
+        </div>
+        <div class="card" style="padding:14px;display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:10px;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:.03em;">Visa</span>
+          <span style="font-size:12.5px;font-style:italic;font-weight:600;line-height:1.35;">&ldquo;Is this offer visa-ready?&rdquo;</span>
+          <span style="font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:6px;line-height:1.4;">D-Visa docs, embassy lead time</span>
+          <span style="font-size:10.5px;color:var(--rose);line-height:1.4;">Can lose weeks to one document.</span>
+        </div>
+        <div class="card" style="padding:14px;display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:10px;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:.03em;">Home</span>
+          <span style="font-size:12.5px;font-style:italic;font-weight:600;line-height:1.35;">&ldquo;Can I register at this address?&rdquo;</span>
+          <span style="font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:6px;line-height:1.4;">Anmeldung within 14 days</span>
+          <span style="font-size:10.5px;color:var(--rose);line-height:1.4;">Can lose bank account access.</span>
+        </div>
+        <div class="card" style="padding:14px;display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:10px;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:.03em;">Insurance</span>
+          <span style="font-size:12.5px;font-style:italic;font-weight:600;line-height:1.35;">&ldquo;Which insurance is necessary?&rdquo;</span>
+          <span style="font-size:10.5px;color:var(--muted);border-top:1px solid var(--border);padding-top:6px;line-height:1.4;">Public vs. private, before Anmeldung</span>
+          <span style="font-size:10.5px;color:var(--rose);line-height:1.4;">May miss a hard-to-reverse window.</span>
+        </div>
+        <div class="card" style="padding:14px;display:flex;flex-direction:column;gap:6px;background:var(--rose-tint);border-color:#F0C7C1;">
+          <span style="font-size:10px;font-weight:700;color:var(--rose);text-transform:uppercase;letter-spacing:.03em;">Rights &amp; Tax</span>
+          <span style="font-size:12.5px;font-style:italic;font-weight:600;line-height:1.35;">&ldquo;What can I still claim?&rdquo;</span>
+          <span style="font-size:10.5px;color:var(--muted);border-top:1px solid #F0C7C1;padding-top:6px;line-height:1.4;">Bildungsurlaub, Homeoffice, relocation</span>
+          <span style="font-size:10.5px;color:var(--rose);line-height:1.4;">Can lose paid days that expire.</span>
+        </div>
+      </div>
+      <div class="foot-row">
+        <div class="foot-note">Eligibility decisions remain with the relevant authority or licensed adviser.</div>
+        <span class="brand-caption" style="font-style:italic;">RelocAIte — your move, made actionable.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 11 — Priya's 6-Step Journey ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 11</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <span class="tag-pill pos-tr" style="background:#fff;border:1px solid var(--border);color:var(--muted);">Slide 1 of 2 · Executive Summary</span>
+      <span class="eyebrow">Management Summary · Customer Journey</span>
+      <h1>Priya's 6-Step Journey: From Analysis to Impact</h1>
+      <p class="sub">End-to-end breakdown of user facts matched against automated checks, compliance deadlines, and cash claims.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <span class="chip solid-blue"><span class="cl">Identified Actions</span><span class="cv">6 Stages</span></span>
+        <span class="chip tint-green"><span class="cl">Claimable Value</span><span class="cv">&#8364;2.400</span></span>
+        <span class="chip tint-amber"><span class="cl">Urgent Deadline</span><span class="cv">44 Days</span></span>
+        <span class="chip outline"><span class="cl">User Profile &amp; Jurisdiction</span><span class="cv" style="font-size:14px;">Berlin &middot; EU Blue Card</span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;flex:1;min-height:0;">
+        <div class="card" style="padding:10px;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;justify-content:space-between;"><span class="footnote">01</span><div class="icon-badge sm"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/></svg></div></div>
+          <span style="font-size:8.5px;font-weight:700;color:var(--indigo);text-transform:uppercase;">Work &amp; Records</span>
+          <span style="font-size:11px;font-weight:700;">Educational Leave</span>
+          <span style="font-size:15px;font-weight:800;">5 Days</span>
+          <span style="font-size:8.5px;color:var(--muted);">Potential Paid Leave</span>
+          <span style="font-size:9px;color:var(--muted);line-height:1.35;border-top:1px dotted var(--border);padding-top:5px;">Eligible for 5 days Bildungszeit in Berlin. HR request template ready to submit.</span>
+        </div>
+        <div class="card" style="padding:10px;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;justify-content:space-between;"><span class="footnote">02</span><div class="icon-badge sm amber"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div></div>
+          <span style="font-size:8.5px;font-weight:700;color:var(--amber);text-transform:uppercase;">Deadline</span>
+          <span style="font-size:11px;font-weight:700;">Residence Permit</span>
+          <span style="font-size:15px;font-weight:800;">44 Days</span>
+          <span style="font-size:8.5px;color:var(--muted);">Time-sensitive</span>
+          <span style="font-size:9px;color:var(--muted);line-height:1.35;border-top:1px dotted var(--border);padding-top:5px;">Approaching expiry. Appointment slot tracking active for Berlin Ausländerbehörde.</span>
+        </div>
+        <div class="card" style="padding:10px;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;justify-content:space-between;"><span class="footnote">03</span><div class="icon-badge sm teal"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div></div>
+          <span style="font-size:8.5px;font-weight:700;color:var(--teal);text-transform:uppercase;">Money Opp.</span>
+          <span style="font-size:11px;font-weight:700;">Relocation Costs</span>
+          <span style="font-size:15px;font-weight:800;">&#8364;2.400</span>
+          <span style="font-size:8.5px;color:var(--muted);">Tax Deduction</span>
+          <span style="font-size:9px;color:var(--muted);line-height:1.35;border-top:1px dotted var(--border);padding-top:5px;">Unreimbursed relocation expenses qualified as tax-deductible employment expenses.</span>
+        </div>
+        <div class="card" style="padding:10px;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;justify-content:space-between;"><span class="footnote">04</span><div class="icon-badge sm"><svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg></div></div>
+          <span style="font-size:8.5px;font-weight:700;color:var(--indigo);text-transform:uppercase;">Expert Review</span>
+          <span style="font-size:11px;font-weight:700;">Cross-Border Income</span>
+          <span style="font-size:15px;font-weight:800;">Context</span>
+          <span style="font-size:8.5px;color:var(--muted);">Advisor Verification</span>
+          <span style="font-size:9px;color:var(--muted);line-height:1.35;border-top:1px dotted var(--border);padding-top:5px;">Foreign income treaty verification flagged for 1-on-1 tax specialist consult.</span>
+        </div>
+        <div class="card" style="padding:10px;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;justify-content:space-between;"><span class="footnote">05</span><div class="icon-badge sm"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/></svg></div></div>
+          <span style="font-size:8.5px;font-weight:700;color:var(--indigo);text-transform:uppercase;">Work &amp; Records</span>
+          <span style="font-size:11px;font-weight:700;">Remote-Work Log</span>
+          <span style="font-size:15px;font-weight:800;">3 Days/Wk</span>
+          <span style="font-size:8.5px;color:var(--muted);">Home Office Rate</span>
+          <span style="font-size:9px;color:var(--muted);line-height:1.35;border-top:1px dotted var(--border);padding-top:5px;">Work pattern logged for mandatory Home Office Lump Sum (Homeoffice-Pauschale) evidence.</span>
+        </div>
+        <div class="card" style="padding:10px;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;justify-content:space-between;"><span class="footnote">06</span><div class="icon-badge sm teal"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></div></div>
+          <span style="font-size:8.5px;font-weight:700;color:var(--teal);text-transform:uppercase;">Money Opp.</span>
+          <span style="font-size:11px;font-weight:700;">Tax Return Check</span>
+          <span style="font-size:15px;font-weight:800;">Not Filed</span>
+          <span style="font-size:8.5px;color:var(--muted);">Open Filing Window</span>
+          <span style="font-size:9px;color:var(--muted);line-height:1.35;border-top:1px dotted var(--border);padding-top:5px;">Filing window still open. Consolidate relocation + home office deductions before filing.</span>
+        </div>
+      </div>
+      <div class="foot-row">
+        <div class="foot-note">&#9432; Automated Decision Engine Prototype &middot; Data matched strictly against local German regulations and employer policies.</div>
+        <span class="brand-caption">Next Steps Execution Rate: 100% Automated</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 12 — Thank You ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 12</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="flex-direction:row;gap:28px;align-items:center;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 20 Q4 10 14 10 L14 5 L20 10 L14 15 L14 12 Q8 12 8 20 Z" fill="var(--blue-solid)"/></svg><span style="font-size:19px;font-weight:800;">Reloc<span style="color:var(--blue-solid);">AI</span>te</span></div>
+        <h1>Thank You for Your Time! Let's Simplify Relocation.</h1>
+        <p class="sub">Empowering international talents to seamlessly navigate the German authority landscape with AI guidance.</p>
+        <div class="card" style="padding:10px 14px;display:flex;gap:10px;align-items:center;"><div class="icon-badge sm"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M4 20c0-3 2-5 5-5s5 2 5 5"/><circle cx="17" cy="8" r="2.4"/><path d="M15 20c0-2.6 1.6-4.4 4-4.6"/></svg></div><div><div style="font-size:11.5px;font-weight:700;">The Team Behind RelocAIte</div><div style="font-size:10px;color:var(--muted);">Driven innovators uniting AI tech &amp; relocation expertise</div></div></div>
+        <div class="card" style="padding:10px 14px;display:flex;gap:10px;align-items:center;"><div class="icon-badge sm teal"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg></div><div><div style="font-size:11.5px;font-weight:700;">Built at AI.WOMEN Hackathon</div><div style="font-size:10px;color:var(--muted);">Sept 12&ndash;13, 2026 &bull; Kühne Logistics University (KLU), Hamburg</div></div></div>
+        <div style="display:flex;gap:10px;align-items:center;"><span style="background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:7px 14px;border-radius:999px;">Questions &amp; Q&amp;A &#8594;</span><span style="font-size:10.5px;color:var(--muted);">Let's connect &amp; build together</span></div>
+      </div>
+      <div style="flex:0 0 34%;display:flex;flex-direction:column;gap:6px;">
+        <div style="border-radius:14px;background:linear-gradient(135deg,#F4C9E0,#C9B8F5);aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#5B4A7A;font-size:11px;font-weight:600;text-align:center;padding:10px;">Team photo<br>(from event photo booth)</div>
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;"><span style="font-weight:700;">Team RelocAIte</span><span style="color:var(--pink);">&#9829;KLU Hamburg</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 13 — Priya, here's what to do next ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 13</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <span class="tag-pill pos-tr" style="background:#fff;border:1px solid var(--border);color:var(--muted);">Slide 2 of 2 · Interactive User View</span>
+      <span class="eyebrow">Customer User Journey · Prototype</span>
+      <h1>Priya, here's what to do next.</h1>
+      <p class="sub">Matched facts against 6 intelligent checks. Detailed breakdown &amp; evidence requirements.</p>
+      <div style="display:flex;gap:10px;">
+        <span class="chip solid-blue"><span class="cl">Actions Identified</span><span class="cv">6 Checks</span></span>
+        <span class="chip tint-green"><span class="cl">Expenses to Review</span><span class="cv">&#8364;2.400</span></span>
+        <span class="chip outline"><span class="cl">User Profile</span><span class="cv" style="font-size:14px;">Berlin &middot; EU Blue Card</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;">
+        <div class="card" style="padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="display:flex;gap:10px;align-items:center;"><div class="icon-badge sm"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/></svg></div><div><div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;">1. Work &amp; Records</div><div style="font-size:12.5px;font-weight:700;">Educational Leave (Bildungszeit)</div><div style="font-size:10px;color:var(--muted);">Eligible for 5 paid leave days for official professional development.</div></div></div>
+            <div style="text-align:right;"><div style="font-size:13px;font-weight:800;">5 days</div><div style="font-size:9px;color:var(--muted);">Potential paid leave</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px dotted var(--border);padding-top:8px;">
+            <div><div style="font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;">Why this appeared</div><div style="font-size:10px;color:var(--muted);line-height:1.4;">User works in Berlin, reported 8 months tenure with current employer, and zero days previously claimed.</div></div>
+            <div><div style="font-size:8.5px;font-weight:700;color:var(--muted);text-transform:uppercase;">Recommended next step</div><div style="font-size:10px;color:var(--muted);line-height:1.4;">Select a certified course, obtain recognition docs, and dispatch the pre-filled HR request template early.</div></div>
+          </div>
+        </div>
+        <div class="card" style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;gap:10px;align-items:center;"><div class="icon-badge sm amber"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div><div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;">2. Deadline Tracker</div><div style="font-size:12.5px;font-weight:700;">Residence Permit Review</div><div style="font-size:10px;color:var(--muted);">Document approaching expiry date. Required appointment slot verification active.</div></div></div>
+          <div style="text-align:right;"><div style="font-size:13px;font-weight:800;">44 days</div><div style="font-size:9px;color:var(--muted);">Time-sensitive</div></div>
+        </div>
+        <div class="card" style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;gap:10px;align-items:center;"><div class="icon-badge sm teal"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div><div><div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;">3. Money Opportunity</div><div style="font-size:12.5px;font-weight:700;">Job-related Relocation Expenses</div><div style="font-size:10px;color:var(--muted);">Unreimbursed relocation expenses qualified as tax-deductible income deductions.</div></div></div>
+          <div style="text-align:right;"><div style="font-size:13px;font-weight:800;">&#8364;2.400</div><div style="font-size:9px;color:var(--muted);">Worth reviewing</div></div>
+        </div>
+      </div>
+      <div class="foot-row">
+        <div class="foot-note">&#128737; Educational prototype only. Confirm decisions with responsible authorities.</div>
+        <span class="brand-caption">Relocaite Intelligent Guidance</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 14 — User Journey Step 1 ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 14</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>User Journey: Step 1 &ndash; Job Offer Review</h1>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;align-content:center;">
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <span class="chip outline" style="padding:3px 9px;"><span class="cv" style="font-size:10px;font-weight:700;">STEP 1</span></span>
+          <div style="font-size:15px;font-weight:800;">AI Contract Clause Parsing</div>
+          <p style="margin:0;font-size:11.5px;color:var(--muted);line-height:1.6;">Upload employment contract (PDF) for automated analysis of salary, start date, probation terms, and standard German perks (e.g. Bildungsurlaub &amp; vacation days).</p>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <span class="chip outline" style="padding:3px 9px;"><span class="cv" style="font-size:10px;font-weight:700;">BLUE CARD SAFEGUARD</span></span>
+          <div style="font-size:15px;font-weight:800;">EU Blue Card Gap Checker</div>
+          <p style="margin:0;font-size:11.5px;color:var(--muted);line-height:1.6;">Checks salary against official legal thresholds. Generates instant negotiation templates so candidates never fall short like Mari's €100 gap story.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 15 — User Journey Step 2 ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 15</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="flex-direction:row;gap:24px;align-items:center;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;">
+        <h1 style="margin-bottom:6px;">User Journey: Step 2 &ndash; Visa Application</h1>
+        <span class="eyebrow">Step 2</span>
+        <div style="font-size:14px;font-weight:800;">EU Blue Card &amp; Visa Navigator</div>
+        <p style="margin:0;font-size:11px;line-height:1.6;">&#10003; <b>Eligibility Screener:</b> Instant determination of visa path based on degree &amp; job role.</p>
+        <p style="margin:0;font-size:11px;line-height:1.6;">&#10003; <b>Degree Recognition:</b> Automated guidance for Anabin and ZAB equivalence verification.</p>
+        <p style="margin:0;font-size:11px;line-height:1.6;">&#10003; <b>Hamburg Checklist:</b> Custom document builder matching Hamburg Welcome Center standards.</p>
+        <p style="margin:0;font-size:11px;line-height:1.6;">&#10003; <b>AI Pre-Check:</b> Pre-scans uploads for missing signatures or formatting errors.</p>
+      </div>
+      <div style="flex:0 0 44%;border-radius:14px;overflow:hidden;"><img src="assets/visa-crm-illustration.jpg" alt="Visa Immigration CRM Introduction illustration" style="width:100%;height:auto;display:block;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 16 — User Journey Step 3 ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 16</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>User Journey: Step 3 &ndash; Accommodation</h1>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;align-content:center;">
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M4 7h7l2 2h7v10H4z"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Landlord Application Packet</div>
+          <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.55;">Generates a complete German-standard application dossier (SCHUFA explanation, salary proof, cover letter).</p>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Housing Search Strategy</div>
+          <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.55;">Educates expats on temporary vs. permanent housing regulations and rental contract traps in competitive markets.</p>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2"/><circle cx="9" cy="12" r="2"/><path d="M13 10h4M13 14h4"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Mandatory Anmeldung</div>
+          <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.55;">Step by step guidance to secure the essential Wohnungsgeberbestätigung and book city registration appointments.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 17 — User Journey Step 4 ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 17</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>User Journey: Step 4 &ndash; Compliance &amp; Setup</h1>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;align-content:center;">
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3z"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Essential Insurance</div>
+          <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.55;">Guides users to set up crucial German safety nets like Private Liability (Haftpflichtversicherung) &amp; Legal Insurance.</p>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M7 4h4l2 3h4v13H7z"/><path d="M10 10h4"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Tax ID Acquisition</div>
+          <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.55;">Tracks automatic Tax ID (Steueridentifikationsnummer) issuance post-Anmeldung to prevent higher tax class assignments.</p>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <div class="icon-badge"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></div>
+          <div style="font-size:13.5px;font-weight:700;">Receipt Vault</div>
+          <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.55;">Allows immediate logging of relocation expenses (flights, agency fees, moving costs) for future tax deductions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 18 — User Journey Steps 5 & 6 ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 18</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="flex-direction:row;gap:24px;align-items:center;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;">
+        <h1 style="margin-bottom:6px;">User Journey: Steps 5 &amp; 6 &ndash; Tax &amp; Refund</h1>
+        <span class="eyebrow">Steps 5 &amp; 6</span>
+        <div style="font-size:14px;font-weight:800;">Ongoing Tax Optimization &amp; Refunds</div>
+        <p style="margin:0;font-size:11px;line-height:1.6;">&#10003; <b>Tax Class Education:</b> Explains German tax classes (Steuerklasse I&ndash;VI) to maximize monthly net income.</p>
+        <p style="margin:0;font-size:11px;line-height:1.6;">&#10003; <b>Deductible Logging:</b> Tracks work-related expenses throughout the first year in Germany.</p>
+        <p style="margin:0;font-size:11px;line-height:1.6;">&#10003; <b>Expat Integration:</b> Connects logged data directly with expat-friendly tools like Taxfix for a seamless annual refund.</p>
+      </div>
+      <div style="flex:0 0 44%;border-radius:14px;overflow:hidden;"><img src="assets/tax-tech-stack.jpg" alt="The Independent Consultant's Tech Stack: Tax Management" style="width:100%;height:auto;display:block;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 19 — Scalable Market Impact (intro) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 19</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="flex-direction:row;gap:24px;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center;min-width:0;">
+        <h1>Scalable Market Impact</h1>
+        <p style="margin:0;font-size:12px;line-height:1.6;"><b>Consumer-First Focus:</b> While B2B platforms serve corporate hires, RelocAIte empowers individual international talent directly at an accessible price point.</p>
+        <p style="margin:0;font-size:12px;line-height:1.6;"><b>Blueprint for Europe:</b> Starting with deep Hamburg integration, our modular rules-engine easily scales to every German state and EU immigration system.</p>
+      </div>
+      <div style="flex:0 0 34%;border-radius:14px;overflow:hidden;align-self:flex-start;"><img src="assets/hamburg-skyline.jpg" alt="Hamburg city hall skyline" style="width:100%;height:auto;display:block;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 20 — kept as previously approved (Business Model & GTM) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 20 — kept as approved</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <span class="eyebrow">Scalable Market Impact · Business Model &amp; Go-to-Market</span>
+      <h1>Free for the mover. Recurring revenue from the organisation that wins when they settle.</h1>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.9 3.1-6 7-6s7 2.1 7 6"/></svg></div>
+            <div style="font-size:14.5px;font-weight:700;">B2C &mdash; Free, always</div>
+          </div>
+          <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.5;">The scan costs nothing. It's the acquisition channel and the trust layer — not the revenue line.</p>
+        </div>
+        <div class="card" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="icon-badge teal"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/></svg></div>
+            <div style="font-size:14.5px;font-weight:700;">B2B &mdash; Paid</div>
+          </div>
+          <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.5;"><b>HR platform:</b> onboarding link, aggregate dashboard — never personal documents. <b>Relocation partner:</b> co-branded console.</p>
+        </div>
+      </div>
+      <span class="chip solid-blue"><span class="cl">Pricing hypothesis</span><span class="cv">&#8364;3,000 base + &#8364;20 / covered employee / yr</span></span>
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:16px;flex:1;min-height:0;">
+        <div class="card" style="padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;">Illustrative ARR &mdash; pricing hypothesis, not booked revenue</div>
+          <table style="width:100%;border-collapse:collapse;font-size:12px;">
+            <thead><tr style="color:var(--muted);"><th style="text-align:left;font-weight:600;padding:4px 0;">Year</th><th style="text-align:right;font-weight:600;">Employers</th><th style="text-align:right;font-weight:600;">Avg. covered</th><th style="text-align:right;font-weight:600;">ARR</th></tr></thead>
+            <tbody>
+              <tr style="border-top:1px solid var(--border);"><td style="padding:6px 0;">1 &mdash; Pilot</td><td style="text-align:right;">3</td><td style="text-align:right;">50</td><td style="text-align:right;font-weight:700;color:var(--indigo);">&#8776;&#8364;12K</td></tr>
+              <tr style="border-top:1px solid var(--border);"><td style="padding:6px 0;">3 &mdash; National</td><td style="text-align:right;">45</td><td style="text-align:right;">~117</td><td style="text-align:right;font-weight:700;color:var(--indigo);">&#8776;&#8364;240K</td></tr>
+              <tr style="border-top:1px solid var(--border);"><td style="padding:6px 0;">5 &mdash; Category</td><td style="text-align:right;">190</td><td style="text-align:right;">~263</td><td style="text-align:right;font-weight:700;color:var(--indigo);">&#8776;&#8364;1.6M</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;">How pilots get there &mdash; 12-month path</div>
+          <div style="display:flex;gap:10px;align-items:flex-start;"><span style="font-size:11px;font-weight:700;color:var(--indigo);width:66px;flex-shrink:0;">Days 0&ndash;90</span><span style="font-size:11.5px;color:var(--ink);line-height:1.4;">20 buyer interviews, 3 design partners, 50 covered hires/pilot</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;border-top:1px dotted var(--border);padding-top:8px;"><span style="font-size:11px;font-weight:700;color:var(--indigo);width:66px;flex-shrink:0;">Months 4&ndash;6</span><span style="font-size:11.5px;color:var(--ink);line-height:1.4;">Measure activation, completed actions, HR tickets avoided, NPS</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;border-top:1px dotted var(--border);padding-top:8px;"><span style="font-size:11px;font-weight:700;color:var(--indigo);width:66px;flex-shrink:0;">Months 7&ndash;12</span><span style="font-size:11.5px;color:var(--ink);line-height:1.4;">10 paid HR accounts and first relocation partner</span></div>
+        </div>
+      </div>
+      <div class="foot-note">Tax authorities are not customers — IHK is a channel/partner until willingness to pay is proven.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 21 — blank in source ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 21 — blank in the source PDF (needs content)</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody"></div>
+  </div>
+</div>
+
+<!-- ============ PAGE 22 — Empowering Global Talent (closing) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 22</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody" style="align-items:center;justify-content:center;text-align:center;gap:14px;">
+      <h1 class="huge">Empowering Global Talent</h1>
+      <p class="sub" style="font-size:14px;">RelocAIte turns administrative hurdles into a seamless journey to calling Germany home.</p>
+      <div style="display:flex;gap:26px;font-size:12px;color:var(--indigo);margin-top:6px;">
+        <span>&#127760; relocaite.de</span>
+        <span>&#9993; pitch@relocaite.de</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 23 — Image Sources (no thumbnails) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 23</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>Image Sources</h1>
+      <div style="display:flex;flex-direction:column;gap:0;margin-top:20px;">
+        <div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--border);">
+          <div style="width:64px;height:42px;background:#E6E8F0;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);">600&times;400</div>
+          <div style="font-size:11px;line-height:1.5;"><div style="word-break:break-all;color:var(--muted);">https://smartxcrm.com/wp-content/uploads/2026/05/Gemini_Generated_Image_su92khsu92khsu92.jpg</div><div>Source: <span style="color:var(--blue-solid);">smartxcrm.com</span></div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--border);">
+          <div style="width:64px;height:42px;background:#E6E8F0;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);">600&times;400</div>
+          <div style="font-size:11px;line-height:1.5;"><div style="word-break:break-all;color:var(--muted);">https://umbrex.com/wp-content/uploads/2024/10/Business-Operations-Finance-Tax-Management-1024x576.png</div><div>Source: <span style="color:var(--blue-solid);">umbrex.com</span></div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+          <div style="width:64px;height:42px;background:#E6E8F0;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);">600&times;400</div>
+          <div style="font-size:11px;line-height:1.5;"><div style="word-break:break-all;color:var(--muted);">https://www.greatdays.co.uk/wp-content/uploads/2023/03/Hamburg-Germany-City-Hall-in-the-city-centre-with-harbour-in-the-background-%C2%A9Florian-Trykowski-GNTB-59846-EXPIRES-09.03.2027-320x235.jpg</div><div>Source: <span style="color:var(--blue-solid);">www.greatdays.co.uk</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 24 — Image Sources (with thumbnails) ============ -->
+<div class="slide-wrap">
+  <span class="page-tag">Page 24</span>
+  <div class="gslide">
+    <div class="gradbar"></div>
+    <div class="gbody">
+      <h1>Image Sources</h1>
+      <div style="display:flex;flex-direction:column;gap:0;margin-top:20px;">
+        <div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--border);">
+          <img src="assets/visa-crm-illustration.jpg" style="width:64px;height:42px;object-fit:cover;border-radius:4px;flex-shrink:0;">
+          <div style="font-size:11px;line-height:1.5;"><div style="word-break:break-all;color:var(--muted);">https://smartxcrm.com/wp-content/uploads/2026/05/Gemini_Generated_Image_su92khsu92khsu92.jpg</div><div>Source: <span style="color:var(--blue-solid);">smartxcrm.com</span></div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--border);">
+          <img src="assets/tax-tech-stack.jpg" style="width:64px;height:42px;object-fit:cover;border-radius:4px;flex-shrink:0;">
+          <div style="font-size:11px;line-height:1.5;"><div style="word-break:break-all;color:var(--muted);">https://umbrex.com/wp-content/uploads/2024/10/Business-Operations-Finance-Tax-Management-1024x576.png</div><div>Source: <span style="color:var(--blue-solid);">umbrex.com</span></div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+          <img src="assets/hamburg-skyline.jpg" style="width:64px;height:42px;object-fit:cover;border-radius:4px;flex-shrink:0;">
+          <div style="font-size:11px;line-height:1.5;"><div style="word-break:break-all;color:var(--muted);">https://www.greatdays.co.uk/wp-content/uploads/2023/03/Hamburg-Germany-City-Hall-in-the-city-centre-with-harbour-in-the-background-%C2%A9Florian-Trykowski-GNTB-59846-EXPIRES-09.03.2027-320x235.jpg</div><div>Source: <span style="color:var(--blue-solid);">www.greatdays.co.uk</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
