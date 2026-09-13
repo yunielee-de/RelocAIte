@@ -1,0 +1,323 @@
+<!doctype html>
+<title>Contract Redline View</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF2FA;
+    --surface: #FFFFFF;
+    --surface-sunken: #F5F7FC;
+    --ink: #101B36;
+    --ink-soft: #56618A;
+    --ink-faint: #8992B5;
+    --line: #DBE1F2;
+    --accent: #2B3E8C;
+    --accent-bright: #3452E0;
+    --accent-tint: #E7EBFC;
+    --good: #1F7A4C;
+    --good-tint: #E5F3EA;
+    --caution: #96650A;
+    --caution-tint: #FBF0DC;
+    --critical: #B23A2E;
+    --critical-tint: #FBE7E4;
+    --font-display: "Manrope", -apple-system, sans-serif;
+    --font-body: "Manrope", -apple-system, sans-serif;
+    --font-doc: "Source Serif 4", Georgia, serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1020; --surface: #131A30; --surface-sunken: #0F1526;
+      --ink: #E7EBFA; --ink-soft: #AAB4DA; --ink-faint: #6E799E;
+      --line: #263056; --accent: #7C90F0; --accent-bright: #96A6FF; --accent-tint: #1C2444;
+      --good: #5FCE93; --good-tint: #123322; --caution: #E3B84C; --caution-tint: #392B10;
+      --critical: #F0897C; --critical-tint: #3A1A17;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1020; --surface: #131A30; --surface-sunken: #0F1526;
+    --ink: #E7EBFA; --ink-soft: #AAB4DA; --ink-faint: #6E799E;
+    --line: #263056; --accent: #7C90F0; --accent-bright: #96A6FF; --accent-tint: #1C2444;
+    --good: #5FCE93; --good-tint: #123322; --caution: #E3B84C; --caution-tint: #392B10;
+    --critical: #F0897C; --critical-tint: #3A1A17;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell { display: flex; min-height: 100vh; }
+
+  /* ---- sidebar ---- */
+  .sidebar {
+    width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; padding: 22px 14px; gap: 22px;
+  }
+  .brand { display: flex; align-items: center; gap: 9px; padding: 0 8px; }
+  .brand .mark {
+    width: 30px; height: 30px; border-radius: 8px; background: var(--accent);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 15px;
+  }
+  .brand .word { font-family: var(--font-display); font-weight: 800; font-size: 16.5px; letter-spacing: -.01em; }
+  .nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .nav a {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px;
+    color: var(--ink-soft); text-decoration: none; font-size: 13.5px; font-weight: 600;
+  }
+  .nav a.active { background: var(--accent-tint); color: var(--accent); }
+  .nav .icon { width: 17px; text-align: center; font-family: var(--font-mono); font-size: 13px; }
+  .nav-foot { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--line); padding-top: 12px; }
+
+  /* ---- main ---- */
+  .main { flex: 1; min-width: 0; padding: 26px clamp(18px, 3vw, 40px) 40px; display: flex; flex-direction: column; gap: 20px; }
+  .crumb { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .04em; }
+  .topline { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
+  h1 { font-family: var(--font-display); font-size: clamp(22px, 3vw, 27px); font-weight: 800; margin: 4px 0 0; text-wrap: balance; }
+  .demo-badge {
+    font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em;
+    background: var(--caution-tint); color: var(--caution); border: 1px solid var(--caution);
+    padding: 3px 9px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .status-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .status-chip {
+    display: flex; align-items: center; gap: 7px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 20px; padding: 7px 13px 7px 9px; font-size: 12.5px; font-weight: 600;
+  }
+  .status-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .status-chip .n { font-family: var(--font-mono); color: var(--ink-faint); font-weight: 500; }
+  .dot.good { background: var(--good); } .dot.caution { background: var(--caution); } .dot.critical { background: var(--critical); }
+
+  .grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items: start; }
+
+  /* ---- document panel ---- */
+  .doc-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .doc-head {
+    display: flex; justify-content: space-between; align-items: center; padding: 14px 20px;
+    border-bottom: 1px solid var(--line); background: var(--surface-sunken);
+  }
+  .doc-head .name { font-size: 13px; font-weight: 700; }
+  .doc-head .sub { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); }
+  .doc-body {
+    padding: 26px 30px 34px; font-family: var(--font-doc); font-size: 15.5px; line-height: 1.75; color: var(--ink);
+  }
+  .doc-body h2 { font-family: var(--font-doc); font-size: 17px; font-weight: 600; margin: 26px 0 8px; }
+  .doc-body h2:first-child { margin-top: 0; }
+  .doc-body p { margin: 0 0 12px; }
+  mark {
+    background: none; color: inherit; padding: 0 1px; border-bottom: 2px solid; cursor: pointer;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
+  mark.critical { border-color: var(--critical); background: color-mix(in srgb, var(--critical) 12%, transparent); }
+  mark.caution { border-color: var(--caution); background: color-mix(in srgb, var(--caution) 14%, transparent); }
+  mark.good { border-color: var(--good); background: color-mix(in srgb, var(--good) 10%, transparent); }
+  mark.active { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+  .tag {
+    display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
+    border-radius: 50%; font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    color: #fff; margin-left: 3px; vertical-align: super; cursor: pointer;
+  }
+  .tag.critical { background: var(--critical); } .tag.caution { background: var(--caution); } .tag.good { background: var(--good); }
+
+  /* ---- findings panel ---- */
+  .findings { display: flex; flex-direction: column; gap: 12px; }
+  .findings-head { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-faint); padding: 0 2px; }
+  .finding {
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--line);
+    border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 7px; cursor: pointer;
+    transition: border-color .15s;
+  }
+  .finding.critical { border-left-color: var(--critical); }
+  .finding.caution { border-left-color: var(--caution); }
+  .finding.good { border-left-color: var(--good); }
+  .finding.active { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .finding .head { display: flex; align-items: center; gap: 8px; }
+  .finding .num {
+    width: 18px; height: 18px; border-radius: 50%; color: #fff; font-family: var(--font-mono);
+    font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .finding.critical .num { background: var(--critical); } .finding.caution .num { background: var(--caution); } .finding.good .num { background: var(--good); }
+  .finding .title { font-size: 13.5px; font-weight: 700; }
+  .finding .status {
+    font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: .04em;
+    margin-left: auto; padding: 2px 7px; border-radius: 10px;
+  }
+  .finding.critical .status { background: var(--critical-tint); color: var(--critical); }
+  .finding.caution .status { background: var(--caution-tint); color: var(--caution); }
+  .finding.good .status { background: var(--good-tint); color: var(--good); }
+  .finding .body { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .finding .action {
+    font-size: 12.5px; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 5px;
+  }
+
+  .insight-card {
+    background: var(--accent-tint); border: 1px solid var(--line); border-radius: 10px; padding: 15px 16px;
+    display: flex; flex-direction: column; gap: 6px; font-size: 13px;
+  }
+  .insight-card .k { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
+  .insight-card .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; font-size: 15px; color: var(--ink); }
+  .insight-card p { margin: 0; color: var(--ink-soft); line-height: 1.5; }
+
+  .bottom-bar { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--font-body); font-weight: 700; font-size: 13.5px; padding: 11px 20px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer;
+  }
+  .btn.primary { background: var(--accent-bright); border-color: var(--accent-bright); color: #fff; }
+
+  @media (max-width: 860px) {
+    .shell { flex-direction: column; }
+    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
+    .nav { flex-direction: row; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark">R</span><span class="word">RelocAIte</span></div>
+    <nav class="nav">
+      <a class="active" href="#"><span class="icon">&#8962;</span>Home</a>
+      <a href="#"><span class="icon">&#9673;</span>My Journey</a>
+      <a href="#"><span class="icon">&#128196;</span>Documents</a>
+      <a href="#"><span class="icon">&#128172;</span>AI Assistant</a>
+      <a href="#"><span class="icon">&#128218;</span>Resources</a>
+    </nav>
+    <div class="nav-foot">
+      <a href="#"><span class="icon">&#9881;</span>Settings</a>
+      <a href="#"><span class="icon">&#8594;</span>Log out</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="crumb">My Journey &nbsp;/&nbsp; Step 1</div>
+    <div class="topline">
+      <h1>Step 1 &middot; Job Offer &amp; Contract Review</h1>
+      <span class="demo-badge">Illustrative contract &mdash; not your signed copy</span>
+    </div>
+
+    <div class="status-row">
+      <div class="status-chip"><span class="dot good"></span>Confirmed <span class="n">2</span></div>
+      <div class="status-chip"><span class="dot caution"></span>Worth negotiating <span class="n">2</span></div>
+      <div class="status-chip"><span class="dot critical"></span>Missing / check before signing <span class="n">3</span></div>
+    </div>
+
+    <div class="grid">
+      <div class="doc-panel">
+        <div class="doc-head">
+          <span class="name">Arbeitsvertrag &mdash; CJ Foods Europe GmbH</span>
+          <span class="sub">Example clauses, EN translation</span>
+        </div>
+        <div class="doc-body" id="docBody">
+          <h2>&sect;1 &nbsp;Commencement of Employment</h2>
+          <p>The employment relationship begins on <mark class="good" data-f="1">1 September 2026</mark> and is for an indefinite period.</p>
+
+          <h2>&sect;2 &nbsp;Remuneration</h2>
+          <p>The Employee shall receive an annual gross salary of <mark class="critical" data-f="2">EUR 50,500</mark>, payable in twelve equal monthly instalments.</p>
+
+          <h2>&sect;3 &nbsp;Probationary Period</h2>
+          <p>The first <mark class="good" data-f="3">six (6) months</mark> of employment constitute a probationary period, during which either party may terminate with two weeks' notice.</p>
+
+          <h2>&sect;4 &nbsp;Annual Leave</h2>
+          <p>The Employee is entitled to <mark class="good" data-f="4">25 working days</mark> of paid annual leave per calendar year.</p>
+
+          <h2>&sect;5 &nbsp;Notice Period</h2>
+          <p>Following the probationary period, the Employee may terminate this agreement with <mark class="caution" data-f="5">three (3) months'</mark> notice to the end of a calendar month; the Employer may terminate with the statutory minimum notice applicable to the Employee's length of service.</p>
+
+          <p style="color:var(--ink-faint); font-family:var(--font-mono); font-size:12px; margin-top:28px;">&mdash; no further clauses in this draft &mdash;</p>
+        </div>
+      </div>
+
+      <div class="findings">
+        <div class="findings-head">7 findings &middot; tap a card or a marker to link them</div>
+
+        <div class="finding good" data-f="1" tabindex="0">
+          <div class="head"><span class="num">1</span><span class="title">Start date is unambiguous</span><span class="status">Confirmed</span></div>
+          <div class="body">A fixed calendar start date with no conditions attached. Nothing to chase here.</div>
+        </div>
+
+        <div class="finding critical" data-f="2" tabindex="0">
+          <div class="head"><span class="num">2</span><span class="title">Salary sits €200 under the Blue Card threshold</span><span class="status">Fix before signing</span></div>
+          <div class="body">€50,500 falls just short of the 2026 EU Blue Card general threshold of €50,700 &mdash; at this figure, the visa route itself is at risk, not just your take-home pay. A raise of just <strong>€200/year</strong> clears it. Ask for €51,000+ to leave margin, since the threshold is reviewed annually and typically rises each year. (If this role could be classified as a shortage occupation &mdash; MINT/STEM/healthcare &mdash; the bar drops to €45,934, which you'd already clear; worth asking HR.)</div>
+          <div class="action">&#8594; Ask for a small, easy bump &mdash; this alone unlocks Blue Card eligibility</div>
+        </div>
+
+        <div class="finding good" data-f="3" tabindex="0">
+          <div class="head"><span class="num">3</span><span class="title">Probation period is standard</span><span class="status">Confirmed</span></div>
+          <div class="body">Six months matches the typical German Probezeit. Two-week mutual notice during this window is also standard &mdash; not a red flag.</div>
+        </div>
+
+        <div class="finding good" data-f="4" tabindex="0">
+          <div class="head"><span class="num">4</span><span class="title">Vacation exceeds the legal minimum</span><span class="status">Confirmed</span></div>
+          <div class="body">25 days is above the statutory floor of 20. Note: Hessen's 5 Bildungsurlaub days are a <em>separate</em> statutory entitlement &mdash; don't let these 25 get counted against them.</div>
+        </div>
+
+        <div class="finding caution" data-f="5" tabindex="0">
+          <div class="head"><span class="num">5</span><span class="title">Notice period is asymmetric</span><span class="status">Worth checking</span></div>
+          <div class="body">You'd owe 3 months' notice; the employer's obligation isn't spelled out beyond "statutory minimum." Worth confirming this asymmetry is within normal bounds &mdash; a Rechtsschutzversicherung (legal insurance) makes this kind of check cheap later.</div>
+        </div>
+
+        <div class="finding critical" data-f="6" tabindex="0">
+          <div class="head"><span class="num">6</span><span class="title">No Weihnachtsgeld clause found</span><span class="status">Missing</span></div>
+          <div class="body">Christmas bonus is never a legal default in Germany &mdash; if it isn't written down, it doesn't exist. Ask HR to confirm and add it in writing before you sign; if paid 3 years running it becomes a standing right.</div>
+          <div class="action">&#8594; Generate a clause-request email</div>
+        </div>
+
+        <div class="finding critical" data-f="7" tabindex="0">
+          <div class="head"><span class="num">7</span><span class="title">No relocation package mentioned</span><span class="status">Missing</span></div>
+          <div class="body">Nothing in this draft covers moving costs, visa support, or temporary housing. For a Korea&rarr;Germany senior move, packages of &euro;20,000&ndash;50,000 aren't unusual &mdash; ask for at least a &euro;10,000&ndash;15,000 lump sum if nothing is offered.</div>
+          <div class="action">&#8594; Add to your counter-offer draft</div>
+        </div>
+
+        <div class="insight-card">
+          <span class="k">Why these checks</span>
+          <p>Every finding ties to a real German employment-law default or a number from your own research &mdash; nothing here was guessed. Where your actual signed contract differs, tell the assistant and the findings update.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <button class="btn">&larr; Back to Journey Overview</button>
+      <button class="btn primary">Proceed to Step 2: Visa Application &rarr;</button>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  var marks = Array.from(document.querySelectorAll('mark'));
+  var cards = Array.from(document.querySelectorAll('.finding'));
+
+  function clearActive() {
+    marks.forEach(function (m) { m.classList.remove('active'); });
+    cards.forEach(function (c) { c.classList.remove('active'); });
+  }
+  function activate(id) {
+    clearActive();
+    marks.filter(function (m) { return m.dataset.f === id; }).forEach(function (m) { m.classList.add('active'); });
+    cards.filter(function (c) { return c.dataset.f === id; }).forEach(function (c) { c.classList.add('active'); });
+  }
+
+  marks.forEach(function (m) {
+    m.addEventListener('click', function () {
+      activate(m.dataset.f);
+      var card = cards.find(function (c) { return c.dataset.f === m.dataset.f; });
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+  cards.forEach(function (c) {
+    c.addEventListener('click', function () {
+      activate(c.dataset.f);
+      var mk = marks.find(function (m) { return m.dataset.f === c.dataset.f; });
+      if (mk) mk.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    c.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.click(); }
+    });
+  });
+})();
+</script>

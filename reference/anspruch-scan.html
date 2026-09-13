@@ -1,0 +1,526 @@
+<!doctype html>
+<title>Anspruch Scan</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F1F3EC; --bg-raised: #FFFFFF; --text: #16241D; --text-muted: #566056;
+    --line: #C9D0C0; --accent: #A9791F; --accent-strong: #7C5A16; --accent-tint: #E9DBB4; --flag: #8B3A3A;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "IBM Plex Sans", -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10160F; --bg-raised: #182018; --text: #E9ECE1; --text-muted: #9BA695;
+      --line: #2C362A; --accent: #D9B25A; --accent-strong: #F0CD7E; --accent-tint: #3A331C; --flag: #C77272;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10160F; --bg-raised: #182018; --text: #E9ECE1; --text-muted: #9BA695;
+    --line: #2C362A; --accent: #D9B25A; --accent-strong: #F0CD7E; --accent-tint: #3A331C; --flag: #C77272;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100dvh; background: var(--bg); color: var(--text);
+    font-family: var(--font-body); display: flex; flex-direction: column; align-items: center;
+    padding: clamp(20px, 5vw, 56px) 18px; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 16px; }
+  .brand {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent-strong); text-align: center; display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .card { background: var(--bg-raised); border: 1px solid var(--line); padding: 32px 26px; display: flex; flex-direction: column; gap: 20px; }
+  [hidden] { display: none !important; }
+
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 6vw, 36px); line-height: 1.15; margin: 0; text-wrap: balance; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: 22px; margin: 0; }
+  p.sub { margin: 0; color: var(--text-muted); font-size: 15px; line-height: 1.55; }
+  .definition { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted); border-top: 1px solid var(--line); padding-top: 14px; }
+  .definition b { color: var(--accent-strong); font-weight: 500; }
+
+  .btn {
+    font-family: var(--font-body); font-weight: 600; font-size: 16px; padding: 16px 18px; border-radius: 3px;
+    border: 1.5px solid var(--text); background: var(--bg-raised); color: var(--text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; width: 100%;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn.small { min-height: 40px; font-size: 13.5px; padding: 8px 14px; width: auto; }
+  .btn.ghost { border: none; background: none; color: var(--text-muted); font-size: 13px; font-family: var(--font-mono); min-height: auto; padding: 6px 0; text-decoration: underline; width: auto; }
+
+  .progress { display: flex; gap: 6px; }
+  .progress span { flex: 1; height: 3px; background: var(--line); }
+  .progress span.done { background: var(--accent); }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+  .field select, .field input[type="number"] {
+    font-family: var(--font-body); font-size: 15px; padding: 10px 12px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); border-radius: 2px;
+  }
+  .field-hint { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+  .field.checkbox-row { flex-direction: row; align-items: center; gap: 9px; }
+  .field.checkbox-row label { text-transform: none; font-size: 14px; color: var(--text); font-family: var(--font-body); letter-spacing: normal; }
+  .field.checkbox-row input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+  /* upload dropzone */
+  .dropzone {
+    border: 1.5px dashed var(--line); border-radius: 4px; padding: 26px 18px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; position: relative;
+  }
+  .dropzone:hover { border-color: var(--accent); }
+  .dropzone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .dropzone .icon { font-size: 26px; }
+  .dropzone .label { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted); }
+  .dropzone.has-file { border-style: solid; border-color: var(--accent); background: var(--accent-tint); }
+  .dropzone .filename { font-family: var(--font-mono); font-size: 13px; color: var(--accent-strong); font-weight: 500; }
+  .confirm-note {
+    font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); line-height: 1.6;
+    background: var(--bg); border-left: 2px solid var(--accent); padding: 10px 12px;
+  }
+
+  .scan-list { display: flex; flex-direction: column; gap: 4px; }
+  .scan-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 4px; font-family: var(--font-mono); font-size: 13.5px;
+    color: var(--text-muted); opacity: .4; transition: opacity .3s;
+  }
+  .scan-item.active { opacity: 1; color: var(--text); }
+  .scan-item.done { opacity: 1; color: var(--text-muted); }
+  .scan-item .mark { width: 18px; text-align: center; flex-shrink: 0; }
+  .scan-item.active .mark { color: var(--accent); }
+  .scan-item.done .mark { color: var(--accent-strong); }
+  .spinner {
+    width: 13px; height: 13px; border: 2px solid var(--line); border-top-color: var(--accent);
+    border-radius: 50%; display: inline-block; animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+  .total-figure { text-align: center; padding: 6px 0 2px; }
+  .total-figure .label { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); }
+  .total-figure .num {
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(38px, 9vw, 52px); color: var(--accent-strong);
+    font-variant-numeric: tabular-nums;
+  }
+  .total-figure .extra { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+
+  .result-items { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+  .result-item { border-bottom: 1px solid var(--line); }
+  .result-item .head {
+    padding: 14px 2px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+    cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: var(--font-body); color: var(--text);
+  }
+  .result-item .name { font-size: 14.5px; font-weight: 500; }
+  .result-item .amt { font-family: var(--font-mono); font-size: 14px; color: var(--accent-strong); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .result-item .chev { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+  .result-item .detail { padding: 0 2px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .result-item .detail[hidden] { display: none; }
+  .route-line {
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); line-height: 1.5;
+    border-left: 2px solid var(--accent); padding-left: 10px;
+  }
+  .draft-box { display: flex; flex-direction: column; gap: 6px; }
+  .draft-box textarea {
+    width: 100%; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.6; min-height: 110px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--text); padding: 10px; border-radius: 2px; resize: vertical;
+  }
+  .copy-status { font-family: var(--font-mono); font-size: 10.5px; color: var(--accent-strong); min-height: 14px; }
+  .auto-note { font-family: var(--font-mono); font-size: 10.5px; line-height: 1.5; margin: 2px 0 0; }
+  .auto-note.can { color: var(--accent-strong); }
+  .auto-note.cant { color: var(--text-muted); }
+
+  .retain-box { display: flex; flex-direction: column; gap: 10px; }
+  .retain-box input[type="email"] {
+    font-family: var(--font-body); font-size: 15px; padding: 12px 14px; border: 1px solid var(--line);
+    background: var(--bg); color: var(--text); border-radius: 2px; width: 100%;
+  }
+  .confirm-msg { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent-strong); }
+
+  .footer-note { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); line-height: 1.6; text-align: center; }
+</style>
+
+<div class="wrap">
+  <div class="brand"><span>ANSPRUCH</span><span id="stepLabel"></span></div>
+
+  <div class="card" id="screen-landing">
+    <h1>Every entitlement you're owed. One scan.</h1>
+    <p class="sub">Tax refunds, Bildungsurlaub, Homeoffice-Pauschale, relocation costs — scattered across forms, deadlines and Amtsdeutsch. This finds all of it, tells you where to send it, and drafts it for you.</p>
+    <button class="btn primary" id="btnStart">Start your scan →</button>
+    <p class="definition"><b>An·spruch</b>, noun (German): a legal claim — an entitlement you hold whether or not you know to ask for it.</p>
+  </div>
+
+  <div class="card" id="screen-upload" hidden>
+    <div class="progress"><span class="done"></span><span></span><span></span><span></span><span></span></div>
+    <h2>Upload</h2>
+    <p class="sub">A payslip or work contract is enough. Nothing here is stored anywhere — it stays on this screen.</p>
+    <label class="dropzone" id="dropzone">
+      <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
+      <span class="icon">📄</span>
+      <span class="label" id="dropLabel">Drop a file, or click to choose one</span>
+    </label>
+    <button class="btn primary" id="btnToConfirm">Continue →</button>
+    <button class="btn ghost" id="btnSkipUpload" style="align-self:center">or skip — I'll answer directly</button>
+  </div>
+
+  <div class="card" id="screen-confirm" hidden>
+    <div class="progress"><span class="done"></span><span class="done"></span><span></span><span></span><span></span></div>
+    <h2>Confirm what we found</h2>
+    <p class="confirm-note" id="confirmNote">We read the following from your document. Adjust anything that's off — this is what the scan runs on.</p>
+    <div class="field">
+      <label for="bl">Bundesland</label>
+      <select id="bl">
+        <option value="hessen">Hessen — 5 Tage/Jahr Bildungsurlaub</option>
+        <option value="berlin">Berlin — 5 Tage/Jahr Bildungszeit</option>
+        <option value="hamburg">Hamburg — 10 Tage/2 Jahre Bildungsurlaub</option>
+        <option value="none">Bayern / Sachsen — kein Anspruch</option>
+        <option value="other">Anderes Bundesland — i.d.R. 5 Tage/Jahr</option>
+      </select>
+      <span class="field-hint" id="blHint"></span>
+    </div>
+    <div class="field">
+      <label for="months">Monate beim aktuellen Arbeitgeber</label>
+      <input type="number" id="months" min="0" max="60" value="8">
+    </div>
+    <div class="field">
+      <label for="used">Bildungsurlaubstage in diesem Zeitraum genutzt</label>
+      <input type="number" id="used" min="0" max="10" value="0">
+    </div>
+    <div class="field">
+      <label for="salary">Bruttogehalt / Monat — optional, für €-Wert</label>
+      <input type="number" id="salary" min="0" step="50" placeholder="z. B. 4200">
+    </div>
+    <div class="field">
+      <label for="ho">Homeoffice-Tage / Woche</label>
+      <input type="number" id="ho" min="0" max="5" value="2">
+    </div>
+    <div class="field checkbox-row">
+      <input type="checkbox" id="moved" checked>
+      <label for="moved">Für diesen Job dieses Jahr nach Deutschland gezogen</label>
+    </div>
+    <div class="field" id="familyField">
+      <label for="family">Mitgezogene Familienmitglieder</label>
+      <input type="number" id="family" min="0" max="6" value="0">
+    </div>
+    <div class="field checkbox-row">
+      <input type="checkbox" id="filed">
+      <label for="filed">Dieses Jahr schon eine Steuererklärung abgegeben</label>
+    </div>
+    <button class="btn primary" id="btnScan">Run the scan →</button>
+  </div>
+
+  <div class="card" id="screen-scanning" hidden>
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span></span><span></span></div>
+    <h2>Classifying…</h2>
+    <div class="scan-list" id="scanList">
+      <div class="scan-item" data-key="bu"><span class="mark"></span><span>Checking Bildungsurlaub / Bildungszeit eligibility</span></div>
+      <div class="scan-item" data-key="ho"><span class="mark"></span><span>Checking Homeoffice-Pauschale</span></div>
+      <div class="scan-item" data-key="mv"><span class="mark"></span><span>Checking relocation cost deduction</span></div>
+      <div class="scan-item" data-key="tx"><span class="mark"></span><span>Checking your tax filing status</span></div>
+    </div>
+  </div>
+
+  <div class="card" id="screen-results" hidden>
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span></span></div>
+    <div class="total-figure">
+      <div class="label">You may be able to claim</div>
+      <div class="num" id="totalNum">0 €</div>
+      <div class="extra" id="totalExtra"></div>
+    </div>
+    <p class="sub" style="text-align:center">Tap a category — where to send it, and a ready draft.</p>
+    <div class="result-items" id="resultItems"></div>
+    <button class="btn primary" id="btnToRetain">Continue →</button>
+  </div>
+
+  <div class="card" id="screen-retain" hidden>
+    <div class="progress"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span></div>
+    <h2>We got you. See you next year.</h2>
+    <p class="sub">Rules change, your situation changes — a new job, a move, a kid. One email a year, and we re-run the scan.</p>
+    <div class="retain-box">
+      <input type="email" id="retainEmail" placeholder="you@email.com">
+      <button class="btn primary" id="btnRemindMe">Remind me next year</button>
+      <p class="confirm-msg" id="retainConfirm" hidden>Got it — we'll check in around this time next year.</p>
+    </div>
+    <button class="btn ghost" id="btnRestart" style="align-self:center">Start over</button>
+    <p class="footer-note">Demo prototype — rule-based estimate using public 2026 flat rates (HBUG, BiZeitG, HmbBUG, §4 EStG, Umzugskostenpauschale). Document upload is not parsed in this demo — you confirm the fields yourself. Not tax or legal advice. No email is actually sent.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  var BL_INFO = {
+    hessen: { eligible: true, term: 'Bildungsurlaub', maxDays: 5, expiry: 'verfällt 31.12', law: 'HBUG', hint: '6 Monate Wartezeit · Antrag 6 Wochen vorher · 5 Tage pro Kalenderjahr (HBUG)' },
+    berlin: { eligible: true, term: 'Bildungszeit', maxDays: 5, expiry: 'verfällt 31.12', law: 'BiZeitG', hint: '6 Monate Wartezeit · Antrag 6 Wochen vorher · Betriebe bis 20 Beschäftigte können ablehnen · mit Zustimmung auf 10 Tage kombinierbar (BiZeitG 2021)' },
+    hamburg: { eligible: true, term: 'Bildungsurlaub', maxDays: 10, expiry: 'verfällt am Ende des 2-Jahres-Zeitraums', law: 'HmbBUG', hint: '10 Arbeitstage pro 2-Jahres-Zeitraum (nicht pro Kalenderjahr, 12 Tage bei 6-Tage-Woche) · Zeitraum beginnt 1. Januar nach Einstellung · Antrag 6 Wochen vorher (HmbBUG)' },
+    none: { eligible: false, term: 'Bildungsurlaub', maxDays: 0, expiry: '', law: '', hint: 'Kein gesetzlicher Anspruch in diesem Bundesland' },
+    other: { eligible: true, term: 'Bildungsurlaub', maxDays: 5, expiry: 'verfällt 31.12', law: 'dein Landesgesetz', hint: 'In den meisten übrigen Bundesländern ebenfalls 5 Tage/Jahr — genaue Regeln vorher prüfen' }
+  };
+
+  var screens = ['landing', 'upload', 'confirm', 'scanning', 'results', 'retain'];
+  function show(name) {
+    screens.forEach(function (s) { document.getElementById('screen-' + s).hidden = (s !== name); });
+    var labels = { landing: '', upload: 'STEP 1 / 5', confirm: 'STEP 2 / 5', scanning: 'STEP 3 / 5', results: 'STEP 4 / 5', retain: 'STEP 5 / 5' };
+    document.getElementById('stepLabel').textContent = labels[name] || '';
+  }
+
+  document.getElementById('btnStart').addEventListener('click', function () { show('upload'); });
+
+  // ---- upload ----
+  var fileInput = document.getElementById('fileInput');
+  var dropzone = document.getElementById('dropzone');
+  var dropLabel = document.getElementById('dropLabel');
+  var hasFile = false;
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files[0]) {
+      hasFile = true;
+      dropzone.classList.add('has-file');
+      dropLabel.innerHTML = 'Attached: <span class="filename">' + fileInput.files[0].name + '</span>';
+    }
+  });
+  document.getElementById('btnToConfirm').addEventListener('click', function () { goToConfirm(); });
+  document.getElementById('btnSkipUpload').addEventListener('click', function () { hasFile = false; goToConfirm(); });
+
+  function goToConfirm() {
+    var note = document.getElementById('confirmNote');
+    note.textContent = hasFile
+      ? 'We read the following from your document. Adjust anything that\'s off — this is what the scan runs on.'
+      : 'No document uploaded — just confirm your details below.';
+    show('confirm');
+  }
+
+  // ---- confirm form ----
+  var blEl = document.getElementById('bl');
+  var movedEl = document.getElementById('moved');
+  function syncHints() {
+    var info = BL_INFO[blEl.value] || BL_INFO.other;
+    document.getElementById('blHint').textContent = info.hint;
+    document.getElementById('used').max = info.maxDays || 10;
+    document.getElementById('familyField').style.display = movedEl.checked ? '' : 'none';
+  }
+  blEl.addEventListener('change', syncHints);
+  movedEl.addEventListener('change', syncHints);
+  syncHints();
+
+  function fmt(n) { return Math.round(n).toLocaleString('de-DE'); }
+
+  var lastResult = null;
+  function computeResult() {
+    var info = BL_INFO[blEl.value] || BL_INFO.other;
+    var months = parseFloat(document.getElementById('months').value) || 0;
+    var used = parseFloat(document.getElementById('used').value) || 0;
+    var salary = parseFloat(document.getElementById('salary').value) || 0;
+    var ho = parseFloat(document.getElementById('ho').value) || 0;
+    var moved = movedEl.checked;
+    var family = parseFloat(document.getElementById('family').value) || 0;
+    var filed = document.getElementById('filed').checked;
+
+    var items = [];
+    var total = 0;
+
+    if (!info.eligible) {
+      items.push({ key: 'bu', name: info.term, amt: null,
+        route: 'Not applicable in this Bundesland.', draft: null });
+    } else if (months < 6) {
+      items.push({ key: 'bu', name: info.term, amt: null,
+        route: 'Applies once you pass 6 months at this employer (' + (6 - months) + ' to go).', draft: null });
+    } else {
+      var remaining = Math.max(0, info.maxDays - used);
+      if (remaining > 0) {
+        var dailyWage = salary > 0 ? salary / 21.75 : 0;
+        var value = Math.round(remaining * dailyWage);
+        items.push({
+          key: 'bu', name: remaining + ' bezahlte ' + info.term + 'stage offen', amt: value || null,
+          route: '📍 Submit to: your employer\'s HR / Personalabteilung — internal request, no government form.',
+          draft: 'Subject: ' + info.term + ' — remaining days this period\n\n' +
+            'Hi [Manager],\n\n' +
+            'I\'d like to use my remaining ' + remaining + ' day(s) of ' + info.term + ' this period, as provided under the ' + info.law + '. ' +
+            'They ' + info.expiry + ' — could we find a time to agree on dates?\n\n' +
+            'Thanks,\n[Your name]'
+        });
+        total += value;
+      } else {
+        items.push({ key: 'bu', name: info.term, amt: 0, route: 'Already used up for this period.', draft: null });
+      }
+    }
+
+    var hoDays = Math.min(ho * 46, 210);
+    var hoValue = Math.round(hoDays * 6);
+    items.push({
+      key: 'ho', name: 'Homeoffice-Pauschale (' + Math.round(hoDays) + ' Tage × 6 €)', amt: hoValue,
+      route: '📍 Submit to: Finanzamt — as Werbungskosten in your Steuererklärung (Anlage N).',
+      draft: hoValue > 0
+        ? ('Werbungskosten checklist — Homeoffice-Pauschale\n\n' +
+           '• Home-office days this year: ' + Math.round(hoDays) + '\n' +
+           '• Rate: €6/day, capped at 210 days (€1,260/year)\n' +
+           '• Amount to enter in Anlage N: €' + fmt(hoValue) + '\n' +
+           '• Keep a simple log of which days you worked from home.')
+        : null
+    });
+    total += hoValue;
+
+    if (moved) {
+      var reloValue = 964 + family * 643;
+      items.push({
+        key: 'mv', name: 'Umzugskostenpauschale (+ ' + family + ' Familienmitglieder)', amt: reloValue,
+        route: '📍 Submit to: Finanzamt — as Werbungskosten in your Steuererklärung (Anlage N).',
+        draft: 'Werbungskosten checklist — Umzugskosten\n\n' +
+          '• Flat rate, no receipts needed: €964 + €643 × ' + family + ' family member(s) = €' + fmt(reloValue) + '\n' +
+          '• Enter under "Umzugskosten" in Anlage N.\n' +
+          '• Keep your move date and new address on file in case it\'s asked for.'
+      });
+      total += reloValue;
+    }
+
+    if (!filed) {
+      items.push({
+        key: 'tx', name: 'Steuererklärung noch offen', amt: null,
+        route: '📍 Submit to: Finanzamt via ELSTER (elster.de), or hand this to a tax preparer.',
+        draft: 'First Steuererklärung — checklist\n\n' +
+          '• Lohnsteuerbescheinigung (from your employer)\n' +
+          '• Steuer-ID\n' +
+          '• Bank IBAN for the refund\n' +
+          '• File via elster.de or a tax-filing app — average newcomer refund: €800–1,500.'
+      });
+    }
+
+    return { items: items, total: total, filed: filed };
+  }
+
+  document.getElementById('btnScan').addEventListener('click', function () {
+    lastResult = computeResult();
+    runScanAnimation();
+  });
+
+  function runScanAnimation() {
+    show('scanning');
+    var order = ['bu', 'ho', 'mv', 'tx'];
+    var els = {};
+    order.forEach(function (k) { els[k] = document.querySelector('.scan-item[data-key="' + k + '"]'); });
+    order.forEach(function (k) {
+      els[k].classList.remove('active', 'done');
+      els[k].querySelector('.mark').innerHTML = '';
+    });
+
+    var i = 0;
+    function step() {
+      if (i > 0) {
+        var prev = els[order[i - 1]];
+        prev.classList.remove('active');
+        prev.classList.add('done');
+        prev.querySelector('.mark').textContent = '✓';
+      }
+      if (i >= order.length) {
+        setTimeout(function () { renderResults(lastResult); show('results'); }, 350);
+        return;
+      }
+      var cur = els[order[i]];
+      cur.classList.add('active');
+      cur.querySelector('.mark').innerHTML = '<span class="spinner"></span>';
+      i++;
+      setTimeout(step, 480);
+    }
+    step();
+  }
+
+  function renderResults(result) {
+    document.getElementById('totalNum').textContent = fmt(result.total) + ' €';
+    document.getElementById('totalExtra').textContent = result.filed ? '' : '+ potential tax refund, filed separately';
+
+    var wrap = document.getElementById('resultItems');
+    wrap.innerHTML = '';
+    result.items.forEach(function (it, idx) {
+      var amtText = it.amt === null ? '—' : (it.amt > 0 ? '≈ ' + fmt(it.amt) + ' €' : '0 €');
+      var item = document.createElement('div');
+      item.className = 'result-item';
+
+      var head = document.createElement('button');
+      head.type = 'button';
+      head.className = 'head';
+      head.innerHTML = '<span class="name">' + it.name + '</span>' +
+        '<span><span class="amt">' + amtText + '</span><span class="chev">▾</span></span>';
+
+      var detail = document.createElement('div');
+      detail.className = 'detail';
+      detail.hidden = true;
+      var detailHtml = '<div class="route-line">' + it.route + '</div>';
+      if (it.draft) {
+        var boxId = 'draft-' + idx;
+        var canAutoSend = (it.key === 'bu');
+        detailHtml += '<div class="draft-box">' +
+          '<textarea id="' + boxId + '" readonly>' + it.draft + '</textarea>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">' +
+          '<button class="btn small" data-copy="' + boxId + '">Copy draft</button>' +
+          (canAutoSend ? '<button class="btn small primary" data-send="' + boxId + '">Review &amp; send to HR →</button>' : '') +
+          '</div>' +
+          '<span class="copy-status" data-status="' + boxId + '"></span>' +
+          (canAutoSend
+            ? '<p class="auto-note can">✓ We can send this for you — it\'s an internal email, not a government submission.</p>'
+            : '<p class="auto-note cant">You submit this yourself — Anspruch prepares it, doesn\'t file it (Steuerberatungsgesetz reserves that step).</p>') +
+          '</div>';
+      }
+      detail.innerHTML = detailHtml;
+
+      head.addEventListener('click', function () { detail.hidden = !detail.hidden; });
+      item.appendChild(head);
+      item.appendChild(detail);
+      wrap.appendChild(item);
+    });
+
+    wrap.querySelectorAll('[data-copy]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.getAttribute('data-copy');
+        var ta = document.getElementById(id);
+        var status = wrap.querySelector('[data-status="' + id + '"]');
+        ta.select();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ta.value).then(function () {
+            status.textContent = 'Copied.';
+          }).catch(function () { status.textContent = 'Select the text above and copy manually.'; });
+        } else {
+          status.textContent = 'Select the text above and copy manually.';
+        }
+      });
+    });
+
+    wrap.querySelectorAll('[data-send]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.getAttribute('data-send');
+        var status = wrap.querySelector('[data-status="' + id + '"]');
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        setTimeout(function () {
+          btn.textContent = '✓ Sent to HR';
+          status.textContent = 'Delivered — you\'ll hear back once they confirm dates.';
+        }, 700);
+      });
+    });
+  }
+
+  document.getElementById('btnToRetain').addEventListener('click', function () { show('retain'); });
+
+  document.getElementById('btnRemindMe').addEventListener('click', function () {
+    var email = document.getElementById('retainEmail').value.trim();
+    if (!email) return;
+    try { localStorage.setItem('anspruch_remind_email', email); } catch (e) {}
+    document.getElementById('retainConfirm').hidden = false;
+  });
+
+  document.getElementById('btnRestart').addEventListener('click', function () {
+    hasFile = false;
+    dropzone.classList.remove('has-file');
+    dropLabel.textContent = 'Drop a file, or click to choose one';
+    fileInput.value = '';
+    document.getElementById('retainConfirm').hidden = true;
+    document.getElementById('retainEmail').value = '';
+    show('landing');
+  });
+
+  show('landing');
+})();
+</script>

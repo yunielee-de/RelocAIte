@@ -1,7 +1,9 @@
 # Design
 
-UI/UX design work for RelocAIte (Anspruch) — currently empty.
+Design-source material preserved for the RelocAIte team:
 
-The product's existing visual language (used in the pitch deck and prototypes so far) is a deep ink-green + brass-gold palette, with Fraunces (display), IBM Plex Sans (body), and IBM Plex Mono (data/labels) — a document/ledger visual theme playing on "Anspruch" meaning a legal claim. See `../development/anspruch-scan.html` and `../product-strategy/anspruch-pitch-deck.html` for the current look.
+- `relocaite-logo.jpeg` — original blue RelocAIte logo source.
+- `relocaite-logo-transparent.svg` — transparent presentation wrapper that references the JPEG source.
+- `ui-reference-dashboard.jpeg` — dashboard design reference. Its six-stage content and fictional user data are visual reference only; the application uses the approved five-stage journey and actual profile state.
 
-Add design files, mockups, and design-system docs here as the UI/UX track produces them.
+The implemented visual system lives in `../development/relocaite-app`.
