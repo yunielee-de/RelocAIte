@@ -13,7 +13,7 @@ export function JourneyDashboard({ profile, assessment, onNavigate }: { profile:
   const progress = journeyProgress(profile, assessment);
   const action = journeyNextAction(profile, assessment);
   return <div className="reference-dashboard">
-    <JourneyOverview profile={profile} assessment={assessment}><div className="page-heading"><div><h1>{profile.name ? `Hi ${profile.name}` : "Welcome to RelocAIte"} <span className="wave" aria-hidden="true">👋</span></h1><p>Let’s get you set up in Germany.</p></div></div></JourneyOverview>
+    <JourneyOverview profile={profile} assessment={assessment}><div className="page-heading"><div><h1>{profile.name ? `Hi ${profile.name}` : "Welcome to RelocAIte"}</h1><p>Let’s get you set up in Germany.</p></div></div></JourneyOverview>
     <section className="next-action-banner dashboard-next-action"><span className="action-icon"><Sparkles size={25} /></span><div><p className="eyebrow">YOUR NEXT ACTION</p><h2>{action.title}</h2><p>{action.detail}</p></div><Button onClick={() => onNavigate(action.destination)}>{action.destination === "contract" && !profile.contractDocument ? "Start with your contract" : "Continue"}<ArrowRight /></Button></section>
     <div className="section-row stage-heading"><h2>Your steps</h2><span className="quiet-label">One profile. One journey.</span></div>
     <div className="journey-stage-list">{journeyStages.map((stage, index) => {

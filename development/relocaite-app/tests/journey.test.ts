@@ -21,6 +21,7 @@ test("normal start is empty and a sample is never treated as confirmed extractio
   const blank = createProfile();
   assert.equal(blank.name, ""); assert.equal(blank.contractDocument, null);
   const sample = loadDemoContract(blank);
+  assert.equal(sample.name, "");
   assert.equal(annualSalary(sample), null);
   assert.equal(sample.employment.employer.origin, "demo-contract");
   assert.equal(sample.employment.employer.confirmed, false);
