@@ -23,7 +23,7 @@ export function loadDemoContract(profile: JourneyProfile): JourneyProfile {
     const [value, evidence] = demoEmployment[key];
     return [key, { value, extractedValue: value, origin: "demo-contract", confirmed: false, evidence } satisfies ProfileField];
   })) as JourneyProfile["employment"];
-  return recordDocument({ ...invalidateJobFacts(profile), name: profile.name || "Alex", employment, contractReviewed: false, contractDocument: { name: DEMO_CONTRACT_NAME, kind: "demo" } }, "employment", DEMO_CONTRACT_NAME, "demo");
+  return recordDocument({ ...invalidateJobFacts(profile), employment, contractReviewed: false, contractDocument: { name: DEMO_CONTRACT_NAME, kind: "demo" } }, "employment", DEMO_CONTRACT_NAME, "demo");
 }
 export function loadDemoBackground(profile: JourneyProfile): JourneyProfile {
   const values: Partial<Record<QualificationKey, string>> = {

@@ -7,6 +7,8 @@ Two different things need to be kept separate:
 
 This document only covers #1.
 
+> **Proposed next step:** See [`firecrawl-source-monitor-proposal.md`](./firecrawl-source-monitor-proposal.md) for the reviewable Firecrawl implementation plan. It is a proposal only; the current pipeline and `sources.json` do not depend on Firecrawl.
+
 ---
 
 ## ⚠️ Correction (2026-09-12): what was actually used vs. what an earlier version of this doc claimed

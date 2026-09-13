@@ -79,6 +79,8 @@ test("contract API sends a PDF for structured extraction without provider respon
     assert.equal(body.fields.employer.value, "Neue Arbeit GmbH");
     assert.equal(response.headers.get("cache-control"), "no-store");
     assert.equal(providerRequest.store, false);
+    assert.deepEqual(providerRequest.reasoning, { effort: "minimal" });
+    assert.equal(providerRequest.max_output_tokens, 2500);
     assert.equal(providerRedirect, "error");
     assert.match(String(providerRequest.instructions), /never invent a value/);
     const input = providerRequest.input as Array<{ content: Array<Record<string, unknown>> }>;

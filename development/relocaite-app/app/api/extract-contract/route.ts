@@ -192,8 +192,9 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: process.env.OPENAI_CONTRACT_MODEL?.trim() || DEFAULT_MODEL,
         store: false,
+        reasoning: { effort: "minimal" },
         instructions: extractionInstructions,
-        max_output_tokens: 6000,
+        max_output_tokens: 2500,
         input: [{ role: "user", content: [
           documentPart,
           { type: "input_text", text: "Extract the employment terms from this contract using the required schema." },

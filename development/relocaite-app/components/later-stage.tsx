@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Check, ExternalLink, FileText } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, ArrowRight, Building2, Check, CheckCircle2, Circle, ExternalLink, FileSearch, FileText, Home, Lightbulb, MessageCircle, ShieldCheck, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { documentAvailable, documentCatalog, vaultDocument, type DocumentType } from "@/lib/document-vault";
@@ -11,9 +12,41 @@ import { DocumentControl } from "./document-vault";
 
 type LaterStageId = keyof typeof stageTasks;
 function Source({ source }: { source: SourceKey }) { return <a className="text-link" href={officialSources[source].url} target="_blank" rel="noreferrer">{officialSources[source].label}<ExternalLink size={13} /></a>; }
-export function LaterStage({ stage, profile, onChange, onBack, onContract, onDocuments, onContinue }: {
-  stage: LaterStageId; profile: JourneyProfile; onChange: (profile: JourneyProfile) => void; onBack: () => void; onContract: () => void; onDocuments: () => void; onContinue: () => void;
+function AccommodationStage({ profile, onBack, onDocuments, onAssistant, onRentalDocuments, onRentalListing, onAnmeldung }: { profile: JourneyProfile; onBack: () => void; onDocuments: () => void; onAssistant: () => void; onRentalDocuments: () => void; onRentalListing: () => void; onAnmeldung: () => void }) {
+  const rentalDocuments = ["employment", "identity", "income", "schufa", "previous-rent"] as const;
+  const rentalReady = rentalDocuments.filter(type => documentAvailable(profile, type)).length;
+  const registrationDocuments = ["identity", "housing-confirmation", "anmeldung"] as const;
+  const registrationReady = registrationDocuments.filter(type => documentAvailable(profile, type)).length;
+  const taskStates = [rentalReady === rentalDocuments.length, false, registrationReady === registrationDocuments.length];
+  const completed = taskStates.filter(Boolean).length;
+  const percent = Math.round(completed / taskStates.length * 100);
+  return <div className="accommodation-screen">
+    <button className="back-link accommodation-back" onClick={onBack}><ArrowLeft size={16} /> Back to journey</button>
+    <div className="accommodation-layout">
+      <main className="accommodation-main">
+        <header className="accommodation-heading"><span className="accommodation-title-icon"><Home /></span><div><h1>Accommodation</h1><p>Handle your rental documents with confidence<br className="desktop-break" /> and get ready for registration.</p></div></header>
+        <section className="panel accommodation-progress"><div><h2>Your progress in this step</h2><span>{completed} of 3 tasks completed</span></div><strong>{percent}%</strong><div className="accommodation-progress-track"><span style={{ width: `${percent}%` }} /></div></section>
+        <div className="accommodation-tasks-heading"><h2>Your tasks</h2><p>Complete the steps below to get your home and prepare for registration in Germany.</p></div>
+        <div className="accommodation-task-list">
+          <article className="panel accommodation-task-card"><span className="accommodation-task-number">1</span><span className="accommodation-task-icon mint"><FileText /></span><div className="accommodation-task-copy"><div className="accommodation-task-title"><h3>Prepare rental documents</h3><span className={`accommodation-status ${taskStates[0] ? "complete" : "pending"}`}>{taskStates[0] ? <CheckCircle2 /> : <Circle />}{taskStates[0] ? "Completed" : "In progress"}</span></div><p>Get a personalized checklist of required documents, upload them, and keep everything in one place.</p><div className="accommodation-task-actions"><div className="document-progress mint"><span>{rentalReady} of {rentalDocuments.length} documents ready</span><div><i style={{ width: `${rentalReady / rentalDocuments.length * 100}%` }} /></div></div><Button variant="outline" onClick={onRentalDocuments}>View documents <ArrowRight /></Button></div></div></article>
+          <article className="panel accommodation-task-card"><span className="accommodation-task-number">2</span><span className="accommodation-task-icon blue"><FileSearch /></span><div className="accommodation-task-copy"><div className="accommodation-task-title"><h3>Review rental agreement</h3><span className="accommodation-status active"><Circle />In progress</span></div><p>Upload your rental contract (Mietvertrag) and review important terms, costs, and potential risks.</p><div className="accommodation-task-buttons"><Button onClick={onDocuments}><UploadCloud /> Upload rental agreement <ArrowRight /></Button><Button variant="outline" asChild><a href="https://www.immobilienscout24.de/Suche/de/berlin/berlin/wohnung-mieten" target="_blank" rel="noreferrer"><FileSearch /> Browse rental listings <ExternalLink /></a></Button></div></div></article>
+          <article className="panel accommodation-task-card"><span className="accommodation-task-number">3</span><span className="accommodation-task-icon neutral"><Building2 /></span><div className="accommodation-task-copy"><div className="accommodation-task-title"><h3>Anmeldung</h3><span className={`accommodation-status ${taskStates[2] ? "complete" : "pending"}`}>{taskStates[2] ? <CheckCircle2 /> : <Circle />}{taskStates[2] ? "Completed" : "Not started"}</span></div><p>Prepare the documents for address registration and get step-by-step guidance.</p><div className="accommodation-task-actions"><div className="document-progress"><span>{registrationReady} of {registrationDocuments.length} documents ready</span><div><i style={{ width: `${registrationReady / registrationDocuments.length * 100}%` }} /></div></div><Button variant="outline" onClick={onAnmeldung}>View checklist <ArrowRight /></Button></div></div></article>
+        </div>
+      </main>
+      <aside className="accommodation-aside">
+        <section className="accommodation-hero"><Image src="/berlin-reichstag.jpg" alt="Berlin skyline" fill sizes="(min-width: 1000px) 32vw, 100vw" /><div><p>A new home.<br />A brighter tomorrow.</p><span /></div></section>
+        <section className="panel accommodation-side-card"><span className="side-card-icon"><MessageCircle /></span><div><h3>Need help?</h3><p>Ask our AI assistant anything about renting, contracts or Anmeldung.</p></div><Button onClick={onAssistant}>Ask AI Assistant <ArrowRight /></Button></section>
+        <section className="panel accommodation-side-card listing-card"><span className="side-card-icon purple"><ShieldCheck /></span><div><h3>Find or check a rental listing</h3><p>Browse current homes, or paste a listing into RelocAIte to review potential warning signs.</p><div className="housing-portals"><a href="https://www.immobilienscout24.de/Suche/de/berlin/berlin/wohnung-mieten" target="_blank" rel="noreferrer">ImmoScout24 <ExternalLink /></a><a href="https://www.wg-gesucht.de/en/apartments/berlin" target="_blank" rel="noreferrer">WG-Gesucht <ExternalLink /></a></div></div><Button variant="outline" onClick={onRentalListing}>Check a listing <ArrowRight /></Button></section>
+        <section className="panel accommodation-side-card tips-card"><span className="side-card-icon"><Lightbulb /></span><div><h3>Quick tips</h3><ul><li><CheckCircle2 />Be cautious of unusually low rent prices.</li><li><CheckCircle2 />Never transfer money before viewing the apartment.</li><li><CheckCircle2 />Check that the landlord can provide a Wohnungsgeberbestätigung.</li><li><CheckCircle2 />When in doubt, ask our AI assistant.</li></ul></div></section>
+      </aside>
+    </div>
+    <section className="accommodation-guide"><span><Check /></span><div><h3>Need more information?</h3><p>Read the official guide to renting in Germany, common scams and the Anmeldung process.</p></div><a href={officialSources.housing.url} target="_blank" rel="noreferrer">Open guide <ArrowRight /></a></section>
+  </div>;
+}
+export function LaterStage({ stage, profile, onChange, onBack, onContract, onDocuments, onContinue, onAssistant = onBack, onRentalDocuments = onDocuments, onRentalListing = onAssistant, onAnmeldung = onDocuments }: {
+  stage: LaterStageId; profile: JourneyProfile; onChange: (profile: JourneyProfile) => void; onBack: () => void; onContract: () => void; onDocuments: () => void; onContinue: () => void; onAssistant?: () => void; onRentalDocuments?: () => void; onRentalListing?: () => void; onAnmeldung?: () => void;
 }) {
+  if ((stage as LaterStageId) === "accommodation") return <AccommodationStage profile={profile} onBack={onBack} onDocuments={onDocuments} onAssistant={onAssistant} onRentalDocuments={onRentalDocuments} onRentalListing={onRentalListing} onAnmeldung={onAnmeldung} />;
   const index = journeyStages.findIndex(item => item.id === stage);
   const tasks = stageTasks[stage];
   const completed = tasks.every(task => profile.tasksDone[task.id]);

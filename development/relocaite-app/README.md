@@ -14,14 +14,14 @@ npm.cmd run dev
 
 Open http://localhost:3000. The demo and manual-entry journeys work without an API key, database or account.
 
-To extract facts from a newly uploaded contract, create `.env.local` from `.env.example` and set a server-side OpenAI API key:
+To extract facts from a newly uploaded contract or run live official-source monitoring, create `.env.local` from `.env.example` and set the relevant server-side keys:
 
 ```powershell
 Copy-Item .env.example .env.local
-# Edit .env.local and set OPENAI_API_KEY, then restart the dev server.
+# Edit .env.local and set OPENAI_API_KEY and FIRECRAWL_API_KEY, then restart the dev server.
 ```
 
-The optional `OPENAI_CONTRACT_MODEL` setting defaults to `gpt-5-mini`. Use a dedicated, restricted project key. In a deployment, configure both values in the hosting environment rather than committing `.env.local`.
+The optional `OPENAI_CONTRACT_MODEL` setting defaults to `gpt-5-mini`. Use dedicated keys. In a deployment, configure all secrets in the hosting environment rather than committing `.env.local`.
 
 This machine also has a portable Node runtime already used for validation. With the existing dependencies:
 
@@ -137,3 +137,20 @@ Updated: `app/page.tsx`, `app/globals.css`, `components/contract-stage.tsx`, `co
 ## Preserved financial prototype
 
 `app/financial-preview/page.tsx`, `lib/assessment.ts`, `app/api/assessment/route.ts` and `app/api/extract-document/route.ts` retain their existing behavior, including synthetic payslip data and dated financial assumptions. Stage 5 links to this separate preview; it does not yet import the Journey Profile.
+
+## Firecrawl source monitor (feature branch)
+
+The implementation in PR #1 is ready for team review. It adds a standalone maintenance screen at http://localhost:3000/source-monitor and a server-only API at `/api/source-monitor`. The browser can choose only one of three allowlisted official sources; it cannot submit an arbitrary URL. Firecrawl receives public URLs only—never contracts, profiles, payslips or other personal data.
+
+To enable real checks, copy `.env.example` to `.env.local`, replace the placeholder with a Firecrawl key, and restart the development server:
+
+```powershell
+Copy-Item .env.example .env.local
+npm.cmd run dev
+```
+
+On macOS/Linux, use `cp .env.example .env.local`. Do not commit `.env.local`. Without a key, the monitor remains viewable and explains that live checks require configuration.
+
+A Firecrawl change signal or missing expected evidence produces **Verification required** and a user-warning preview. It does not alter an active eligibility rule. The hackathon implementation is manual and session-only; scheduling, durable snapshots, authentication, review history and notifications remain production work.
+
+See the detailed [`Firecrawl source-monitor proposal`](../firecrawl-source-monitor-proposal.md) for architecture, boundaries, future work and the team approval checklist.
