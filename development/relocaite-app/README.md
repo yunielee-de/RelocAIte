@@ -14,14 +14,14 @@ npm.cmd run dev
 
 Open http://localhost:3000. The demo and manual-entry journeys work without an API key, database or account.
 
-To extract facts from a newly uploaded contract or run live official-source monitoring, create `.env.local` from `.env.example` and set the relevant server-side keys:
+To extract facts from a newly uploaded contract, enable live assistant answers, or run live official-source monitoring, create `.env.local` from `.env.example` and set the relevant server-side keys:
 
 ```powershell
 Copy-Item .env.example .env.local
 # Edit .env.local and set OPENAI_API_KEY and FIRECRAWL_API_KEY, then restart the dev server.
 ```
 
-The optional `OPENAI_CONTRACT_MODEL` setting defaults to `gpt-5-mini`. Use dedicated keys. In a deployment, configure all secrets in the hosting environment rather than committing `.env.local`.
+The optional `OPENAI_CONTRACT_MODEL` and `OPENAI_ASSISTANT_MODEL` settings default to `gpt-5-mini`. Use dedicated keys. In a deployment, configure all secrets in the hosting environment rather than committing `.env.local`.
 
 This machine also has a portable Node runtime already used for validation. With the existing dependencies:
 
@@ -54,7 +54,8 @@ npm.cmd start
 7. Add a document record, or report availability with **I have this document**. **Open Document Vault** shows the same records across stages.
 8. Refresh to demonstrate persistence. Edit a profile fact: route review must be repeated, while documents remain.
 9. Explore Accommodation & Registration, Compliance & Setup, and Tax Refund & Benefits. Mark explicit preparation reviews to update progress.
-10. Stage 5 → **Open financial preview** opens the preserved `/financial-preview`.
+10. Stage 5 → **Open financial preview** opens `/financial-preview` and carries confirmed name, location, salary and reviewed visa route from this browser session. Complete the remaining financial questions before generating results.
+11. Open **Assistant** and ask about the confirmed salary or visa preparation. With `OPENAI_API_KEY`, the app requests a short contextual answer; otherwise it automatically uses curated built-in guidance.
 
 For a standard-case example, explicitly report recognition as confirmed. This is not official verification. EU/EEA or Swiss nationalities give distinct checklists and omit the D-visa timeline.
 
@@ -66,7 +67,7 @@ For a standard-case example, explicitly report recognition as confirmed. This is
 - Shared Vault: stable ID, document type, filename, added/updated dates, status and stages using the record. Replacement keeps the record ID and other documents.
 - **File bytes are not persisted by RelocAIte.** A selected contract is sent transiently through the server to the configured OpenAI account for extraction with response storage disabled; the Journey Profile and Vault retain fields and metadata only. Keep originals. “Already provided” means metadata exists; “Reported ready” means user-reported availability without selecting a file. Neither verifies evidence; samples are not application documents.
 - The extraction route rejects cross-site browser requests and oversized bodies, applies a small per-instance request limit, disables response caching and never logs the key or contract contents.
-- Journey summaries and the AI Assistant preview use templates. The live model is limited to contract extraction.
+- The relocation assistant uses `POST /api/assistant` for short, contextual OpenAI responses with storage disabled. Only a limited set of confirmed session facts is sent; the name and documents are excluded. If OpenAI is unavailable or unconfigured, the same screen falls back to curated guidance instead of failing.
 - Visa rules support EU/EEA/Swiss, standard academic Blue Card and formally qualified skilled-worker preparation. Conditional checklist, sources, next action, export and D-visa timeline.
 - Lightweight housing, Anmeldung, insurance/tax setup and opportunity guides. No booking, government submission, insurance purchase or tax filing.
 - No auth, cloud storage, database or cross-device sync.
@@ -95,7 +96,9 @@ The responsible mission or authority determines the full document requirements. 
 - `lib/document-vault.ts`, `journey-stages.ts`: document records and progress.
 - `lib/demo-contract.ts`, `mvp-visa-rules.ts`, `visa-assessment.ts`: fixtures, sources and rules.
 - `app/api/extract-contract/route.ts`, `lib/contract-extraction.ts`: transient contract analysis and validated profile mapping.
-- `tests/journey.test.ts`: rule boundaries, migration, reuse, progress and API failures.
+- `app/api/assistant/route.ts`, `lib/relocation-assistant.ts`: contextual assistant with curated fallback.
+- `lib/financial-profile.ts`: confirmed browser-session facts mapped into the financial preview.
+- `tests/journey.test.ts`, `tests/assistant-financial.test.ts`: rule boundaries, migration, reuse, integration and API failures.
 
 ## Five-stage upgrade inventory
 
@@ -134,13 +137,13 @@ Created: `components/contract-preview.tsx`, `components/journey-overview.tsx`, `
 
 Updated: `app/page.tsx`, `app/globals.css`, `components/contract-stage.tsx`, `components/contract-insights.tsx`, `components/journey-dashboard.tsx`, this app's `README.md`.
 
-## Preserved financial prototype
+## Financial opportunities prototype
 
-`app/financial-preview/page.tsx`, `lib/assessment.ts`, `app/api/assessment/route.ts` and `app/api/extract-document/route.ts` retain their existing behavior, including synthetic payslip data and dated financial assumptions. Stage 5 links to this separate preview; it does not yet import the Journey Profile.
+`app/financial-preview/page.tsx` imports confirmed name, work location, gross salary and reviewed visa route from the Journey Profile stored in the same browser. Unanswered financial questions remain blank for the user to complete. `lib/assessment.ts` and `app/api/assessment/route.ts` then produce deterministic, sourced findings. Payslip extraction remains synthetic in the hackathon prototype and is clearly labeled as such.
 
-## Firecrawl source monitor (feature branch)
+## Firecrawl source monitor
 
-The implementation in PR #1 is ready for team review. It adds a standalone maintenance screen at http://localhost:3000/source-monitor and a server-only API at `/api/source-monitor`. The browser can choose only one of three allowlisted official sources; it cannot submit an arbitrary URL. Firecrawl receives public URLs only—never contracts, profiles, payslips or other personal data.
+The merged prototype includes a standalone maintenance screen at http://localhost:3000/source-monitor and a server-only API at `/api/source-monitor`. The browser can choose only one of three allowlisted official sources; it cannot submit an arbitrary URL. Firecrawl receives public URLs only—never contracts, profiles, payslips or other personal data.
 
 To enable real checks, copy `.env.example` to `.env.local`, replace the placeholder with a Firecrawl key, and restart the development server:
 

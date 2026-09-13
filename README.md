@@ -1,6 +1,6 @@
 # RelocAIte
 
-Finds the money and rights foreign workers in Germany are entitled to but don't know about — and turns "you might be owed this" into a submitted claim.
+Helps foreign workers in Germany identify relocation steps and financial opportunities they may otherwise miss, then turns them into a sourced action plan.
 
 Built at the AI.WOMEN Hackathon (Hamburg, Sept 12–13, 2026).
 
@@ -21,4 +21,4 @@ Built at the AI.WOMEN Hackathon (Hamburg, Sept 12–13, 2026).
 - Source: [`development/relocaite-app/`](development/relocaite-app/)
 - Hosted demo: [relocaite-ai-woman.mary986373.chatgpt.site](https://relocaite-ai-woman.mary986373.chatgpt.site/)
 
-The app includes a guided profile flow, optional payslip step, confirmation screen, deterministic assessment API, and source-backed action plan. Payslip extraction is synthetic in this hackathon version and uploaded files are not stored.
+The app includes a browser-session Journey Profile, real OpenAI contract extraction, visa preparation, a shared Document Vault, a contextual assistant with curated fallback, a profile-linked financial assessment, and manual Firecrawl checks of allowlisted official sources. Contract files are processed transiently and are not stored; payslip extraction remains synthetic in this hackathon version. There is no authentication, database, government submission, automatic source-monitoring schedule, or cross-device sync.

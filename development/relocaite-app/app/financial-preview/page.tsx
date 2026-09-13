@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -33,6 +33,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Finding, Profile } from "@/lib/assessment";
+import { emptyFinancialProfile, financialProfileFromJourney, hasJourneyProfileData } from "@/lib/financial-profile";
+import { loadProfile } from "@/lib/journey-storage";
 
 type Step = "welcome" | "profile" | "upload" | "confirm" | "results";
 type ExtractedFields = {
@@ -53,7 +55,7 @@ type AssessmentResponse = {
 };
 
 const stepOrder: Step[] = ["profile", "upload", "confirm", "results"];
-const defaultProfile: Profile = {
+const demoProfile: Profile = {
   name: "Priya",
   city: "Berlin",
   federalState: "Berlin",
@@ -243,10 +245,12 @@ function ProfileStep({
   profile,
   setProfile,
   onNext,
+  imported,
 }: {
   profile: Profile;
   setProfile: (profile: Profile) => void;
   onNext: () => void;
+  imported: boolean;
 }) {
   return (
     <StepShell
@@ -255,6 +259,11 @@ function ProfileStep({
       description="We only ask for facts that can change your action plan. You can review everything before analysis."
       side={<ProfileAside />}
     >
+      {imported ? (
+        <p className="mb-6 rounded-2xl border border-[#b8d7d2] bg-[#edf7f4] p-4 text-sm leading-6 text-[#214f54]">
+          Confirmed contract and visa facts were carried over from this browser’s relocation journey. Complete the remaining questions below.
+        </p>
+      ) : null}
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="First name">
           <Input
@@ -816,7 +825,8 @@ function ResultsStep({
 
 export default function Home() {
   const [step, setStep] = useState<Step>("welcome");
-  const [profile, setProfile] = useState<Profile>(defaultProfile);
+  const [profile, setProfile] = useState<Profile>(emptyFinancialProfile);
+  const [imported, setImported] = useState(false);
   const [fields, setFields] = useState<ExtractedFields>(emptyFields);
   const [fileName, setFileName] = useState("");
   const [findings, setFindings] = useState<Finding[]>([]);
@@ -828,6 +838,17 @@ export default function Home() {
     () => ({ profile: "welcome", upload: "profile", confirm: "upload", results: "confirm" }),
     [],
   );
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const journey = loadProfile(window.localStorage).profile;
+      if (hasJourneyProfileData(journey)) {
+        setProfile(financialProfileFromJourney(journey));
+        setImported(true);
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   function goTo(next: Step) {
     setStep(next);
@@ -862,7 +883,8 @@ export default function Home() {
       <Welcome
         onStart={() => goTo("profile")}
         onDemo={() => {
-          setProfile(defaultProfile);
+          setProfile(demoProfile);
+          setImported(false);
           goTo("profile");
         }}
       />
@@ -873,7 +895,7 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground">
       <AppHeader step={step} onBack={() => goTo(previousStep[step])} />
       {step === "profile" ? (
-        <ProfileStep profile={profile} setProfile={setProfile} onNext={() => goTo("upload")} />
+        <ProfileStep profile={profile} setProfile={setProfile} imported={imported} onNext={() => goTo("upload")} />
       ) : null}
       {step === "upload" ? (
         <UploadStep
