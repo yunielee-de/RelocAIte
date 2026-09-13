@@ -126,3 +126,7 @@ Updated: `app/page.tsx`, `app/globals.css`, `components/contract-stage.tsx`, `co
 ## Preserved financial prototype
 
 `app/financial-preview/page.tsx`, `lib/assessment.ts`, `app/api/assessment/route.ts` and `app/api/extract-document/route.ts` retain their existing behavior, including synthetic payslip data and dated financial assumptions. Stage 5 links to this separate preview; it does not yet import the Journey Profile.
+
+## Proposed Firecrawl integration
+
+The team can review the detailed [`Firecrawl source-monitor proposal`](../firecrawl-source-monitor-proposal.md). It specifies the hackathon scope, maintenance approval flow, user warnings and notifications, API boundaries, security requirements, tests, acceptance criteria, and an explicit approval checklist. It is documentation only; Firecrawl has not been added as a runtime dependency.
