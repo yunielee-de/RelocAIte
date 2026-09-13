@@ -1,9 +1,9 @@
 # Proposal: Firecrawl source monitoring for RelocAIte
 
-**Status:** Proposed — awaiting team approval  
+**Status:** Hackathon implementation in PR #1 — awaiting team approval
 **Owner after approval:** Platform/backend maintainer  
-**Decision deadline:** Before implementing source monitoring  
-**Current state:** Firecrawl is not installed or configured in this repository. No existing RelocAIte result depends on it.
+**Decision deadline:** Before merging or connecting it to user results
+**Current state:** A manual, server-side source monitor is implemented on this feature branch. It is isolated from assessments, requires `FIRECRAWL_API_KEY` for live checks, and no existing RelocAIte result depends on it.
 
 ## Decision requested
 
@@ -180,27 +180,25 @@ Create an in-app notification containing:
 
 Email is opt-in. Do not notify users for formatting, navigation, or other non-material page changes. A material change alters at least one of: eligibility, amount, duration, deadline, required evidence, application procedure, or escalation requirement.
 
-## Proposed repository changes after approval
+## Implemented hackathon files
 
 ```text
 development/relocaite-app/
-  app/api/admin/source-monitor/run/route.ts
-  app/api/admin/source-monitor/changes/route.ts
-  app/api/admin/source-monitor/changes/[id]/route.ts
-  app/admin/sources/page.tsx
-  lib/source-monitor/firecrawl.ts
-  lib/source-monitor/normalize.ts
-  lib/source-monitor/validate.ts
-  lib/source-monitor/impact.ts
-  lib/source-monitor/types.ts
-  lib/source-monitor/__tests__/
+  app/api/source-monitor/route.ts
+  app/source-monitor/page.tsx
+  lib/source-monitor.ts
+  lib/source-monitor-types.ts
+  tests/source-monitor.test.ts
+  .env.example
 ```
 
-Production persistence may use the project's selected database. The hackathon demo may use committed baseline fixtures and an in-memory candidate result, clearly labelled as demo behavior.
+The implementation uses the single-page scrape endpoint, change tracking, deterministic evidence checks and an allowlist of three official sources. It is manual and session-only. Production persistence may use the project's selected database.
 
 ## API contracts
 
-- `POST /api/admin/source-monitor/run` — checks allowlisted source IDs; never accepts an arbitrary client-supplied URL.
+- `POST /api/source-monitor` — implemented hackathon endpoint; checks one allowlisted source ID and never accepts an arbitrary client-supplied URL.
+- `GET /api/source-monitor` — implemented hackathon endpoint; returns safe source metadata and whether the server is configured.
+- `POST /api/admin/source-monitor/run` — proposed production endpoint for authenticated multi-source checks.
 - `GET /api/admin/source-monitor/changes` — lists pending and historical changes.
 - `PATCH /api/admin/source-monitor/changes/:id` — approves or rejects a candidate after authentication and authorization.
 - `GET /api/sources/:id/status` — exposes only safe freshness/status metadata to the user interface.
@@ -263,4 +261,3 @@ Before implementation, the developers should record agreement on:
 - [ ] Approve the hackathon scope and defer the production items listed above.
 
 Approval can be recorded in a GitHub issue, pull-request discussion, or by replacing the status at the top of this document with `Approved` and linking the decision.
-

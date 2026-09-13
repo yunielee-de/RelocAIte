@@ -12,7 +12,7 @@ npm.cmd ci
 npm.cmd run dev
 ```
 
-Open http://localhost:3000. No API key, database or account is required.
+Open http://localhost:3000. The core journey needs no API key, database or account. Live source monitoring needs an optional server-side Firecrawl key as described below.
 
 This machine also has a portable Node runtime already used for validation. With the existing dependencies:
 
@@ -127,6 +127,19 @@ Updated: `app/page.tsx`, `app/globals.css`, `components/contract-stage.tsx`, `co
 
 `app/financial-preview/page.tsx`, `lib/assessment.ts`, `app/api/assessment/route.ts` and `app/api/extract-document/route.ts` retain their existing behavior, including synthetic payslip data and dated financial assumptions. Stage 5 links to this separate preview; it does not yet import the Journey Profile.
 
-## Proposed Firecrawl integration
+## Firecrawl source monitor (feature branch)
 
-The team can review the detailed [`Firecrawl source-monitor proposal`](../firecrawl-source-monitor-proposal.md). It specifies the hackathon scope, maintenance approval flow, user warnings and notifications, API boundaries, security requirements, tests, acceptance criteria, and an explicit approval checklist. It is documentation only; Firecrawl has not been added as a runtime dependency.
+The implementation in PR #1 is ready for team review. It adds a standalone maintenance screen at http://localhost:3000/source-monitor and a server-only API at `/api/source-monitor`. The browser can choose only one of three allowlisted official sources; it cannot submit an arbitrary URL. Firecrawl receives public URLs only—never contracts, profiles, payslips or other personal data.
+
+To enable real checks, copy `.env.example` to `.env.local`, replace the placeholder with a Firecrawl key, and restart the development server:
+
+```powershell
+Copy-Item .env.example .env.local
+npm.cmd run dev
+```
+
+On macOS/Linux, use `cp .env.example .env.local`. Do not commit `.env.local`. Without a key, the monitor remains viewable and explains that live checks require configuration.
+
+A Firecrawl change signal or missing expected evidence produces **Verification required** and a user-warning preview. It does not alter an active eligibility rule. The hackathon implementation is manual and session-only; scheduling, durable snapshots, authentication, review history and notifications remain production work.
+
+See the detailed [`Firecrawl source-monitor proposal`](../firecrawl-source-monitor-proposal.md) for architecture, boundaries, future work and the team approval checklist.
